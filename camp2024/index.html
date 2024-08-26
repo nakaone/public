@@ -1410,7 +1410,7 @@ function confirmEntryNo(conf){
     if( v.entryNo === '0000' ){
       v.button.style.display = 'none';
     } else {
-      v.button.setAttribute('href',conf.staffSite + '&n=' + Number(v.entryNo));
+      v.button.setAttribute('href',conf.staffSite + '?n=' + Number(v.entryNo));
       v.button.style.display = '';
     }
 
