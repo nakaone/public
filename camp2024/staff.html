@@ -2,22 +2,189 @@
 <title>camp2024(スタッフ)</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <!--link rel="stylesheet" href="style.css"-->
-<style type="text/css">/*::CSS::*/</style>
-<!--::CDN::-->
+<style type="text/css">/*:x:CSS::*/</style>
+<!--:x:CDN::-->
 <!--script src="" type="text/javascript"></script-->
 </head>
 <body>
   <h1>camp2024 スタッフ専用サイト</h1>
-<!--::body::-->
 </body>
-<script type="text/javascript">
-//::script::
+<script type="text/javascript" title="library">
+/** 関数他を含め、変数を文字列化
+ * - JSON.stringifyでは文字列化されない関数、シンボル、undefinedも文字列化して表示
+ * - 関数はtoString()で文字列化
+ * - シンボルは`Symbol(xxx)`という文字列とする
+ * - undefinedは'undefined'(文字列)とする
+ *
+ * @param {Object} variable - 文字列化対象変数
+ * @param {Object|boolean} opt - booleanの場合、opt.addTypeの値とする
+ * @param {boolean} opt.addType=false - 文字列化の際、元のデータ型を追記
+ * @returns {string}
+ * @example
+ *
+ * ```
+ * console.log(`l.424 v.td=${stringify(v.td,true)}`)
+ * ⇒ l.424 v.td={
+ *   "children":[{
+ *     "attr":{"class":"[String]th"}, // opt.addType=trueなら[データ型名]がつく
+ *     "text":"[String]タグ"
+ *   },{
+ *     "attr":{"class":"[String]td"},
+ *     "text":"[String]#md"
+ *   }],
+ *   "style":{"gridColumn":"[String]1/13"},
+ *   "attr":{"name":"[String]tag"}
+ * }
+ * ```
+ */
+function stringify(variable,opt={addType:false}){
+  const v = {whois:'stringify',rv:null,step:0};
+  const conv = arg => {
+    const w = {type:whichType(arg)};
+    w.pre = opt.addType ? `[${w.type}]` : '';
+    switch( w.type ){
+      case 'Function': case 'Arrow': case 'Symbol':
+        w.rv = w.pre + arg.toString(); break;
+      case 'BigInt':
+        w.rv = w.pre + parseInt(arg); break;
+      case 'Undefined':
+        w.rv = w.pre + 'undefined'; break;
+      case 'Object':
+        w.rv = {};
+        for( w.i in arg ){
+          // 自分自身(stringify)は出力対象外
+          if( w.i === 'stringify' ) continue;
+          w.rv[w.i] = conv(arg[w.i]);
+        }
+        break;
+      case 'Array':
+        w.rv = [];
+        for( w.i=0 ; w.i<arg.length ; w.i++ ){
+          w.rv[w.i] = conv(arg[w.i]);
+        }
+        break;
+      default:
+        w.rv = w.pre + arg;
+    }
+    return w.rv;
+  };
+  //console.log(`${v.whois} start.\nvariable=${variable}\nopt=${JSON.stringify(opt)}`);
+  try {
 
-window.addEventListener('DOMContentLoaded',() => {
-  const v = {whois:'DOMContentLoaded',rv:null,step:0};
+    v.step = 1; // 事前準備
+    if( typeof opt === 'boolean' ) opt={addType:opt};
+
+    v.step = 2; // 終了処理
+    //console.log(`${v.whois} normal end.`);
+    return JSON.stringify(conv(variable));
+
+  } catch(e) {
+    e.message = `${v.whois} abnormal end at step.${v.step}`
+    + `\n${e.message}`;
+    console.error(`${e.message}\nv=${JSON.stringify(v)}`);
+    return e;
+  }
+}
+/** 変数の型を判定
+ * 
+ * - 引数"is"が指定された場合、判定対象が"is"と等しいかの真偽値を返す。
+ *
+ * @param {any} arg - 判定対象の変数
+ * @param {string} [is] - 想定される型(型名の大文字小文字は意識不要)
+ * @returns {string|boolean} - 型の名前。is指定有りなら判定対象が想定型かの真偽値
+ *
+ * @example
+ * ```
+ * let a = 10;
+ * whichType(a);  // 'Number'
+ * whichType(a,'string'); // false
+ * ```
+ *
+ * <b>確認済戻り値一覧</b>
+ *
+ * オブジェクトは型名が返るので、限定列挙は困難。以下は確認済みの戻り値のみ記載。
+ *
+ * | 型名 | 戻り値 | 備考 |
+ * | :-- | :-- | :-- |
+ * | 文字列 | String |  |
+ * | 数値 | Number |  |
+ * | NaN | NaN |  |
+ * | 長整数 | BigInt |  |
+ * | 論理値 | Boolean |  |
+ * | シンボル | Symbol |  |
+ * | undefined | Undefined | 先頭大文字 |
+ * | Null | Null |  |
+ * | オブジェクト | Object |  |
+ * | 配列 | Array |  |
+ * | 関数 | Function |  |
+ * | アロー関数 | Arrow |  |
+ * | エラー | Error | RangeError等も'Error' |
+ * | Date型 | Date |  |
+ * | Promise型 | Promise |  |
+ *
+ * - Qiita [JavaScriptの型などの判定いろいろ](https://qiita.com/amamamaou/items/ef0b797156b324bb4ef3)
+ *
+ */
+
+function whichType(arg,is){
+  let rv = String(Object.prototype.toString.call(arg).slice(8,-1));
+  switch(rv){
+    case 'Number': if(Number.isNaN(arg)) rv = 'NaN'; break;
+    case 'Function': if(!('prototype' in arg)) rv = 'Arrow'; break;
+  }
+  if( typeof is === 'string' ){
+    return rv.toLowerCase() === is.toLowerCase();
+  } else {
+    return rv;
+  }
+}
+</script>
+<script type="text/javascript" title="onload">
+/** doFetch: HTML内のJavaScriptからWebAPI(GAS)を呼び出す
+ * @param {Object} arg
+ * @param {string} arg.url - WebAPIのURL
+ * 
+ * - JS: [Async/await](https://ja.javascript.info/async-await)
+ * - MDN: [フェッチが成功したかの確認](https://developer.mozilla.org/ja/docs/Web/API/Fetch_API/Using_Fetch#%E3%83%95%E3%82%A7%E3%83%83%E3%83%81%E3%81%8C%E6%88%90%E5%8A%9F%E3%81%97%E3%81%9F%E3%81%8B%E3%81%AE%E7%A2%BA%E8%AA%8D)
+ * - MDN: [fetch()](https://developer.mozilla.org/ja/docs/Web/API/fetch)
+ * - MDN: [Response Object](https://developer.mozilla.org/ja/docs/Web/API/Response)
+ * - Qiita: [Fetch APIでネットワークエラーも含めてエラーハンドリングする](https://qiita.com/IzumiSy/items/031df1df4f4541e536b4)
+ */
+async function doFetch(arg){
+  const v = {whois:'doFetch',step:0,rv:null};
+  console.log(`${v.whois} start.\narg(${whichType(arg)})=${stringify(arg)}`);
+  try {
+
+    v.fetch = await fetch(arg.url,{
+      "method": "POST",
+      //"mode": "no-cors",
+      "body": JSON.stringify({v:'test'}),
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    });
+    v.step = '3.2';
+    v.rv = await v.fetch.json();
+
+    v.step = 9; // 終了処理
+    console.log(`${v.whois} normal end.\nv.rv(${whichType(v.rv)})=${stringify(v.rv)}`);
+    return v.rv;
+
+  } catch(e) {
+    e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
+    console.error(`${e.message}\nv=${stringify(v)}`);
+    return e;
+  }
+}
+
+window.addEventListener('DOMContentLoaded',async () => {
+  const v = {whois:'DOMContentLoaded',rv:null,step:0,conf:{
+    masterAPI: 'https://script.google.com/macros/s/AKfycbz68wWQbyN6DSbbKt3MQrMldoUpaT3cDonHBZ7_BeOK/dev',
+  }};
   console.log(`${v.whois} start.`);
   try {
-    //::onload::
+
+    v.rv = await doFetch({url:v.conf.masterAPI});
+    console.log(`l.38 v.rv=${stringify(v.rv)}`);
 
     v.step = 99; // 終了処理
     console.log(`${v.whois} normal end.`);
