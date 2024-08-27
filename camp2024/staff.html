@@ -159,10 +159,10 @@ async function doFetch(arg){
       method: "POST",
       //mode: "no-cors",
       body: JSON.stringify({v:'test'}),
-      headers :{
+      /*headers :{
         "Content-Type": "text/plain", //"application/json",
         //"Accept": "application/json",
-      },
+      },*/
     });
     v.step = '3.2';
     v.rv = await v.fetch.json();
