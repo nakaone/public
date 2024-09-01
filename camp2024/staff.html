@@ -1,5 +1,5 @@
 <!DOCTYPE html><html xml:lang="ja" lang="ja"><head>
-<title>10:02 staff2024(public)</title>
+<title>10:14 staff2024(public)</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <!--link rel="stylesheet" href="style.css"-->
 <style type="text/css">/*:x:CSS::*/</style>
@@ -525,8 +525,10 @@ window.addEventListener('DOMContentLoaded',async () => {
     v.r = await fetch('https://script.google.com/macros/s/AKfycbz68wWQbyN6DSbbKt3MQrMldoUpaT3cDonHBZ7_BeOK/dev?f=ping',{
       method: 'GET',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded',
+        Access-Control-Allow-Origin: *
+
+        //'Accept': 'application/json',
+        //'Content-Type': 'application/x-www-form-urlencoded',
       }
     });
     console.log(`l.528 v.r(${whichType(v.r)})=${stringify(v.r)}`);
