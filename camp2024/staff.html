@@ -522,6 +522,31 @@ window.addEventListener('DOMContentLoaded',async () => {
   console.log(`${v.whois} start.`);
   try {
 
+    v.url = 'https://script.google.com/macros/s/AKfycbz68wWQbyN6DSbbKt3MQrMldoUpaT3cDonHBZ7_BeOK/dev';
+    v.r = await fetch(v.url,{
+      method: 'GET',
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "text/plain",
+      }
+    });
+    if( !v.r.ok ) throw new Error(`[fetch error] status=${v.r.status}`);
+    v.res = await v.r.json();
+    console.log(`l.16 [DEV] v.res(${whichType(v.res)})=${stringify(v.res)}`);
+
+    v.url = 'https://script.google.com/macros/s/AKfycbywHlYXcUAhnnZ3aQ8ZtHygLCoKf29P_2FGDcdW4gaiq-k1j74z1F-1I3EEe4aHbbi2/exec';
+    v.r = await fetch(v.url,{
+      method: 'GET',
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "text/plain",
+      }
+    });
+    if( !v.r.ok ) throw new Error(`[fetch error] status=${v.r.status}`);
+    v.res = await v.r.json();
+    console.log(`l.28 [Deploy] v.res(${whichType(v.res)})=${stringify(v.res)}`);
+
+    /*
     (()=>{ v.step = 1;  // 事前準備
 
       v.step = 1.1; v.conf = // 設定情報(v.conf)の作成
@@ -554,6 +579,7 @@ window.addEventListener('DOMContentLoaded',async () => {
     v.r = await v.eq.request();
     console.log(`l.38 v.r(${whichType(v.r)})=${stringify(v.r)}`);
     if( v.r.status < 0 ) throw new Error(v.r.message);
+    */
 
     v.step = 99; // 終了処理
     console.log(`${v.whois} normal end.`);
