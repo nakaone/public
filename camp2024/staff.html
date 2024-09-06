@@ -10,6 +10,96 @@
   <h1>camp2024 スタッフ専用サイト</h1>
 </body>
 <script type="text/javascript" title="library">
+/** HTMLElementを生成する
+ * @param {CEDefObj|CEDefObj[]} arg - 生成するHTMLElementの定義
+ * @param {HTMLElement|string} [parent=null] - 本関数内部で親要素への追加まで行う場合に指定
+ * @returns {HTMLElement|Error}
+ */
+function createElement(arg,parent=null){
+  const v = {whois:'BasePage.createElement',rv:[],step:0};
+  //console.log(v.whois+' start.',arg);
+  try {
+    v.step = 1.1; // 引数を強制的に配列化
+    v.isArr = Array.isArray(arg); // 引数が配列ならtrue。戻り値にも使用するので保存
+    if( !v.isArr ) arg = [arg];
+    v.step = 1.2; // 親要素の特定
+    if( parent !== null ){
+      v.parent = typeof parent === 'string' ? document.querySelector(parent) : parent;
+    }
+
+
+    for( v.i = 0 ; v.i<arg.length ; v.i++ ){
+      v.step = 2; // 既定値の設定
+      v.def = {tag: 'div',attr: {},style:{},event:{},text: '',html:'',children:[],name:''};
+      Object.assign(v.def,(typeof arg[v.i] === 'string' ? {tag:arg} : arg[v.i]))
+
+      v.step = 3; // HTMLElementを生成、v.objとする
+      v.obj = document.createElement(v.def.tag);
+
+      v.step = 4; // HTMLElementの属性を定義
+      for( v.j in v.def.attr ){
+        v.obj.setAttribute(v.j,v.x = v.def.attr[v.j]);
+      }
+
+      v.step = 5; // 論理属性を定義(ex.checked)
+      for( v.j in v.def.logical ){
+        if( v.def.logical[v.j] ){
+          v.obj.setAttribute(v.j,v.def.logical[v.j]);
+        }
+      }
+
+      v.step = 6; // style属性の定義
+      for( v.j in v.def.style ){
+        if( v.j.match(/^\-\-/) ){ // CSS変数
+          v.obj.style.setProperty(v.j,v.def.style[v.j]);
+        } else {
+          v.obj.style[v.j] = v.def.style[v.j];
+        }
+      }
+
+      v.step = 7; // イベントの定義
+      for( v.j in v.def.event ){
+        v.obj.addEventListener(v.j,v.def.event[v.j],false);
+      }
+
+      v.step = 8; // 内部文字列(html or text)
+      if( v.def.html.length > 0 ){
+        v.obj.innerHTML = v.def.html;
+      } else {
+        // textareaの場合はvalueに、それ以外はinnerTextに内部文字列(text)をセット
+        v.obj[v.def.tag.toLowerCase()==='textarea'?'value':'innerText'] = v.def.text;
+      }
+
+      v.step = 9; // 子要素の追加(parentは指定しない)
+      for( v.j=0 ; v.j<v.def.children.length ; v.j++ ){
+        v.obj.appendChild(this.createElement(v.def.children[v.j]));
+      }
+
+      v.step = 10; // 戻り値への登録
+      v.rv.push(v.obj);
+
+      v.step = 11; // 親要素への追加
+      if( parent !== null ){
+        v.parent.appendChild(v.obj);
+      }
+
+      v.step = 12; // メンバとして、また切替画面として登録
+      if( v.def.name.length > 0 ){
+        this[v.def.name] = v.obj;
+        this.screenList[v.def.name] = v.obj;
+      }
+    }
+
+    v.step = 12; // 配列で渡されたら配列で、オブジェクトならオブジェクトを返す
+    v.rv = v.isArr ? v.rv : v.rv[0];
+    //console.log(v.whois+' normal end.\n',v.rv);
+    return v.rv;
+
+  } catch(e){
+    console.error(v.whois+' abnormal end(step.'+v.step+').',e,v);
+    return e;
+  }
+}
 /** 長さ・文字種指定に基づき、パスワードを生成
  * 
  * @param {number} [len=16] - パスワードの長さ
@@ -60,6 +150,7 @@ class encryptedQuery {
    * @param {SingleTable} arg.master - サーバ側でユーザ情報を保持するシート
    * @param {string} arg.IDcol - 当該シート上でのユーザ側を特定する欄名。ex.'entryNo'
    * @param {string} arg.CPcol - 当該シート上でユーザ側公開鍵を保持する欄名。ex.'CPkey'
+   * @param {string} arg.upv - URLクエリパラメータ文字列。URL Parameter Variable
    * @returns 
    * 
    * 
@@ -83,8 +174,6 @@ class encryptedQuery {
         } else {
           throw new Error(`${this.isClient?'sessionStorage':'DocumentProperties'}のキー文字列が指定されていません`);
         }
-        this.upv = arg.upv || 'n';  // URLパラメータ(クエリ文字列)の変数名
-
       })();
 
       if( this.isClient ){  v.step = 2; // 実行環境がクライアント側の場合の鍵ペア設定
@@ -108,9 +197,12 @@ class encryptedQuery {
           this.CSkey = cryptico.generateRSAKey(v.password,(arg.bits));
           this.conf.CSkey = JSON.stringify(this.CSkey.toJSON());
           this.conf.CPkey = this.CPkey = cryptico.publicKeyString(this.CSkey);
+          vlog(this,'CPkey');
           v.step = 2.33; // 生成した鍵ペアをsessionStorageに保存
           sessionStorage.setItem(this.storageKey,JSON.stringify(this.conf));
         }
+        vlog(v,'password');
+        vlog(this.conf,'CPkey');
 
         v.step = 2.4; // サーバ側公開鍵を取得済なら設定
         this.SPkey = this.conf.SPkey || null;
@@ -123,7 +215,7 @@ class encryptedQuery {
         if( arg.CPcol ) this.CPcol = arg.CPcol; else throw new Error('CPcol is not defined.');
 
         v.step = 3.2; // 実行環境がサーバ側(GAS)かつDocumentPropertiesに保存されているなら取得
-        this.conf = JSON.parse(PropertiesService.getDocumentProperties().getProperty(arg.DocPropKey));
+        this.conf = JSON.parse(PropertiesService.getDocumentProperties().getProperty(arg.storageKey));
 
         v.step = 3.3; // サーバ側鍵ペアの設定
         if( this.conf.SPkey ){
@@ -143,7 +235,7 @@ class encryptedQuery {
 
       v.step = 9; // 終了処理
       console.log(`${v.whois} normal end.`);
-  
+
     } catch(e) {
       e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
       console.error(`${e.message}\nv=${stringify(v)}`);
@@ -155,60 +247,52 @@ class encryptedQuery {
    * 
    * @param {string|Object} arg - サーバ側で分岐処理を行うコールバック関数に渡す引数
    * @returns 
-   * 
-   * [自分]
-   * Object(引数)
-   *   JSON.stringify()
-   * String(plain)
-   *   base64Encode()
-   * String(base64)
-   *   cryptico.encrypt()
-   * cipher
-   * 
-   * [相手]
-   * cipher
-   *   cryptico.decrypt()
-   * String(base64)
-   *   base64Decode()
-   * String(plain)
-   *   JSON.parse()
-   * Object(戻り値)
    */
-  async request(arg){
+  async request(arg=this.CPkey){
     const v = {whois:this.constructor.name+'.request',step:0,rv:null};
     console.log(`${v.whois} start.\narg(${whichType(arg)})=${stringify(arg)}`);
     try {
 
-      if( this.SPkey === null ){  // サーバ側公開鍵未取得
+      // -------------------------------------------------
+      // step.1 : 問合せ先URL(WebAPI+param)を作成
+      // -------------------------------------------------
 
-        v.step = 1.1; // 平文で送付。送付内容はidとCPkeyのみ(固定)
-        v.payload = {id:this.clientId,CPkey:this.CPkey};
-        v.url = `${this.url}?${new URLSearchParams(v.payload)}`;
-        console.log(`l.140 v.url(${whichType(v.url)})=${stringify(v.url)}`);
+      v.step = 1.1; // 平文か暗号文か判定。サーバ側公開鍵取得済なら暗号文とする。
+      v.isPlain = this.SPkey === null ? true : false;
+      vlog(v,'isPlain');
 
-      } else {  // サーバ側公開鍵取得済 -> 暗号化して送る
+      v.step = 1.2; // responseで署名検証のためにIDが必要なので付加し、JSON化
+      v.json = JSON.stringify({id:this.clientId,arg:arg});
+      vlog(v,'json');
 
-        v.step = 1.2; // responseで署名検証のためにIDが必要なので付加し、JSON化
-        v.json = JSON.stringify({id:this.clientId,arg:arg});
-        console.log(`l.146 v.json(${whichType(v.json)})=${stringify(v.json)}`);
-  
-        v.step = 1.3; // JSON -> base64
-        v.b64 = await this.base64Encode(v.str);
-        if( v.b64 instanceof Error ) throw v.b64;
-        console.log(`l.151 v.b64(${whichType(v.b64)})=${stringify(v.b64)}`);
-  
-        v.step = 1.4; // SPkeyがあればbase64を暗号化、無ければそのまま使用
+      v.step = 1.3; // base64化
+      v.b64 = await this.encB64(v.json);
+      vlog(v,'b64');
+
+      v.step = 1.4; // 暗号化
+      if( v.isPlain ){
+        v.str = v.b64;
+      } else {
         v.enc = cryptico.encrypt(v.b64,this.SPkey,this.CSkey);
+        vlog(v,'enc');
         if( v.enc.status !== 'success' ) throw new Error('encrypt failed.');
-        v.arg = v.enc.cipher;
-        console.log(`l.157 v.arg(${whichType(v.arg)})=${stringify(v.arg)}`);
-  
-        v.url = `${this.url}?${this.upv}=${v.arg}`;
-        console.log(`l.160 v.url(${whichType(v.url)})=${stringify(v.url)}`);
+        v.str = v.enc.cipher;
       }
 
-      v.step = 2; // 問合せの実行、結果受領
-      console.log(`l.164 v.url(${whichType(v.url)})=${stringify(v.url)}`);
+      v.step = 1.5; // URLセーフ化
+      v.param = encodeURIComponent(v.str); //this.encURL(v.str);
+      vlog(v,'param');
+
+      v.step = 1.6; // WebAPI+paramでURL作成
+      v.url = `${this.url}?${v.isPlain?'p':'c'}=${v.param}`;
+      vlog(v,'url');
+
+
+      // -------------------------------------------------
+      // step.2 : サーバ側に問合せ実行、結果検証
+      // -------------------------------------------------
+
+      v.step = 2.1; // 問合せの実行
       v.r = await fetch(v.url,{
         method: 'GET',
         headers: {
@@ -216,37 +300,62 @@ class encryptedQuery {
           "Content-Type": "text/plain",
         }
       });
-      if( !v.r.ok ) throw new Error(`[fetch error] status=${v.r.status}`);
-      v.res = await v.r.json();
-      console.log(`l.165 v.res(${whichType(v.res)})=${stringify(v.res)}`);
+      vlog(v,'r');
+      console.log(v.r);
 
-      v.step = 3.1; // 結果を復号(encrypted -> base64)
+      v.step = 2.2; // ネットワークエラー
+      if( !v.r.ok ) throw new Error(`[fetch error] status=${v.r.status}`);
+
+      v.step = 2.3; // オブジェクト化
+      v.obj = await v.r.json();
+      vlog(v,'obj');
+
+      v.step = 2.4; // 分岐先関数では無く、response()で起きたエラーの場合はthrow
+      // ※分岐先関数でのエラーは本関数(response)の戻り値として本関数呼出元に返す
+      if( v.obj.isOK === false ){
+        throw new Error(v.res.message);
+      }
+
+      v.step = 2.5;
+      v.res = v.obj.rv;
+      vlog(v,'res');
+
+
+      // -------------------------------------------------
+      // step.3 : 呼出元への戻り値の作成(結果の復号、署名検証)
+      // -------------------------------------------------
+
+      v.step = 3.1; // decrypt
       v.dec = cryptico.decrypt(v.res,this.CSkey);
-      console.log(`l.169 v.dec(${whichType(v.dec)})=${stringify(v.dec)}`);
-      if( v.dec.status !== 'success' ) throw new Error('decrypt failed.');
+      if( v.dec.status !== 'success' ){
+        throw new Error(`decrypt failed.\n${stringify(v.dec)}`);
+      }
 
       v.step = 3.2; // 署名検証、SPkeyが無ければ保存
       if( v.dec.publicKeyString !== this.SPkey ){
         if( this.SPkey === null ){
           this.conf.SPkey = this.SPkey = v.dec.publicKeyString;
           // sessionStorageに保存
-          sessionStorage.setItem(this.storageKey,JSON.stringify(this.conf));  
+          sessionStorage.setItem(this.storageKey,JSON.stringify(this.conf));
         } else {
           throw new Error('サーバ側の署名が不正です');
         }
       }
 
       v.step = 3.3; // base64 -> JSON
-      v.json = await this.base64Decode(v.b64);
-      console.log(`l.185 v.json(${whichType(v.json)})=${stringify(v.json)}`);
+      v.json = await this.decB64(v.dec.plaintext);
 
       v.step = 3.4; // JSON -> Object
-      v.rv = JSON.parse(v.json);
+      v.rv = this.objectizeJSON(v.json);
+      if( v.rv === null ){
+        throw new Error(`invalid JSON\n${stringify(v.json)}`);
+      }
+
 
       v.step = 9; // 終了処理
       console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
       return v.rv;
-  
+
     } catch(e) {
       e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
       console.error(`${e.message}\nv=${stringify(v)}`);
@@ -258,86 +367,120 @@ class encryptedQuery {
    * 
    * @param {Object} arg - URLクエリ文字列のオブジェクト(e.parameter)
    * @param {*} callback - 分岐処理を行うコールバック関数。asyncで定義のこと。
-   * @returns 
+   * @returns {Object}
    * 
    * - ContentService.createTextOutput()はdoGetで行うため、定義不要
+   * 
+   * - 戻り値のデータ型
+   *   - isOK {boolean} true:正常終了、false:異常終了
+   *   - message {string} エラーメッセージ(平文)
+   *   - rv {Object} 署名＋暗号化された、分岐先関数の戻り値(JSON)。ex.`{status:-1}`
    */
-  async response(arg,callback){
-    const v = {whois:this.constructor.name+'.response',step:0,rv:null,arg:arg,isPlain:true};
-    console.log(`${v.whois} start.\narg=${stringify(arg)}`);
+  response(arg,callback){
+    const v = {whois:this.constructor.name+'.response',step:0,rv:null};
+    console.log(`${v.whois} start.\narg(${whichType(arg)})=${stringify(arg)}`);
     try {
-  
-      // argにthis.upvで指定されたメンバが無い、
-      // またはそれ以外のメンバが存在する ⇒ 平文
-      if( arg[this.upv] && Object.keys(arg).length === 1 ){
-        // argにはthis.upvで指定されたメンバ以外のメンバは存在しない ⇒ 暗号文
-        v.isPlain = false;
-      }
-      v.rv = await callback(v.arg,v.isPlain);
 
-      /*
-      // cipher -> base64
-      v.dec = cryptico.decrypt(arg,this.SSkey);
-      if( v.dec.status === 'success' ){
-        // 署名検証。
-        v.b64 = v.dec.plaintext;
+      // -------------------------------------------------
+      // step.1 : 分岐用関数に渡す引数v.argを作成
+      // -------------------------------------------------
+
+      v.step = 1.1; // 引数(e.parameter)が平文か暗号文か判定
+      v.isPlain = arg.hasOwnProperty('p') ? true : false;
+      v.str = arg[v.isPlain?'p':'c'];
+      vlog(v,'str');
+
+      v.step = 1.2;  // URLセーフ解除
+      v.cipher = decodeURIComponent(v.str); //this.decURL(v.str);
+      vlog(v,'cipher');
+
+      v.step = 1.3;  // 暗号文なら復号
+      if( v.isPlain ){
+        v.b64 = v.cipher;
       } else {
-        // 復号失敗⇒平文として、引数をそのまま使用
-        v.obj = arg;
+        v.dec = cryptico.decrypt(v.cipher,this.SSkey);
+        if( v.dec.status === 'success' ) v.b64 = v.dec.plaintext;
+        else throw new Error(`decrypt failed.\n${stringify(v.dec)}`);
+      }
+      vlog(v,'b64');
+
+      v.step = 1.4;  // base64解除
+      v.json = this.decB64(v.b64);
+      vlog(v,'json');
+
+      v.step = 1.5;  // Object化
+      v.obj = JSON.parse(v.json);
+      vlog(v,'obj');
+
+      v.step = 1.6;  // ユーザ情報を取得
+      v.user = this.master.data.find(x => x[this.IDcol] == v.obj.id);
+      if( !v.user )
+        throw new Error(`対象が見つかりません(ID=${arg[this.upv]}[${whichType(arg[this.upv])}])`);
+      vlog(v,'user');
+
+      v.step = 1.7;  // 暗号文なら署名検証
+      // 尚v.user.CPkeyおよびシートへの保存はauth1で実施、この時点での変更は不可。
+      // ∵ masterは同一Objectなので、ここで変更すると「変更点無し」と解釈されupdateされない。
+      if( v.isPlain === false && v.dec.publicKeyString !== v.user.CPkey ){
+        throw new Error(`unmatch CPkey.\ndec.CPkey=${v.dec.publicKeyString}\nregistrated=${v.user.CPkey}`);
       }
 
-      // base64 -> json
-      v.json = Utilities.newBlob(Utilities.base64Decode(v.b64, Utilities.Charset.UTF_8)).getDataAsString();
-
-      // json -> Object
-      v.arg = JSON.parse(v.json);
-
-      v.obj = objectizeJSON(v.str);
-      if( v.obj === null ){  // 復元結果が非JSON文字列
-
-
-        // 復号文字列(JSON)をオブジェクト化、シートからユーザ情報を取得して署名検証
-        v.obj = JSON.parse(v.dec.plaintext);
-        v.user = this.master.data.find(x => x[this.IDcol] === v.obj.id);
-        if( !v.user ) throw new Error(`"${v.obj.id}"は未登録です`);
-
-        // 検証NG(署名が未登録)ならthrowする
-        if( v.user[this.CPcol] !== v.dec.publicKeyString ){
-          throw new Error('不適切な署名です');
-        }
-
-        // 引数が暗号化されている場合の処理分岐を呼び出す
-        v.r = await callback(v.obj.arg);
-        v.isPlain = false;
+      v.step = 1.8;  // 分岐用関数に渡す引数をv.argに設定
+      v.arg = {
+        isPlain: v.isPlain,
+        master: this.master,
+        user: v.user,
+        id: v.obj.id,
+        arg: v.obj.arg,
       }
-      v.r = await callback(v.obj,v.isPlain);
-      if( v.r instanceof Error ) throw v.r;
+      vlog(v,'arg');
 
-      // 結果をJSON＋base64化して返す
-      v.str = JSON.stringify(v.r);
-      v.b64 = this.base64Encode(v.str);
-      v.enc = cryptico.encrypt(v.b64,this.CPkey,this.SSkey);
-      if( v.enc.status !== 'success' ){}
-      v.rv = {status:true,data:v.enc.cipher};
-      */
+
+      // -------------------------------------------------
+      v.step = 2; // 分岐用関数の呼び出し
+      // -------------------------------------------------
+      v.r = callback(v.arg);
+      vlog(v,'r');
+
+
+      // -------------------------------------------------
+      // step.3 : 呼出元への戻り値の作成(結果への署名・暗号化)
+      // -------------------------------------------------
+      v.step = 3.1; // 分岐先関数の戻り値(Object) -> JSON
+      v.json = JSON.stringify(v.r);
+      vlog(v,'json');
+
+      v.step = 3.2; // JSON -> base64
+      v.b64 = this.encB64(v.json);
+      vlog(v,'b64');
+
+      v.step = 3.3; // base64 -> encrypt
+      v.enc = cryptico.encrypt(v.b64,v.user.CPkey,this.SSkey);  // 署名あり
+      if( v.enc.status !== 'success' ){
+        throw new Error(`encrypt failed.\n${stringify(v.enc)}`);
+      }
+
+      v.step = 3.4; // 結果オブジェクトの作成
+      v.rv = {isOK:true,rv:v.enc.cipher};
 
       v.step = 9; // 終了処理
-      console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
-  
+      console.log(`${v.whois} normal end.\nv.rv(${whichType(v.rv)})=${stringify(v.rv)}`);
+
     } catch(e) {
       e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
       console.error(`${e.message}\nv=${stringify(v)}`);
-      v.rv = {status:false,message:e.message};
+      v.rv = {isOK:false,message:e.message};
     } finally {
       return v.rv;
     }
   }
 
-  /** base64Encode: 日本語文字列をbase64にエンコード
+  /** encB64: 日本語文字列を含め、base64にエンコード
    * @param {string} parts - 変換する日本語文字列
    * @returns {string} base64エンコード文字列
    * 
    * - Qiita [JavaScriptでBase64エンコード・デコード](https://qiita.com/i15fujimura1s/items/6fa5d16b1e53f04f3b06)
+   * - Zenn [URLセーフなBase64エンコーディングとデコーディング](https://zenn.dev/jusanz/articles/d6cec091d45657)
    * 
    * @example
    * 
@@ -348,18 +491,23 @@ class encryptedQuery {
    * console.log(`str=${v.str}\nenc=${v.enc}\ndec=${v.dec}`);
    * ```
    */
-  async base64Encode(...parts) {
-    return new Promise(resolve => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const offset = reader.result.indexOf(",") + 1;
-        resolve(reader.result.slice(offset));
-      };
-      reader.readAsDataURL(new Blob(parts));
-    });
+  encB64(text){
+    const cl = async (...parts) => {
+      return new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const offset = reader.result.indexOf(",") + 1;
+          resolve(reader.result.slice(offset));
+        };
+        reader.readAsDataURL(new Blob(parts));
+      });
+    };
+    const sv = text => Utilities.base64Encode(text, Utilities.Charset.UTF_8);
+
+    return this.isClient ? cl(text) : sv(text);
   }
 
-  /** base64Decode: base64を日本語文字列にデコード
+  /** decB64: base64を日本語文字列にデコード
    * @param {string} text - base64文字列
    * @param {string} charset='UTF-8'
    * @returns {string} 復号された日本語文字列
@@ -374,10 +522,33 @@ class encryptedQuery {
    * v.dec = await base64Decode(v.enc);
    * console.log(`str=${v.str}\nenc=${v.enc}\ndec=${v.dec}`);
    * ```
-   */
   async base64Decode(text, charset='UTF-8') {
     return fetch(`data:text/plain;charset=${charset};base64,` + text)
     .then(response => response.text());
+  }
+   */
+  decB64(text, charset='UTF-8') {
+    const cl = (text, charset='UTF-8') => {
+      return fetch(`data:text/plain;charset=${charset};base64,` + text)
+      .then(response => response.text());
+    };
+    const sv = text => Utilities.newBlob(Utilities.base64Decode(text, Utilities.Charset.UTF_8)).getDataAsString();
+
+    return this.isClient ? cl(text) : sv(text);
+  }
+
+  /** encURL:文字列をURLセーフ化、decURL:URLセーフ化された文字列を復元
+   * 
+   * @param {string} text - 変換対象文字列
+   * @returns {string} 変換結果
+   * 
+   * - Zenn [URLセーフなBase64エンコーディングとデコーディング](https://zenn.dev/jusanz/articles/d6cec091d45657)
+   */
+  encURL(text){
+    return text.replace(/=/g, "~").replace(/\+/g, "-").replace(/\//g, "_");
+  }
+  decURL(text){
+    return text.replace(/~/g,"=").replace(/-/g, "+").replace(/_/g, "/");
   }
 
   /** objectizeJSON: 文字列がJSONか判定、parse結果かnullを返す
@@ -387,6 +558,110 @@ class encryptedQuery {
    */
   objectizeJSON(arg){try{return JSON.parse(arg)}catch{return null}};
 
+}
+/**
+ * @classdesc 待機画面を表示する
+ */
+class LoadingIcon {
+  /**
+   * @constructor
+   * @param {Object} [arg={}] - オプション
+   * @param {HTMLElement} [arg.pattern='theSpinner23'] - デザインパターン(CSSのクラス名)
+   *
+   * - [CSS Loaders](https://css-loaders.com/bars/)
+   */
+  constructor(arg={}){
+    const v = {whois:this.constructor.name+'.constructor',rv:true,step:0,
+      css: { theSpinner23: `
+        dialog.LoadingIcon {
+          margin: auto;
+          width: 400px; /* .loader width * 2 */
+          aspect-ratio: 1;
+          position: relative;
+          outline: none;
+          border: none;
+        }
+        dialog.LoadingIcon::backdrop {background:#fff}
+        dialog.LoadingIcon > div {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          margin: -100px 0 0 -100px;
+        }
+
+        /* HTML: <div class="loader"></div> */
+        .loader {
+          width: 200px;   /* ここは修正 */
+          aspect-ratio: 1;
+          display: grid;
+          border-radius: 50%;
+          background:
+            linear-gradient(0deg ,rgb(0 0 0/50%) 30%,#0000 0 70%,rgb(0 0 0/100%) 0) 50%/8% 100%,
+            linear-gradient(90deg,rgb(0 0 0/25%) 30%,#0000 0 70%,rgb(0 0 0/75% ) 0) 50%/100% 8%;
+          background-repeat: no-repeat;
+          animation: l23 1s infinite steps(12);
+        }
+        .loader::before,
+        .loader::after {
+          content: "";
+          grid-area: 1/1;
+          border-radius: 50%;
+          background: inherit;
+          opacity: 0.915;
+          transform: rotate(30deg);
+        }
+        .loader::after {
+          opacity: 0.83;
+          transform: rotate(60deg);
+        }
+        @keyframes l23 {
+          100% {transform: rotate(1turn)}
+        }
+      `},
+    };
+    console.log(`${v.whois} start.\narg=${stringify(arg)}`);
+  try {
+
+      v.step = 1; // 事前準備：argの既定値設定
+      if( !arg.hasOwnProperty('pattern') ) arg.pattern = 'theSpinner23';
+
+      v.step = 2; // 待機画面要素の準備
+      this.screen = document.querySelector('.'+this.constructor.name);
+      if( this.screen === null ){
+        this.screen = createElement({
+          tag:'dialog',
+          attr:{class:this.constructor.name},
+          children:[{attr:{class:'loader '+arg.pattern}}],
+        },'body');
+        if( this.screen instanceof Error ) throw this.screen;
+      }
+
+      v.step = 3; // styleの準備
+      if( document.querySelector(`style[name="${this.constructor.name}_${arg.pattern}"]`) === null ){
+        v.r = createElement({
+          tag: 'style',
+          attr: {type:'text/css',name:`${this.constructor.name}_${arg.pattern}"]`},
+          text: v.css[arg.pattern].replaceAll(/\n/g,'').replaceAll(/\s+/g,' '),
+        },'head');
+      }
+
+      v.step = 9; // 終了処理
+      this.hide();
+      console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
+      return v.rv;
+  
+    } catch(e) {
+      e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
+      console.error(`${e.message}\nv=${stringify(v)}`);
+      return e;
+    }
+  }
+
+  /** 待機画面を表示する */
+  show = () => this.screen.showModal();
+
+  /** 待機画面を隠蔽する */
+  hide = () => this.screen.close();
 }
 /** 関数他を含め、変数を文字列化
  * - JSON.stringifyでは文字列化されない関数、シンボル、undefinedも文字列化して表示
@@ -463,6 +738,25 @@ function stringify(variable,opt={addType:false}){
     return e;
   }
 }
+/** vlog: デバッグ用コンソール出力
+ * @param {Object} v - 出力対象Object
+ * @param {string} m - メンバ名
+ * @param {number} l=null - 行番号
+ * @returns {void}
+ */
+const vlog = (v,m,l=null) => {
+  // return; // デバッグ用。本番時はコメントを外す
+
+  let h = new Date().toLocaleTimeString() + ' ';
+  h += l !== null ? `l.${l} ` : '';
+  h += v.whois ? v.whois + ' ' : '';
+  h += v.step ? `step ${v.step} ` : '';
+  h += h.length > 0 ? ': ' : '';
+  if( whichType(m,'String') ) m = [m];
+  const msg = [];
+  m.forEach(x => msg.push(`${x}(${whichType(v[x])})=${stringify(v[x])}`));
+  console.log(h+msg.join('\n'));
+}
 /** 変数の型を判定
  * 
  * - 引数"is"が指定された場合、判定対象が"is"と等しいかの真偽値を返す。
@@ -522,25 +816,17 @@ window.addEventListener('DOMContentLoaded',async () => {
   console.log(`${v.whois} start.`);
   try {
 
-    v.url = 'https://script.google.com/macros/s/AKfycbywHlYXcUAhnnZ3aQ8ZtHygLCoKf29P_2FGDcdW4gaiq-k1j74z1F-1I3EEe4aHbbi2/exec';
-    v.r = await fetch(v.url,{
-      method: 'GET',
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "text/plain",
-      }
-    });
-    if( !v.r.ok ) throw new Error(`[fetch error] status=${v.r.status}`);
-    v.res = await v.r.json();
-    console.log(`l.28 [Deploy] v.res(${whichType(v.res)})=${stringify(v.res)}`);
-
-    /*
     (()=>{ v.step = 1;  // 事前準備
 
-      v.step = 1.1; v.conf = // 設定情報(v.conf)の作成
-{"storageKey":"camp2024","masterAPI":"https://script.google.com/macros/s/AKfycbz68wWQbyN6DSbbKt3MQrMldoUpaT3cDonHBZ7_BeOK/dev","entryFormQR":"view","volunteerQR":"view"}
+      v.step = 1.1; // 待機画面作成
+      v.loading = new LoadingIcon();
+      v.loading.show();
 
-      v.step = 1.2; // 受付番号の特定
+      v.step = 1.2; v.conf = // 設定情報(v.conf)の作成
+{"storageKey":"camp2024","masterAPI":"https://script.google.com/macros/s/AKfycbywHlYXcUAhnnZ3aQ8ZtHygLCoKf29P_2FGDcdW4gaiq-k1j74z1F-1I3EEe4aHbbi2/exec","masterSheetName":"master","entryFormQR":"view","volunteerQR":"view","upv":"n","isClient":true}
+      vlog(v,'conf');
+
+      v.step = 1.3; // 受付番号の特定
       v.params = new URLSearchParams(window.location.search);
       v.conf.entryNo = v.params.get('n') || 0;  // URLパラメータをlocalStorageより優先
       if( v.conf.entryNo === 0 ){
@@ -551,11 +837,16 @@ window.addEventListener('DOMContentLoaded',async () => {
         // 　※後者についてはメニューから「受付番号入力」を行う事で参加者扱いとする。
         v.conf.entryNo = Number(localStorage.getItem(v.conf.storageKey));
       }
+      vlog(v,['params','conf']);
 
-      v.step = 1.3; // 受付番号をlocalStorageに保存(未確定の場合'0')
+      v.step = 1.4; // 受付番号をlocalStorageに保存(未確定の場合'0')
       localStorage.setItem(v.conf.storageKey,v.conf.entryNo);
 
-      v.step = 1.4; // 認証基盤をインスタンス化
+      v.step = 1.5; // sessionStorageをクリア
+      // リロードしたら再設定するため、全てクリアする
+      sessionStorage.clear();
+
+      v.step = 1.6; // 認証基盤をインスタンス化
       v.eq = new encryptedQuery({
         storageKey: v.conf.storageKey,
         url: v.conf.masterAPI,
@@ -565,11 +856,77 @@ window.addEventListener('DOMContentLoaded',async () => {
 
     v.step = 2; // パスコード通知メール発行要求
     v.r = await v.eq.request();
-    console.log(`l.38 v.r(${whichType(v.r)})=${stringify(v.r)}`);
+    vlog(v,'r');
+    if( v.r instanceof Error ) throw v.r;
     if( v.r.status < 0 ) throw new Error(v.r.message);
+
+    v.step = 3; // パスコード入力
+    v.passcode = null;
+    v.msg = 'メールでパスコードを送信しました。\n';
+    for( v.cnt=0 ; v.cnt<3 ; v.cnt++ ){
+
+      v.step = 3.1; // パスコード入力ダイアログ表示
+      v.passcode = window.prompt(v.msg + 'メール記載のパスコードを入力してください');
+
+      if( v.passcode ){
+        v.step = 3.2; // パスコード有効性検証要求
+        v.r = await v.eq.request(Number(v.passcode));
+        if( v.r instanceof Error ) throw v.r;
+
+        switch( v.r.status ){
+          case 1: // 正当性検証OK ⇒ シート全情報をsessionStorageに保存
+            sessionStorage.setItem(v.storageKey,{
+              header:v.r.header,
+              data:v.r.data,
+              expire: v.r.expire,
+            });
+            break;
+          case 0: // 検証NGだが再試行可 ⇒ 入力値をクリアしてもう一度
+            v.passcode = null;
+            v.msg = v.r.message;
+            break;
+          default: // エラー ⇒ メッセージを出して終了
+            alert(v.r.message);
+            throw new Error(v.r.message);      
+        }
+      } else {
+        // ダイアログでキャンセルされた場合、内容を消去して終了
+        v.loading.hide();
+        //document.querySelector('.BurgerMenu[name="wrapper"]').innerHTML = '';
+        //document.querySelectorAll('script').forEach(dom => dom.innerHTML = '');
+        throw new Error('スタッフ専用サイトは認証が必要です');
+      }
+    }
+
+    /*
+    (()=>{  v.step = 3; // 受付業務の準備
+      // v.rにシートデータが入っていること
+      v.Reception = new Reception({
+        wrapper: '.Reception[name="wrapper"]',
+        header: v.r.header,
+        data: v.r.data,
+        filter: (o,key) => {  // 検索キーを元にした候補者の抽出条件
+          // 数字なら受付番号と看做してentryNoと一致、非数字なら申込者氏名/カナに部分一致
+          return !isNaN(key) ? Number(o.entryNo) === Number(key)
+          : (o['申込者氏名'].indexOf(key) >= 0 || o['申込者カナ'].indexOf(key) >= 0)
+        },
+      });
+      if( v.Reception instanceof Error ) throw v.Reception;
+    })();
+
+    (()=>{  v.step = 4; // メニュー作成
+      // ※Receptionインスタンス作成後に実行
+      v.menu = new BurgerMenu({home:'ホーム',func:{
+        recept: async () => {  // 受付番号or検索キー入力
+          changeScreen('受付業務'); // data-BurgerMenu:id
+          await v.Reception.targeting();
+        },
+      }});
+    })();
     */
 
     v.step = 99; // 終了処理
+    v.loading.hide();
     console.log(`${v.whois} normal end.`);
     return v.rv;
   } catch(e) {
