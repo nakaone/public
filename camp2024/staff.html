@@ -7,7 +7,314 @@
 <!--script src="" type="text/javascript"></script-->
 </head>
 <body>
-  <h1>camp2024 スタッフ専用サイト</h1>
+  <div class="BurgerMenu" name="wrapper">
+    <div data-BurgerMenu="id:'ホーム'">
+<h1>
+「スタッフ専用サイト」ホーム
+</h1>
+<h2 id="利用上の注意">利用上の注意</h2>
+<ul>
+<li>連続3回不適切なパスコードが入力された場合、アカウントが凍結されます。即時凍結解除が必要な場合、システム管理者(嶋津)まで直接ご連絡ください。</li>
+<li>リロードした場合、パスコード入力ダイアログでキャンセルした場合も1回失敗と看做します。</li>
+<li>パスコードは10分以内に入力してください</li>
+</ul>
+<!--
+- 受付業務では個人情報もアクセス可能になるため、＋αの権限が必要です。受付業務を行う場合、システム管理者(嶋津)まで直接ご連絡ください。
+-->
+    </div>
+    <div data-BurgerMenu="id:マニュアル">
+      <div data-BurgerMenu="id:受付業務マニュアル">
+<h1>
+受付業務マニュアル
+</h1>
+<h2 id="イベント前日までに">イベント前日までに</h2>
+<ol type="1">
+<li>参加者名簿を紙で出力(障害時用)</li>
+</ol>
+<h2 id="受付開始準備">受付開始準備</h2>
+<ol type="1">
+<li>動線の確認、机の準備</li>
+<li>受付待機列整理用にコーンや白線等を用意</li>
+<li>役割分担</li>
+<li>机上に以下が揃っているか確認
+<ul>
+<li>おつり用コイン</li>
+<li>手提げ金庫</li>
+<li>参加者識別用ガムテープ</li>
+<li>参加者名簿、チェック用ペン</li>
+<li>メモ用紙、</li>
+<li>文鎮</li>
+</ul></li>
+</ol>
+<h2 id="受付の手順">受付の手順</h2>
+<ol type="1">
+<li>[参加者]
+申込受付メールでQRコードを準備。分かれば受付番号、分からなければ氏名の一部で検索</li>
+<li>「メニュー &gt; 受付業務」を選択</li>
+<li>参加者から申込受付メール(QRコード)を提示いただき、スキャン
+または受付番号・氏名(一部)から検索</li>
+<li>複数の候補がいる場合、該当者をタップして「選択」</li>
+<li>申込情報の内容確認
+<ul>
+<li>以下の場合、参加者に画面右の「申込フォームの修正」(QRコード)から修正してもらう<br>
+※スマホがない等、対応不能なら修正不要
+<ul>
+<li>参加者に増減が有った場合</li>
+<li>キャンセルされているのに来場した場合</li>
+</ul></li>
+<li>テント泊以外でテントを持ち込んでいないか</li>
+<li>引取者が決まっているか</li>
+</ul></li>
+<li>特記事項があればメモ欄に記入</li>
+<li>ボタンクリックして確定。全員分なら「全員受領」、一部なら該当者分を「既収」にして「更新」</li>
+<li>参加費を収納、参加者識別用ガムテープを見やすい位置に貼付</li>
+</ol>
+<h2 id="受付が終わったら">受付が終わったら</h2>
+<ol type="1">
+<li>受領した参加費を本部に持参</li>
+</ol>
+      </div>
+    </div>
+    <div data-BurgerMenu="id:'受付業務',func:'recept'"><div class="Reception" name="wrapper">
+<div name="scanner"><!-- スキャナ＋キーワード入力領域 -->
+      <div name="camera"></div><!-- スキャナ領域。scanQRの包摂要素 -->
+      <div name="keyword"><!-- キーワード入力領域 -->
+        <p>受付番号、または申込者の氏名・カナ(一部可)を入力してください</p>
+        <input type="text">
+        <button>検索</button>
+        <div name="val" style="display: none;"></div>
+      </div>
+      <dialog><!-- 検索結果が複数時の候補者一覧表示画面 -->
+        <p>複数の候補が見つかりました</p>
+        <div name="list"></div>
+        <button>選択</button>
+      </dialog>
+    </div>
+  
+    <div name="detail"><!-- 申込情報詳細画面 -->
+      <div name="entryNo" style="display: none;"></div>
+      <div name="キャンセル"></div>
+      <h2>申込情報</h2>
+      <div class="c19"><ruby class="big"><span name="申込者氏名">嶋津　邦浩</span><rt name="申込者カナ" class="big">シマヅ　クニヒロ</rt></ruby></div>
+      <div name="editURL" class="c9d">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&amp;data=https://chiilabo.co.jp/2024-05/wordpress-replace-qr-code-generater-api-post/">
+        <sub>申込フォーム修正</sub>
+      </div>
+      <div name="メールアドレス" class="c19">nakaone.kunihiro@gmail.com</div>
+      <div class="c19" name="緊急連絡先">090-6511-1788</div>
+      <div class="c19">ボランティア：<span name="ボランティア募集"></span></div>
+
+      <h2>参加者情報</h2>
+      <table style="grid-column: 1/13;"><tbody><tr name="参加者01">
+        <td><ruby>
+          <span name="参加者01氏名">嶋津　邦浩</span>
+          <rt name="参加者01カナ">シマヅ　クニヒロ</rt>
+        </ruby></td>
+        <td name="参加者01所属">卒業生</td>
+        <td><form name="参加者01会費">
+          <label><input type="radio" name="fee01" value="未収"><span>未収</span></label>
+          <label><input type="radio" name="fee01" value="既収"><span>既収</span></label>
+          <label><input type="radio" name="fee01" value="無料"><span>無料</span></label>  
+        </form></td>
+      </tr><tr name="参加者02">
+        <td><ruby>
+          <span name="参加者02氏名">嶋津　弘子</span>
+          <rt name="参加者02カナ">シマヅ　ヒロコ</rt>
+        </ruby></td>
+        <td name="参加者02所属">卒業生</td>
+        <td><form name="参加者02会費">
+          <label><input type="radio" name="fee02" value="未収"><span>未収</span></label>
+          <label><input type="radio" name="fee02" value="既収"><span>既収</span></label>
+          <label><input type="radio" name="fee02" value="無料"><span>無料</span></label>  
+        </form></td>
+      </tr><tr name="参加者03">
+        <td><ruby>
+          <span name="参加者03氏名">嶋津　諒</span>
+          <rt name="参加者03カナ">シマヅ　リョウ</rt>
+        </ruby></td>
+        <td name="参加者03所属">卒業生</td>
+        <td><form name="参加者03会費">
+          <label><input type="radio" name="fee03" value="未収"><span>未収</span></label>
+          <label><input type="radio" name="fee03" value="既収"><span>既収</span></label>
+          <label><input type="radio" name="fee03" value="無料"><span>無料</span></label>  
+        </form></td>
+      </tr><tr name="参加者04">
+        <td><ruby>
+          <span name="参加者04氏名">嶋津　史奈</span>
+          <rt name="参加者04カナ">シマヅ　フミナ</rt>
+        </ruby></td>
+        <td name="参加者04所属">卒業生</td>
+        <td><form name="参加者04会費">
+          <label><input type="radio" name="fee04" value="未収"><span>未収</span></label>
+          <label><input type="radio" name="fee04" value="既収"><span>既収</span></label>
+          <label><input type="radio" name="fee04" value="無料"><span>無料</span></label>  
+        </form></td>
+      </tr><tr name="参加者05">
+        <td><ruby>
+          <span name="参加者05氏名">嶋津　悠奈</span>
+          <rt name="参加者05カナ">シマヅ　ユウナ</rt>
+        </ruby></td>
+        <td name="参加者05所属">卒業生</td>
+        <td><form name="参加者05会費">
+          <label><input type="radio" name="fee05" value="未収"><span>未収</span></label>
+          <label><input type="radio" name="fee05" value="既収"><span>既収</span></label>
+          <label><input type="radio" name="fee05" value="無料"><span>無料</span></label>  
+        </form></td>
+      </tr></tbody></table>
+
+      <h2>その他</h2>
+      <div class="c14">申込者の参加</div>
+      <div class="c4d" name="申込者の参加">参加予定(宿泊あり)</div>
+      <div class="c14">宿泊、テント</div>
+      <div class="c4d" name="宿泊、テント">宿泊する(テントあり)</div>
+      <div class="c14">引取者氏名</div>
+      <div class="c4d" name="引取者氏名">申込者が参加して帰宅時の付添もするのでお迎えは不要</div>
+      <div class="c14">備考</div>
+      <div class="c4d" name="備考">(無記入)</div>
+      <div class="c14">メモ</div>
+      <div><textarea name="memo" placeholder="受付時等にスタッフが記入"></textarea></div>
+
+      <div name="button">
+        <button name="cancel">取消</button>
+        <button name="update">更新</button>
+        <button name="updall">全員<br>受領</button>
+      </div>
+    </div>
+    </div></div>
+    <div data-BurgerMenu="id:'参加者集計'">
+      <h1>参加者集計</h1>
+<div class="summaryTable" title="table01" data-st="&quot;f&quot;:[&quot;entries inner join members on entries.entryNo=members.entryNo&quot;,&quot;entries&quot;]">
+
+  <!-- 左上空白部分 -->
+  <div style="grid-column:1/3;grid-row:1/4;"></div>
+
+  <!-- X軸(class="x") -->
+  <div data-st="&quot;cl&quot;:&quot;x l1&quot;,&quot;rc&quot;:&quot;1/4-3/9&quot;,&quot;w&quot;:&quot;isCancel=false&quot;">参加予定</div>
+  <div data-st="&quot;cl&quot;:&quot;x l2&quot;,&quot;rc&quot;:&quot;2/4-4/9&quot;,&quot;w&quot;:&quot;isCancel=false and isOyaji=false&quot;">一般参加</div>
+  <div data-st="&quot;cl&quot;:&quot;x l3&quot;,&quot;rc&quot;:&quot;3/4-5/6&quot;,&quot;w&quot;:&quot;isCancel=false and isOyaji=false and `宿泊、テント`=\&quot;宿泊する(テントあり)\&quot;&quot;">テント</div>
+  <div data-st="&quot;cl&quot;:&quot;x l3&quot;,&quot;rc&quot;:&quot;3/4-6/7&quot;,&quot;w&quot;:&quot;isCancel=false and isOyaji=false and `宿泊、テント`=\&quot;宿泊する(テントなし)\&quot;&quot;">体育館</div>
+  <div data-st="&quot;cl&quot;:&quot;x l3&quot;,&quot;rc&quot;:&quot;3/4-7/8&quot;,&quot;w&quot;:&quot;isCancel=false and isOyaji=false and `宿泊、テント`=\&quot;宿泊しない\&quot;&quot;">日帰り</div>
+  <div data-st="&quot;cl&quot;:&quot;x l2&quot;,&quot;rc&quot;:&quot;2/4-8/9&quot;,&quot;w&quot;:&quot;isCancel=false and isOyaji=true&quot;">おやじの会</div>
+  <div data-st="&quot;cl&quot;:&quot;x l1&quot;,&quot;rc&quot;:&quot;1/4-9/12&quot;,&quot;w&quot;:&quot;isCancel=true&quot;">キャンセル</div>
+  <div data-st="&quot;cl&quot;:&quot;x l2&quot;,&quot;rc&quot;:&quot;2/4-10/11&quot;,&quot;w&quot;:&quot;isCancel=true and isOyaji=false&quot;">一般参加</div>
+  <div data-st="&quot;cl&quot;:&quot;x l2&quot;,&quot;rc&quot;:&quot;2/4-11/12&quot;,&quot;w&quot;:&quot;isCancel=true and isOyaji=true&quot;">おやじの会</div>
+
+  <!-- Y軸(class="y") -->
+  <div data-st="&quot;cl&quot;:&quot;y l1&quot;,&quot;rc&quot;:&quot;4/5-1/3&quot;,&quot;f&quot;:1">申込口数</div><!-- 口数ベースなのでfrom句パターンNo.1を指定 -->
+  <div data-st="&quot;cl&quot;:&quot;y l1&quot;,&quot;rc&quot;:&quot;5/15-1/3&quot;">申込人数</div>
+  <div data-st="&quot;cl&quot;:&quot;y l2&quot;,&quot;rc&quot;:&quot;6/7-2/3&quot;,&quot;w&quot;:&quot;`所属`=\&quot;未就学児\&quot;&quot;">未就学児</div>
+  <div data-st="&quot;cl&quot;:&quot;y l2&quot;,&quot;rc&quot;:&quot;7/8-2/3&quot;,&quot;w&quot;:&quot;`所属`=\&quot;1年生\&quot;&quot;">1年生</div>
+  <div data-st="&quot;cl&quot;:&quot;y l2&quot;,&quot;rc&quot;:&quot;8/9-2/3&quot;,&quot;w&quot;:&quot;`所属`=\&quot;2年生\&quot;&quot;">2年生</div>
+  <div data-st="&quot;cl&quot;:&quot;y l2&quot;,&quot;rc&quot;:&quot;9/10-2/3&quot;,&quot;w&quot;:&quot;`所属`=\&quot;3年生\&quot;&quot;">3年生</div>
+  <div data-st="&quot;cl&quot;:&quot;y l2&quot;,&quot;rc&quot;:&quot;10/11-2/3&quot;,&quot;w&quot;:&quot;`所属`=\&quot;4年生\&quot;&quot;">4年生</div>
+  <div data-st="&quot;cl&quot;:&quot;y l2&quot;,&quot;rc&quot;:&quot;11/12-2/3&quot;,&quot;w&quot;:&quot;`所属`=\&quot;5年生\&quot;&quot;">5年生</div>
+  <div data-st="&quot;cl&quot;:&quot;y l2&quot;,&quot;rc&quot;:&quot;12/13-2/3&quot;,&quot;w&quot;:&quot;`所属`=\&quot;6年生\&quot;&quot;">6年生</div>
+  <div data-st="&quot;cl&quot;:&quot;y l2&quot;,&quot;rc&quot;:&quot;13/14-2/3&quot;,&quot;w&quot;:&quot;`所属`=\&quot;卒業生\&quot;&quot;">卒業生</div>
+  <div data-st="&quot;cl&quot;:&quot;y l2&quot;,&quot;rc&quot;:&quot;14/15-2/3&quot;,&quot;w&quot;:&quot;`所属`=\&quot;保護者\&quot;&quot;">保護者</div>
+
+</div>
+    </div>
+    <div data-BurgerMenu="id:'お気づきの点',func:'awareness'"></div>
+    <!--div data-BurgerMenu="id:'写真共有'">
+      <h1>写真共有</h1>
+    </div-->
+    <div data-BurgerMenu="id:'リンク集'">
+      <h1>リンク集</h1>
+<div class="LinkCollection">
+
+    <!-- 「困ったときは」(FAQサイト) -->
+    <div class="title" data-assign="innerText:faq.title"></div>
+    <div class="tr">
+      <div>
+        <p><span data-assign="innerText:faq.view"></span> 
+          [<a data-assign="href:faq.view" target="_blank">jump</a>]</p>
+        <p>短縮URL : <span data-assign="innerText:faq.shortView"></span></p>
+      </div>
+      <div><img data-assign="src:faq.qrcode"></div>
+    </div>
+    
+    <!-- 一般公開サイト -->
+    <div class="title" data-assign="innerText:public.title"></div>
+    <div class="tr">
+      <div>
+        <p><span data-assign="innerText:public.API"></span> 
+          [<a data-assign="href:public.API" target="_blank">jump</a>]</p>
+        <p>短縮URL : <span data-assign="innerText:public.shortAPI"></span></p>
+      </div>
+      <div><img data-assign="src:public.qrcode"></div>
+    </div>
+    
+    <!-- スタッフ専用サイト -->
+    <div class="title" data-assign="innerText:master.title"></div>
+    <div class="tr">
+      <div>
+        <p><span data-assign="innerText:master.API"></span> 
+          [<a data-assign="href:master.API" target="_blank">jump</a>]</p>
+        <p>短縮URL : <span data-assign="innerText:master.shortAPI"></span></p>
+      </div>
+      <div><img data-assign="src:master.qrcode"></div>
+    </div>
+    
+    <!-- 参加申込フォーム -->
+    <div class="title" data-assign="innerText:entry.title"></div>
+    <div class="tr">
+      <div>
+        <p><span data-assign="innerText:entry.view"></span> 
+          [<a data-assign="href:entry.view" target="_blank">jump</a>]</p>
+        <p>短縮URL : <span data-assign="innerText:entry.shortView"></span></p>
+      </div>
+      <div><img data-assign="src:entry.qrcode"></div>
+    </div>
+    
+    <!-- ボランティア募集フォーム -->
+    <div class="title" data-assign="innerText:volunteer.title"></div>
+    <div class="tr">
+      <div>
+        <p><span data-assign="innerText:volunteer.view"></span> 
+          [<a data-assign="href:volunteer.view" target="_blank">jump</a>]</p>
+        <p>短縮URL : <span data-assign="innerText:volunteer.shortView"></span></p>
+      </div>
+      <div><img data-assign="src:volunteer.qrcode"></div>
+    </div>
+    
+    <!-- 参加者アンケートフォーム -->
+    <div class="title" data-assign="innerText:participantEnquete.title"></div>
+    <div class="tr">
+      <div>
+        <p><span data-assign="innerText:participantEnquete.view"></span> 
+          [<a data-assign="href:participantEnquete.view" target="_blank">jump</a>]</p>
+        <p>短縮URL : <span data-assign="innerText:participantEnquete.shortView"></span></p>
+      </div>
+      <div><img data-assign="src:participantEnquete.qrcode"></div>
+    </div>
+    
+    <!-- 気づき投稿フォーム -->
+    <div class="title" data-assign="innerText:awareness.title"></div>
+    <div class="tr">
+      <div>
+        <p><span data-assign="innerText:awareness.view"></span> 
+          [<a data-assign="href:awareness.view" target="_blank">jump</a>]</p>
+        <p>短縮URL : <span data-assign="innerText:awareness.shortView"></span></p>
+      </div>
+      <div><img data-assign="src:awareness.qrcode"></div>
+    </div>
+    
+    <!-- おやじの会ML登録 -->
+    <div class="title" data-assign="innerText:oyajiML.title"></div>
+    <div class="tr">
+      <div>
+        <p><span data-assign="innerText:oyajiML.view"></span> 
+          [<a data-assign="href:oyajiML.view" target="_blank">jump</a>]</p>
+        <p>短縮URL : <span data-assign="innerText:oyajiML.shortView"></span></p>
+        <p>登録確認 : <span data-assign="innerText:oyajiML.confirm"></span> 
+          [<a data-assign="href:oyajiML.confirm" target="_blank">jump</a>]</p>
+      </div>
+      <div><img data-assign="src:oyajiML.qrcode"></div>
+    </div>
+    
+  </div>
+    </div>
+  </div>
 </body>
 <script type="text/javascript" title="library">
 /** HTMLElementを生成する
@@ -141,7 +448,9 @@ class encryptedQuery {
    * === client/server両方で使用するパラメータ ==================
    * @param {boolean} arg.isClient=true - 動作環境。true:クライアント側、false:サーバ側
    * @param {string} arg.storageKey - DocumentProperties/sessionStorageのキー文字列
-   * @param {string} [arg.upv='n'] - URLパラメータ(クエリ文字列)の変数名(URL Parameter Variable)
+   * @param {string} arg.pUP='x' - 平文送信時のURLクエリパラメータの変数名(Plain URL Parameter)
+   * @param {string} arg.eUP='y' - 暗号文〃(encrypted URL Parameter)
+   * @param {number} arg.expire=172800000 - クライアント側鍵の有効期間。既定値48時間
    * === clientでのみ使用するパラメータ ==================
    * @param {string} arg.url - 問合せ先(server=WebAPI)のURL
    * @param {number|string} arg.clientId - クライアントのID。例：受付番号(entryNo)
@@ -152,12 +461,6 @@ class encryptedQuery {
    * @param {string} arg.CPcol - 当該シート上でユーザ側公開鍵を保持する欄名。ex.'CPkey'
    * @param {string} arg.upv - URLクエリパラメータ文字列。URL Parameter Variable
    * @returns 
-   * 
-   * 
-   * @param {string|Object} [CSkey] - クライアント側の秘密鍵。文字列ならcryptico.toJSON()で出力された文字列
-   * @param {string} [CPkey] - クライアント側の公開鍵
-   * @param {string|Object} [SSkey] - サーバ側の秘密鍵。文字列ならcryptico.toJSON()で出力された文字列
-   * @param {string} [arg.SPkey] - サーバ側の公開鍵
    * 
    */
   constructor(arg){
@@ -174,6 +477,9 @@ class encryptedQuery {
         } else {
           throw new Error(`${this.isClient?'sessionStorage':'DocumentProperties'}のキー文字列が指定されていません`);
         }
+        this.pUP = arg.pUP || 'x';
+        this.eUP = arg.eUP || 'y';
+        this.expire = arg.expire || 172800000;
       })();
 
       if( this.isClient ){  v.step = 2; // 実行環境がクライアント側の場合の鍵ペア設定
@@ -280,11 +586,11 @@ class encryptedQuery {
       }
 
       v.step = 1.5; // URLセーフ化
-      v.param = encodeURIComponent(v.str); //this.encURL(v.str);
+      v.param = encodeURIComponent(v.str);
       vlog(v,'param');
 
       v.step = 1.6; // WebAPI+paramでURL作成
-      v.url = `${this.url}?${v.isPlain?'p':'c'}=${v.param}`;
+      v.url = `${this.url}?${v.isPlain ? this.pUP : this.eUP}=${v.param}`;
       vlog(v,'url');
 
 
@@ -386,12 +692,20 @@ class encryptedQuery {
       // -------------------------------------------------
 
       v.step = 1.1; // 引数(e.parameter)が平文か暗号文か判定
-      v.isPlain = arg.hasOwnProperty('p') ? true : false;
-      v.str = arg[v.isPlain?'p':'c'];
-      vlog(v,'str');
+      v.keys = Object.keys(arg);
+      if( v.keys.length === 1 && v.keys.indexOf(this.pUP) >= 0 ){
+        v.isPlain = true;
+        v.str = arg[this.pUP];
+      } else if( v.keys.length === 1 && v.keys.indexOf(this.eUP) >= 0 ){
+        v.isPlain = false;
+        v.str = arg[this.eUP];
+      } else {
+        throw new Error('Invalid URL query parameter');
+      }
+      vlog(v,['isPlain','str']);
 
       v.step = 1.2;  // URLセーフ解除
-      v.cipher = decodeURIComponent(v.str); //this.decURL(v.str);
+      v.cipher = decodeURIComponent(v.str);
       vlog(v,'cipher');
 
       v.step = 1.3;  // 暗号文なら復号
@@ -432,6 +746,7 @@ class encryptedQuery {
         user: v.user,
         id: v.obj.id,
         arg: v.obj.arg,
+        expire: this.expire,
       }
       vlog(v,'arg');
 
@@ -535,20 +850,6 @@ class encryptedQuery {
     const sv = text => Utilities.newBlob(Utilities.base64Decode(text, Utilities.Charset.UTF_8)).getDataAsString();
 
     return this.isClient ? cl(text) : sv(text);
-  }
-
-  /** encURL:文字列をURLセーフ化、decURL:URLセーフ化された文字列を復元
-   * 
-   * @param {string} text - 変換対象文字列
-   * @returns {string} 変換結果
-   * 
-   * - Zenn [URLセーフなBase64エンコーディングとデコーディング](https://zenn.dev/jusanz/articles/d6cec091d45657)
-   */
-  encURL(text){
-    return text.replace(/=/g, "~").replace(/\+/g, "-").replace(/\//g, "_");
-  }
-  decURL(text){
-    return text.replace(/~/g,"=").replace(/-/g, "+").replace(/_/g, "/");
   }
 
   /** objectizeJSON: 文字列がJSONか判定、parse結果かnullを返す
@@ -823,7 +1124,7 @@ window.addEventListener('DOMContentLoaded',async () => {
       v.loading.show();
 
       v.step = 1.2; v.conf = // 設定情報(v.conf)の作成
-{"storageKey":"camp2024","masterAPI":"https://script.google.com/macros/s/AKfycbywHlYXcUAhnnZ3aQ8ZtHygLCoKf29P_2FGDcdW4gaiq-k1j74z1F-1I3EEe4aHbbi2/exec","masterSheetName":"master","entryFormQR":"view","volunteerQR":"view","upv":"n","isClient":true}
+{"sys":{"underDev":false,"storageKey":"config","staffML":"skz-oyaji@googlegroups.com","adminMail":"shimokitasho.oyaji@gmail.com","qrserver":"https://api.qrserver.com/v1/create-qr-code/?data=","qrSize":"&size=200x200","upv":"n","isClient":false},"publicSite":{"title":"一般公開サイト","type":"site","url":"https://nakaone.github.io/public/camp2024/index.html","shortURL":"https://tinyurl.com/2b9lymoc","qr":"url"},"staffSite":{"title":"スタッフ専用サイト","type":"site","url":"https://nakaone.github.io/public/camp2024/staff.html","shortURL":"https://tinyurl.com/2aovhf8r","qr":"url"},"master":{"title":"「管理局」スプレッドシート","type":"spread","spread":"https://docs.google.com/spreadsheets/d/1TVoLfxJ4Ch884ZJ8vOoBUGj8HOWqXKfg742wxaVBb18/edit","sheetName":"master","IDcol":"entryNo","CPcol":"CPkey","deployId":"AKfycbywHlYXcUAhnnZ3aQ8ZtHygLCoKf29P_2FGDcdW4gaiq-k1j74z1F-1I3EEe4aHbbi2","API":"https://script.google.com/macros/s/AKfycbywHlYXcUAhnnZ3aQ8ZtHygLCoKf29P_2FGDcdW4gaiq-k1j74z1F-1I3EEe4aHbbi2/exec","headId":"AKfycbz68wWQbyN6DSbbKt3MQrMldoUpaT3cDonHBZ7_BeOK","devAPI":"https://script.google.com/macros/s/AKfycbz68wWQbyN6DSbbKt3MQrMldoUpaT3cDonHBZ7_BeOK/dev","bits":1024,"cols":{"timestamp":"タイムスタンプ","mail":"メールアドレス","auth":"authority","CPkey":"CPkey","id":"entryNo","trial":"trial","editURL":"editURL"}},"entry":{"title":"参加申込フォーム","type":"form","formId":"1CfYByT_O_s7s2fPS76hIEpLfJqdenx5FdAdP7wR2DYY","edit":"https://docs.google.com/forms/d/1CfYByT_O_s7s2fPS76hIEpLfJqdenx5FdAdP7wR2DYY/edit","view":"https://docs.google.com/forms/d/e/1FAIpQLSfKJ5aUz4h6lTGlz6c3NjPyWMnViVQxHqwRkCnzJsRKfz9ULQ/viewform","shortView":"https://tinyurl.com/2dbjtqke","sheetName":"master","qr":"view","receiptMail":"{\"recipient\":\"::メールアドレス::\",\"subject\":\"[連絡] 校庭キャンプ2024 申込受付\",\"body\":null,\"options\":{\"attachments\":null,\"bcc\":null,\"cc\":null,\"from\":null,\"htmlBody\":\"<head><style type=\\\"text/css\\\">\\n .button {\\n display : inline-block;\\n border-radius : 5%; /* 角丸 */\\n font-size : 18pt; /* 文字サイズ */\\n text-align : center; /* 文字位置 */\\n cursor : pointer; /* カーソル */\\n padding : 12px 12px; /* 余白 */\\n background : #6666ff; /* 背景色 */\\n color : #ffffff; /* 文字色 */\\n line-height : 1em; /* 1行の高さ */\\n transition : .3s; /* なめらか変化 */\\n box-shadow : 2px 2px 3px #666666; /* 影の設定 */\\n border : 2px solid #6666ff; /* 枠の指定 */\\n }\\n .button:hover {\\n box-shadow : none; /* カーソル時の影消去 */\\n color : #6666ff; /* 背景色 */\\n background : #ffffff; /* 文字色 */\\n }\\n </style></head><body>\\n <p>To: <span style=\\\"font-size:2rem\\\">::申込者氏名::</span> 様</p>\\n \\n <p>下北沢小おやじの会です。<br>\\n この度は「校庭キャンプ2024」にお申し込みいただき、ありがとうございました。<br>\\n 以下のようにお申し込みを受け付けましたのでご連絡致します。</p>\\n <p style=\\\"font-size:2rem\\\">受付番号：::entryNo::</p>\\n <p><img src=\\\"https://api.qrserver.com/v1/create-qr-code/?data=::entryNo::\\\" /></p>\\n <p>※ 上のQRコードはイベント当日受付でお示しください。</p>\\n \\n <hr>\\n \\n <p>当日の予定表や会場マップ、注意事項等を掲載したパンフレットを以下に掲載しています。\\n 事前にご確認いただけますようお願いします。</p>\\n <p><a class=\\\"button\\\" href=\\\"https://nakaone.github.io/public/camp2024/index.html&n=::entryNo::\\\" target=\\\"_blank\\\">パンフレット</a></p>\\n \\n <p>台風接近等の事情によりイベントが中止になる場合、このサイトで告知すると共に、\\n お申し込みいただいたe-mailアドレス宛にご連絡差し上げます。</p>\\n\\n <hr>\\n \\n <p>申込〜イベント当日の間に何らかの事情でお申し込み内容に変更がある場合、\\n またはお申し込み自体をキャンセルする場合、以下から申込内容を修正いただけますようお願いします。</p>\\n <p><a class=\\\"button\\\" href=\\\"::editURL::\\\" target=\\\"_blank\\\">申込内容修正</a></p>\\n \\n <hr>\\n \\n <p>ご不明な点がございましたら、以下までご連絡お願いいたします。<br>skz-oyaji@googlegroups.com</p>\\n \\n <p>それでは当日のご来場をお待ちしております。</p>\\n \\n <p style=\\\"text-align:right\\\">以上</p></body>\",\"inlineImages\":null,\"name\":\"下北沢小おやじの会\",\"replyTo\":\"skz-oyaji@googlegroups.com\"}}"},"volunteer":{"title":"ボランティア募集フォーム","type":"form","edit":"https://docs.google.com/forms/d/1M-n09_cCfbjnE4ZYeu5lClGDycoqAos1xxw9Ry7giDk/edit","view":"https://docs.google.com/forms/d/e/1FAIpQLSeIr2VFqnxm_c7qgzQ-cD7rz_obus7OD0dvZWrui9j0v_cD2Q/viewform","shortView":"https://tinyurl.com/29rl5vof","sheetName":"ボランティア募集","qr":"view"},"participantEnquete":{"title":"参加者アンケート","type":"form","edit":"https://docs.google.com/forms/d/1LPvt4n57DpvYYRtuddjHm37kSmAio6slB3MYvtJet38/edit","view":"https://docs.google.com/forms/d/e/1FAIpQLSf8CsE6x3UxIFTyD7Pe1nQczq227LDmv9ypJ5kbDLmwnzjJXQ/viewform","shortView":"https://tinyurl.com/24s7tce6","sheetName":"参加者アンケート","qr":"view"},"awareness":{"title":"気づき投稿フォーム","type":"form","edit":"https://docs.google.com/forms/d/1E6C8N_H0i1WU0UfG4Tn4cECWOyZbjgYqhQzpzRtqjpQ/edit","view":"https://docs.google.com/forms/d/e/1FAIpQLSefyvYCjtTUuLaZqCG7c6k9sjnCXucsSjxhHppXWFqzhC0lRg/viewform","shortView":"https://tinyurl.com/2bpg2kga","sheetName":"気づき投稿","qr":"view"},"oyajiML":{"title":"おやじの会ML登録","type":"form","edit":"https://docs.google.com/forms/d/1wq0M7p2SCacwm3uzYAiTLr5OazMVBURjjd0I3TdtaT4/edit","view":"https://docs.google.com/forms/d/e/1FAIpQLSfbqa_vRBQYjsn2cYkPHbsc2-xSa0AFU6AwgZMIMKAKPxcyEQ/viewform","shortView":"https://tinyurl.com/23hgkfv4","sheet":"https://docs.google.com/spreadsheets/d/1ns1GRROPVIDc_s2ov2lLjbudxh0uUeOzws5bOA0_ojo/edit","confirm":"https://nakaone.github.io/library/oyajiML/1.0.0/index.html","email":"skz-oyaji@googlegroups.com","qr":"view"},"faq":{"title":"「困ったときは」(FAQサイト)","type":"site","edit":"https://sites.google.com/d/1cq0aV06FVKKeGFb4SQeEiYZjDPg5rnkL/p/1gtzJU8YHbtsR3tfrWeIPy6gB6IdCiIKU/edit","view":"https://sites.google.com/view/skz-camp2024faq/","shortView":"https://tinyurl.com/27n7sj5b","qr":"view"}}
       vlog(v,'conf');
 
       v.step = 1.3; // 受付番号の特定
@@ -872,34 +1173,34 @@ window.addEventListener('DOMContentLoaded',async () => {
         v.step = 3.2; // パスコード有効性検証要求
         v.r = await v.eq.request(Number(v.passcode));
         if( v.r instanceof Error ) throw v.r;
+        vlog(v,'r');
 
         switch( v.r.status ){
           case 1: // 正当性検証OK ⇒ シート全情報をsessionStorageに保存
-            sessionStorage.setItem(v.storageKey,{
+            sessionStorage.setItem(v.conf.storageKey,JSON.stringify({
               header:v.r.header,
               data:v.r.data,
               expire: v.r.expire,
-            });
+            }));
+            v.cnt = 3;
             break;
           case 0: // 検証NGだが再試行可 ⇒ 入力値をクリアしてもう一度
             v.passcode = null;
             v.msg = v.r.message;
             break;
           default: // エラー ⇒ メッセージを出して終了
-            alert(v.r.message);
             throw new Error(v.r.message);      
         }
       } else {
         // ダイアログでキャンセルされた場合、内容を消去して終了
         v.loading.hide();
-        //document.querySelector('.BurgerMenu[name="wrapper"]').innerHTML = '';
-        //document.querySelectorAll('script').forEach(dom => dom.innerHTML = '');
+        document.querySelector('.BurgerMenu[name="wrapper"]').innerHTML = '';
+        document.querySelectorAll('script').forEach(dom => dom.innerHTML = '');
         throw new Error('スタッフ専用サイトは認証が必要です');
       }
     }
 
-    /*
-    (()=>{  v.step = 3; // 受付業務の準備
+    (()=>{  v.step = 4; // 受付業務の準備
       // v.rにシートデータが入っていること
       v.Reception = new Reception({
         wrapper: '.Reception[name="wrapper"]',
@@ -914,7 +1215,7 @@ window.addEventListener('DOMContentLoaded',async () => {
       if( v.Reception instanceof Error ) throw v.Reception;
     })();
 
-    (()=>{  v.step = 4; // メニュー作成
+    (()=>{  v.step = 5; // メニュー作成
       // ※Receptionインスタンス作成後に実行
       v.menu = new BurgerMenu({home:'ホーム',func:{
         recept: async () => {  // 受付番号or検索キー入力
@@ -923,7 +1224,6 @@ window.addEventListener('DOMContentLoaded',async () => {
         },
       }});
     })();
-    */
 
     v.step = 99; // 終了処理
     v.loading.hide();
