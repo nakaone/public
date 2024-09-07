@@ -1,10 +1,159 @@
 <!DOCTYPE html><html xml:lang="ja" lang="ja"><head>
 <title>camp2024(スタッフ)</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<!--link rel="stylesheet" href="style.css"-->
-<style type="text/css">/*:x:CSS::*/</style>
-<!--:x:CDN::-->
-<!--script src="" type="text/javascript"></script-->
+<!-- QRコード検出 --><script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+<!-- alasql --><script src="https://cdn.jsdelivr.net/npm/alasql@4.5.1/dist/alasql.min.js"></script>
+<style type="text/css">
+html {
+  font-size: 24pt;
+  font:helvetica,arial,freesans,clean,sans-serif;
+  line-height: 1.5rem;
+  color: black;
+  box-sizing: border-box;
+  width: 100vw;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  -webkit-text-size-adjust: none;
+  -moz-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+.right, .num {text-align: right;}
+/*
+  ヘッダ関係
+*/
+h1,h2,h3,h4,h5,h6 {border: 0;}
+h1 {
+  margin: 1rem;
+  width: calc(100% - 2rem);
+  font-size: 170%;
+  text-shadow: #8ff 3px 3px 15px;
+  font-weight: 900;
+}
+h2, h3 {margin: 1rem 0;}
+h2 {
+  font-size: 150%;
+  margin-top: 1.5rem;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.5rem;
+}
+/*
+  テーブル関係
+*/
+th, .th {padding: 0.3rem;background-color: #888;color: white;}
+td, .td {padding: 0.3rem;border-bottom: solid 1px #aaa;border-right: solid 1px #aaa;}
+/*
+  リスト関係
+*/
+ul, ol {margin: 1rem 0 1rem 2rem;}
+li {margin-top: 0.5rem;margin-bottom: 0.5rem;}
+/*
+  ソース表示
+*/
+code {
+  background-color: #f8f8ff;
+  color: #444;
+  padding: 0 0.2rem;
+  border: 1px solid #dedede;
+}
+pre {border: solid 5px #999;}
+/* Reception共通 */
+  .Reception div {display: grid;}
+  .Reception rt {font-size: 0.6rem;}
+  .Reception dialog {margin: auto;box-shadow: 0 0 1rem black;padding: 1rem;}
+  .Reception dialog::backdrop {background-color: #ddd;/*backdrop-filter: blur(8px);*/}
+
+  /* scanner領域 */
+  .Reception [name="scanner"] [name="keyword"] {display: block;margin:1rem;}
+  .Reception [name="scanner"] [name="keyword"] input {display: inline-block;margin-right: 1rem;font-size: 2rem;}
+  .Reception [name="scanner"] [name="keyword"] button {display: inline-block;font-size: 2rem;}
+  .Reception [name="scanner"] dialog .act {background-color: #ddd;}
+
+  /* detail領域 */
+  .Reception [name="detail"] {padding:1rem;grid-template-columns: repeat(12, 1fr);}
+  .Reception [name="detail"] h2 {margin:0.5rem 0;padding: 0.5rem 1rem;border-left: 5px solid #000;background: #f4f4f4;grid-column: 1/13;}
+  .Reception [name="detail"] div {grid-column: 1/13;}
+  /* detail領域 申込情報 */
+  .Reception [name="detail"] [name="キャンセル"] {margin:2rem 0;font-size:3rem; color:red;}
+  .Reception [name="detail"] .c19 {grid-column: 1/9;} /* column 1 to 9 */
+  .Reception [name="detail"] .c9d {grid-column: 9/13;grid-row: 3/7;} /* column 9 to 13(=0x0d) */
+  .Reception [name="detail"] ruby.big span {font-size: 1.5rem;}
+  .Reception [name="detail"] rt.big {font-size: 1rem;}
+  .Reception [name="detail"] img {margin:auto;}
+  .Reception [name="detail"] sub {font-size:0.8rem;text-align: center;}
+  /* detail領域 参加者情報 */
+  .Reception [name="detail"] table {grid-column: 1/13}
+  .Reception [name="detail"] td {border: none;}
+  .Reception [name="detail"] input {margin:0 0.6rem;transform: scale(3.0);}
+  /* detail領域 その他 */
+  .Reception [name="detail"] .c14 {grid-column: 1/4;}
+  .Reception [name="detail"] .c4d {grid-column: 4/13;margin-bottom: 0.6rem;}
+  .Reception [name="detail"] textarea {height: 5rem;}
+  /* detail領域 ボタン */
+  .Reception [name="detail"] [name="button"] { margin: 1rem;
+    grid-column: 1/13; grid-template-columns: repeat(3, 1fr); gap: 1rem;}
+  .Reception [name="detail"] [name="button"] button {
+    width:100%; aspect-ratio: 1/1; font-size: 2rem;}
+.summaryTable {
+  display: grid;
+  grid-template-columns: 1rem 5rem repeat(9, 4rem);
+  grid-template-rows: repeat(11, 1.5rem);
+  gap: 0.2rem;
+  margin: 1rem;
+}
+.summaryTable div {
+  padding: 0.2rem;
+  border-top: solid 1px #aaa;
+  border-left: solid 1px #aaa;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+.summaryTable .l1, .summaryTable .l2, .summaryTable .l3 {
+  background: #eee;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: normal;
+}
+.summaryTable .l1 {z-index: 1;}
+.summaryTable .l2 {z-index: 2;}
+.summaryTable .l3 {z-index: 3;}
+.LinkCollection .title {
+  margin: 2rem 20px 10px 20px;
+  padding: 10px;
+  width: calc(100% - 60px);
+  background: #ddd;
+  font-size: 1.4rem;
+  font-weight: 900;
+}
+.LinkCollection .tr {
+  margin: 20px;
+  padding: 20px;
+  width: calc(100% - 80px);
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr 200px;
+}
+.LinkCollection p {
+  margin-bottom: 1rem;
+  font-family: serif;
+}
+.LinkCollection img {
+  width: 200px;
+  height: 200px;
+}
+</style>
 </head>
 <body>
   <div class="BurgerMenu" name="wrapper">
@@ -317,6 +466,550 @@
   </div>
 </body>
 <script type="text/javascript" title="library">
+/** assignVariables: 位置指定属性を持つHTML要素に変数を代入する
+ * 
+ * @example
+ * 
+ * ```
+ * <a data-assing="href:public.refURL,innerText:title"></a>
+ * <img data-assing="src:public.refQR" />
+ * 
+ * let r = assignVariables({
+ *   attribute: 'data-assign',
+ *   data: {
+ *     title  : '参考資料',
+ *     public: {
+ *       refURL : 'https://〜',
+ *       refQR  : 'https://api.qrserver.com/〜?data=' + 'https://〜',
+ *     }
+ *   },
+ * });
+ * 
+ * <a href="https://〜">参考資料</a>
+ * <img src="https://api.qrserver.com/〜?data=https://〜" />
+ * ```
+ * 
+ * @param {Object} arg
+ * @param {string} [arg.parent='body'] - 対象範囲となる包摂要素のCSSセレクタ
+ * @param {string} [arg.attribute="data-assign"] - 位置指定属性の名称
+ * @param {Object.<string, string>} arg.data - {属性名：値}となるオブジェクト
+ * 
+ * - 1.1.0 2024/08/16 : 階層化オブジェクトに対応
+ */
+function assignVariables(arg){
+  const v = {whois:'assignVariables',step:0,rv:null};
+  console.log(`${v.whois} start.\narg=${stringify(arg)}`);
+  try {
+
+    v.step = 1; // 事前準備
+    v.arg = Object.assign({parent:'body',attribute:'data-assign'},arg);
+    v.arg.data = JSON.stringify(arg.data);  // 壊れないよう文字列化
+    v.parent = document.querySelector(v.arg.parent);
+    v.elements = v.parent.querySelectorAll('['+v.arg.attribute+']');
+
+    v.step = 2; // 対象要素毎に属性置換
+    v.elements.forEach(element => {
+
+      v.step = 2.1; // data-assign文字列をカンマで切り分け
+      v.attributes = element.getAttribute(v.arg.attribute).split(',');
+      v.attributes.forEach(attribute => {
+
+        v.step = 2.2; // m[1]=属性名、m[2]=arg.dataのメンバ名に切り分け
+        v.m = attribute.match(/(\w+)\s*:\s*([\w\.]+)/);
+
+        v.step = 2.3; // '.'で階層毎に切り分け、arg.dataの該当メンバの値をv.dataにセット
+        v.data = JSON.parse(v.arg.data);
+        v.m[2].split('.').forEach(x => v.data = v.data[x]);
+
+        v.step = 2.4; // HTML要素に適用
+        if( v.m[1].match(/inner/) ){
+          // innerText, innerHTML指定の場合
+          element[v.m[1]] = v.data;
+        } else {
+          // innerText, innerHTML以外の、属性指定の場合
+          element.setAttribute(v.m[1],v.data);
+        }
+      });
+    });
+
+    v.step = 9; // 終了処理
+    console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
+    return v.rv;
+
+  } catch(e) {
+    e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
+    console.error(`${e.message}\nv=${stringify(v)}`);
+    return e;
+  }
+}
+/**
+ * @classdesc htmlからdata-BurgerMenu属性を持つ要素を抽出、ハンバーガーメニューを作成
+ */
+class BurgerMenu {
+
+  /**
+   * @constructor
+   * @param {Object} arg 
+   * @returns {BurgerMenu|Error}
+   */
+  constructor(arg={}){
+    const v = {whois:this.constructor.name+'.constructor',rv:null,step:0};
+    console.log(`${v.whois} start.\narg=${stringify(arg)}`);
+    try {
+
+      v.step = 1; // 引数と既定値からメンバの値を設定
+      v.r = this.#setProperties(arg);
+      if( v.r instanceof Error ) throw v.r;
+
+      v.step = 2; // アイコン、ナビ、背景の作成
+      v.step = 2.1; // アイコンの作成
+      this.icon = createElement({
+        attr:{class:'icon'},
+        event:{click:this.toggle},
+        children:[{
+          tag:'button',
+          children:[{tag:'span'},{tag:'span'},{tag:'span'}],
+        }]
+      },this.wrapper);
+      v.step = 2.2; // ナビゲータの作成
+        this.navi = createElement({
+        tag:'nav',
+      },this.wrapper);
+      v.step = 2.3; // ナビゲータ背景の作成
+        this.back = createElement({
+        attr:{class:'back'},
+        event:{click:this.toggle},
+      },this.wrapper);
+
+      v.step = 3; // 親要素を走査してナビゲーションを作成
+      v.rv = this.genNavi();
+      if( v.rv instanceof Error ) throw v.rv;
+
+      v.step = 9; // 終了処理
+      changeScreen(this.home);
+      console.log(`${v.whois} normal end.`);
+  
+    } catch(e) {
+      e.message = `${v.whois} abnormal end at step.${v.step}`
+      + `\n${e.message}`
+      + `\narg=${stringify(arg)}`;  // 引数
+      console.error(`${e.message}\nv=${stringify(v)}`);
+      return e;
+    }
+  }
+
+  /** constructorの引数と既定値からthisの値を設定
+   * @param {Object} arg - constructorに渡された引数オブジェクト
+   * @returns {null|Error}
+   */
+  #setProperties(arg){
+    const v = {whois:this.constructor.name+'.setProperties',rv:null,step:0};
+    console.log(`${v.whois} start.`);
+    try {
+  
+      v.step = 1; // 既定値の定義
+      v.default = {
+        wrapper: `.${this.constructor.name}[name="wrapper"]`, // {string|HTMLElement}
+        auth: 1, // ユーザ権限の既定値
+        allow: 2 ** 32 - 1, // data-BurgerMenuのauth(開示範囲)の既定値
+        func: {}, // {Object.<string,function>} メニューから呼び出される関数
+        home: null,
+        homeForEachAuth: null, // {Object.<number,string>} ユーザ権限毎にメニューを設定するなら、auth毎に.screen[name]を設定
+        initialSubMenu: true, // サブメニューの初期状態。true:開いた状態、false:閉じた状態
+      };
+      v.default.css = `/* BurgerMenu専用CSS
+          BurgerMenu共通変数定義
+          --text: テキストおよびハンバーガーアイコンの線の色
+          --maxIndex: ローディング画面優先なので、最大値2147483647-1
+        */
+        .BurgerMenu {
+          --text : #000;
+          --fore : #fff;
+          --back : #ddd;
+          --debug : rgba(255,0,0,1);
+          --iconSize : 100px;
+          --maxIndex : 2147483646;
+          --navWidth : 0.7;
+        }
+        .BurgerMenu .screen {padding: 1rem;width: calc(100% - 2rem);}
+        /* ハンバーガーアイコン
+          icon周囲にiconSizeの40%程度の余白が必要なのでtop,rightを指定
+        */
+        .BurgerMenu .icon {
+          display : flex;
+          justify-content : flex-end;
+          place-items : center;
+          position : absolute;
+          top : calc(var(--iconSize) * 0.4);
+          right : calc(var(--iconSize) * 0.4);
+          width : var(--iconSize);
+          height : var(--iconSize);
+          z-index : var(--maxIndex);
+        }
+        .BurgerMenu .icon > button {
+          place-content : center center;
+          display : block;
+          margin : 0;
+          padding : 0px;
+          box-sizing : border-box;
+          width : calc(var(--iconSize) * 0.7);
+          height : calc(var(--iconSize) * 0.7);
+          border : none;
+          background : rgba(0,0,0,0);
+          position : relative;
+          box-shadow : none;
+        }
+        .BurgerMenu .icon button span {
+          display : block;
+          width : 100%;
+          height : calc(var(--iconSize) * 0.12);
+          border-radius : calc(var(--iconSize) * 0.06);
+          position : absolute;
+          left : 0;
+          background : var(--text);
+          transition : top 0.24s, transform 0.24s, opacity 0.24s;
+        }
+        .BurgerMenu .icon button span:nth-child(1) {
+          top : 0;
+        }
+        .BurgerMenu .icon button span:nth-child(2) {
+          top : 50%;
+          transform : translateY(-50%);
+        }
+        .BurgerMenu .icon button span:nth-child(3) {
+          top : 100%;
+          transform : translateY(-100%);
+        }
+        .BurgerMenu .icon button span.is_active:nth-child(1) {
+          top : 50%;
+          transform : translateY(-50%) rotate(135deg);
+        }
+        .BurgerMenu .icon button span.is_active:nth-child(2) {
+          transform : translate(50%, -50%);
+          opacity : 0;
+        }
+        .BurgerMenu .icon button span.is_active:nth-child(3) {
+          top : 50%;
+          transform : translateY(-50%) rotate(-135deg);
+        }
+        /* ナビゲーション領域 */
+        .BurgerMenu nav {
+          display : none;
+        }
+        .BurgerMenu nav.is_active {
+          display : block;
+          margin : 0 0 0 auto;
+          font-size : 1rem;
+          position : absolute;
+          top : calc(var(--iconSize) * 1.8);
+          right : 0;
+          width : calc(100% * var(--navWidth));
+          height : var(--iconSize);
+          z-index : var(--maxIndex);
+        }
+        .BurgerMenu nav ul {
+          margin : 0rem 0rem 1rem 0rem;
+          padding : 0rem 0rem 0rem 0rem;
+          background-color : var(--back);
+        }
+        .BurgerMenu nav ul ul { /* 2階層以降のulにのみ適用 */
+          display : none;
+        }
+        .BurgerMenu nav ul ul.is_open {
+          display : block;
+          border-top : solid 0.2rem var(--fore);
+          border-left : solid 0.7rem var(--fore);
+        }
+        .BurgerMenu nav li {
+          margin : 0.6rem 0rem 0.3rem 0.5rem;
+          padding : 0.5rem 0rem 0rem 0rem;
+          list-style : none;
+          background-color : var(--back);
+        }
+        .BurgerMenu nav li a {
+          color : var(--text);
+          text-decoration : none;
+          font-size: 1.5rem;
+        },
+        /* 背景 */
+        .BurgerMenu .back {
+          display : none;
+        }
+        .BurgerMenu .back.is_active {
+          display : block;
+          position : absolute;
+          top : 0;
+          right : 0;
+          width : 100vw;
+          height : 100vh;
+          z-index : calc(var(--maxIndex) - 1);
+          background : rgba(100,100,100,0.8);
+        }
+      `;
+      v.default.toggle = () => {  // ナビゲーション領域の表示/非表示切り替え
+        document.querySelector(`.${this.constructor.name} nav`).classList.toggle('is_active');
+        document.querySelector(`.${this.constructor.name} .back`).classList.toggle('is_active');
+        document.querySelectorAll(`.${this.constructor.name} .icon button span`)
+        .forEach(x => x.classList.toggle('is_active'));        
+      };
+      v.default.showChildren = (event) => { // ブランチの下位階層メニュー表示/非表示切り替え
+        event.target.parentNode.querySelector('ul').classList.toggle('is_open');
+        let m = event.target.innerText.match(/^([▶️▼])(.+)/);
+        const text = ((m[1] === '▼') ? '▶️' : '▼') + m[2];
+        event.target.innerText = text;  
+      };
+
+      v.step = 2; // 引数と既定値から設定値のオブジェクトを作成
+      v.arg = mergeDeeply(arg,v.default);
+      if( v.arg instanceof Error ) throw v.arg;
+
+      v.step = 3; // メンバに設定値をコピー
+      for( v.x in v.arg ) this[v.x] = v.arg[v.x];
+
+      v.step = 4; // wrapperが文字列(CSSセレクタ)ならHTMLElementに変更
+      if( typeof this.wrapper === 'string' ){
+        this.wrapper = document.querySelector(this.wrapper);
+      }
+      v.step = 5; // BurgerMenu専用CSSが未定義なら追加
+      if( !document.querySelector(`style[name="${this.constructor.name}"]`) ){
+        v.styleTag = document.createElement('style');
+        v.styleTag.setAttribute('name',this.constructor.name);
+        v.styleTag.textContent = this.css;
+        document.head.appendChild(v.styleTag);
+      }
+  
+      v.step = 6; // 終了処理
+      console.log(`${v.whois} normal end.`);
+      return v.rv;
+  
+    } catch(e) {
+      e.message = `${v.whois} abnormal end at step.${v.step}`
+      + `\n${e.message}`
+      + `\narg=${stringify(arg)}`;  // 引数
+      console.error(`${e.message}\nv=${stringify(v)}`);
+      return e;
+    }
+  }
+  
+  /** data-BurgerMenu属性の文字列をオブジェクトに変換
+   * BurgerMenu専用として、以下の制限は許容する
+   * - メンバ名は英小文字に限定
+   * - カンマは区切記号のみで、id,label,func,hrefの値(文字列)内には不存在
+   * 
+   * @param {string} arg - data-BurgerMenuにセットされた文字列
+   * @returns {Object|null|Error} 引数がnullまたは空文字列ならnullを返す
+   */
+  #objectize(arg){
+    const v = {whois:this.constructor.name+'.objectize',rv:{},step:0};
+    console.log(`${v.whois} start.`);
+    try {
+
+      v.step = 1; // nullまたは空文字列にはnullを返す
+      if( !arg || arg.length === 0 ) return null;
+
+      v.step = 2; // カンマで分割
+      v.p = arg.split(',');
+
+      v.step = 3; // 各値をオブジェクト化
+      for( v.i=0 ; v.i<v.p.length ; v.i++ ){
+        v.m = v.p[v.i].match(/^([a-z]+):['"]?(.+?)['"]?$/);
+        if( v.m ){
+          v.rv[v.m[1]] = v.m[2];
+        } else {
+          throw new Error('data-BurgerMenuの設定値が不適切です\n'+arg);
+        }
+      }
+
+      v.step = 4.1; // idの存否チェック
+      if( !v.rv.hasOwnProperty('id') )
+        throw new Error('data-BurgerMenuの設定値にはidが必須です\n'+arg);
+      v.step = 4.2; // ラベル不在の場合はidをセット
+      if( !v.rv.hasOwnProperty('label') )
+        v.rv.label = v.rv.id;
+      v.step = 4.3; // allowの既定値設定
+      v.rv.allow = v.rv.hasOwnProperty('allow') ? Number(v.rv.allow) : this.allow;
+      v.step = 4.4; // func,href両方有ればhrefを削除
+      if( v.rv.hasOwnProperty('func') && v.rv.hasOwnProperty('href') )
+        delete v.rv.href;
+      v.step = 4.5; // from/toの既定値設定
+      v.rv.from = v.rv.hasOwnProperty('from')
+        ? new Date(v.rv.from).getTime() : 0;  // 1970/1/1(UTC)
+      v.rv.to = v.rv.hasOwnProperty('to')
+        ? new Date(v.rv.from).getTime() : 253402182000000; // 9999/12/31(UTC)
+
+      v.step = 5; // 終了処理
+      console.log(`${v.whois} normal end.`);
+      return v.rv;
+  
+    } catch(e) {
+      e.message = `${v.whois} abnormal end at step.${v.step}`
+      + `\n${e.message}\narg=${stringify(arg)}`;
+      console.error(`${e.message}\nv=${stringify(v)}`);
+      return e;
+    }
+  }
+  
+  /** 親要素を走査してナビゲーションを作成
+   * @param {HTMLElement} wrapper - body等の親要素。
+   * @param {HTMLElement} navi - nav等のナビゲーション領域
+   * @param {number} depth=0 - 階層の深さ
+   * @returns {null|Error}
+   */
+  genNavi(wrapper=this.wrapper,navi=this.navi,depth=0){
+    const v = {whois:this.constructor.name+'.genNavi',rv:null,step:0,now:Date.now()};
+    console.log(`${v.whois} start.`);
+    try {
+
+      v.step = 1.1; // navi領域をクリア
+      if( depth === 0 ) navi.innerHTML = '';
+      v.step = 1.2; // auth毎にホームを変更する場合、変更
+      if( this.homeForEachAuth !== null ){
+        this.home = this.homeForEachAuth[this.auth];
+      }
+
+      // 子要素を順次走査し、data-BurgerMenuを持つ要素をnaviに追加
+      for( v.i=0 ; v.i<wrapper.childElementCount ; v.i++ ){
+        v.d = wrapper.children[v.i];
+
+        // wrapper内のdata-BurgerMenu属性を持つ要素に対する処理
+        v.step = 2.1; // data-BurgerMenuを持たない要素はスキップ
+        v.attr = this.#objectize(v.d.getAttribute(`data-${this.constructor.name}`));
+        if( v.attr instanceof Error ) throw v.attr;
+        if( v.attr === null ) continue;
+
+        v.step = 2.2; // screenクラスが無ければ追加
+        v.class = v.d.className.match(/screen/);
+        if( !v.class ) v.d.classList.add('screen'); 
+        v.step = 2.3; // nameが無ければ追加
+        v.name = v.d.getAttribute('name');
+        if( !v.name ){
+          v.name = v.attr.id;
+          v.d.setAttribute('name',v.name);
+        }
+
+        // navi領域への追加が必要か、判断
+        v.step = 3.1; // 実行権限がない機能・画面はnavi領域に追加しない
+        if( (this.auth & v.attr.allow) === 0 ) continue;
+        v.step = 3.2; // 有効期間外の場合はnavi領域に追加しない
+        if( v.now < v.attr.from || v.attr.to < v.now ) continue;
+
+        v.step = 4; // navi領域にul未設定なら追加
+        if( navi.tagName !== 'UL' ){
+          v.r = createElement({tag:'ul',attr:{class:this.constructor.name}},navi);
+          if( v.r instanceof Error ) throw v.r;
+          navi = v.r;
+        }
+
+        v.step = 5; // メニュー項目(li)の追加
+        v.li = {tag:'li',children:[{
+          tag:'a',
+          text:v.attr.label,
+          attr:{class:this.constructor.name,name:v.attr.id},
+        }]};
+        v.hasChild = false;
+        if( v.attr.hasOwnProperty('func') ){
+          v.step = 5.1; // 指定関数実行の場合
+          Object.assign(v.li.children[0],{
+            attr:{href:'#',name:v.attr.func},
+            event:{click:(event)=>{
+              this.toggle();  // メニューを閉じる
+              this.func[event.target.name](event); // 指定関数の実行
+              this.genNavi(); // メニュー再描画
+            }},
+          });
+        } else if( v.attr.hasOwnProperty('href') ){
+          v.step = 5.2; // 他サイトへの遷移指定の場合
+          Object.assign(v.li.children[0].attr,{href:v.attr.href,target:'_blank'});
+          Object.assign(v.li.children[0],{event:{click:this.toggle}}); // 遷移後メニューを閉じる
+        } else {
+          v.step = 5.3; // その他(=画面切替)の場合
+          // 子孫メニューがあるか確認
+          if( v.d.querySelector(`[data-${this.constructor.name}]`) ){
+            v.step = 5.33; // 子孫メニューが存在する場合
+            v.hasChild = true; // 再帰呼出用のフラグを立てる
+            Object.assign(v.li.children[0],{
+              // 初期がサブメニュー表示ならclassにis_openを追加
+              attr:{class:(this.initialSubMenu ? 'is_open' : '')},
+              // '▼'または'▶︎'をメニューの前につける
+              text: (this.initialSubMenu ? '▶︎' : '▼') + v.li.children[0].text,
+              event: {click:this.showChildren}
+            });
+          } else { // 子孫メニューが存在しない場合
+            v.step = 5.33; // nameを指定して画面切替
+            Object.assign(v.li.children[0],{
+              event:{click:(event)=>{
+                changeScreen(event.target.getAttribute('name'));
+                this.toggle();
+              }}
+            });
+          }
+        }
+
+        v.step = 5.4; // navi領域にliを追加
+        v.r = createElement(v.li,navi);
+        if( v.r instanceof Error ) throw v.r;
+
+        v.step = 5.5; // 子要素にdata-BurgerMenuが存在する場合、再帰呼出
+        if( v.hasChild ){
+          v.r = this.genNavi(v.d,v.r,depth+1);
+          if( v.r instanceof Error ) throw v.r;
+        }
+      }
+
+      v.step = 6; // 終了処理
+      console.log(`${v.whois} normal end.`);
+      return v.rv;
+  
+    } catch(e) {
+      e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
+      console.error(`${e.message}\nv=${stringify(v)}`);
+      return e;
+    }
+  }
+}
+/** SPA用のスクリーンの切り替え
+ * 
+ * - スクリーン(div)は`class="screen" name="xxx"`を指定
+ * - 引数の`screenName`は上述のname属性
+ * 
+ * @param {string} screenName - スクリーン名
+ * @returns {void}
+ */
+function changeScreen(screenName){
+  const v = {whois:'changeScreen',rv:null,step:0};
+  try {
+
+    v.step = 1; // 全スクリーンを閉じる
+    document.querySelectorAll('.screen').forEach(x => x.style.display = 'none');
+
+    v.step = 2; // 対象スクリーンを取得
+    v.screen = document.querySelector(`.screen[name="${screenName}"]`);
+    if( !v.screen ) throw new Error(`${screenName}が見つかりません`);
+
+    v.step = 3; // 祖先に遡ってスクリーンを表示
+    v.i = 100; // 永久ループ防止用
+    while( v.screen.tagName !== 'BODY' && v.i > 0){
+      if( v.screen.tagName === 'DIV' ){
+        v.screen.style.display = '';
+      }
+      v.screen = v.screen.parentNode;
+      v.i--;
+    }
+
+    v.step = 4; // 見つからなければエラー
+    if( v.i <= 0 ) throw new Error(`${screenName}が見つかりません`);
+
+    v.step = 5; // 終了処理
+    return v.rv;
+
+  } catch(e) {
+    e.message = `${v.whois} abnormal end at step.${v.step}`
+    + `\n${e.message}`
+    + `\nscreenName=${stringify(screenName)}`;  // 引数
+    console.error(`${e.message}\nv=${stringify(v)}`);
+    return e;
+  }
+}
 /** HTMLElementを生成する
  * @param {CEDefObj|CEDefObj[]} arg - 生成するHTMLElementの定義
  * @param {HTMLElement|string} [parent=null] - 本関数内部で親要素への追加まで行う場合に指定
@@ -964,6 +1657,463 @@ class LoadingIcon {
   /** 待機画面を隠蔽する */
   hide = () => this.screen.close();
 }
+/** 渡された変数内のオブジェクト・配列を再帰的にマージ
+ * - pri,subともデータ型は不問。次項のデシジョンテーブルに基づき、結果を返す
+ *
+ * @param {any} pri - 優先される変数(priority)
+ * @param {any} sub - 劣後する変数(subordinary)
+ * @param {Object} opt - オプション
+ * @returns {any|Error}
+ *
+ * #### デシジョンテーブル
+ *
+ * | 優先(pri) | 劣後(sub) | 結果 | 備考 |
+ * | :--: | :--: | :--: | :-- |
+ * |  A  |  -  |  A  | 優先(A)のみ存在するメンバはそのまま |
+ * |  A  |  B  |  A  | |
+ * |  A  | [B] |  A  | |
+ * |  A  | {B} |  A  | |
+ * | [A] |  -  | [A] | |
+ * | [A] |  B  | [A] | |
+ * | [A] | [B] | [X] | 配列はopt.arrayによる |
+ * | [A] | {B} | [A] | |
+ * | {A} |  -  | {A} | |
+ * | {A} |  B  | {A} | |
+ * | {A} | [B] | {A} | |
+ * | {A} | {B} | {A+B} | オブジェクトも置換ではなく結合する |
+ * |  -  |  -  |  -  | |
+ * |  -  |  B  |  B  | |
+ * |  -  | [B] | [B] | |
+ * |  -  | {B} | {B} | |
+ *
+ * #### opt.array : pri,sub双方配列の場合の処理方法を指定
+ *
+ * 例 pri:[1,2,{x:'a'},{a:10,b:20}], sub:[1,3,{x:'a'},{a:30,c:40}]
+ *
+ * - pri(priority): 単純にpriをセット。subは全て廃棄 ⇒ [1,2,{x:'a'},{a:10,b:20}]
+ * - add: 値の重複に拘わらず、pri+subを返す ⇒ [1,2,{x:'a'},{a:10,b:20},1,3,{x:'a'},{a:30,c:40}]
+ * - set(既定値): priに無いsubの要素をpriに追加 ⇒ [1,2,3,{x:'a'},{x:'a'},{a:10,b:20},{a:30,c:40}]
+ *   ※`{x:'a'}`は別オブジェクトなので、重複排除されない事に注意。関数、Date等のオブジェクトも同様。
+ * - str(strict): priに無いsubの要素をpriに追加。setと異なり、内容が同値なら重複排除<br>
+ *   ⇒ [1,2,3,{x:'a'},{a:10,b:20},{a:30,c:40}]
+ * - cmp(未実装): pri[n]とsub[n]を比較(comparison)。原則pri優先だが、例外として両方がObj or Arrならマージ<br>
+ *   ⇒ [1,2,{x:'a'},{a:10,b:20,c:40}]
+ */
+function mergeDeeply(pri,sub,opt={}){
+  const v = {whois:'mergeDeeply',rv:null,step:0,
+    isObj: arg => arg && String(Object.prototype.toString.call(arg).slice(8,-1)) === 'Object',
+    isArr: arg => arg && Array.isArray(arg),
+  };
+  //console.log(`${v.whois} start.`+`\npri=${stringify(pri)}`+`\nsub=${stringify(sub)}`+`\nopt=${stringify(opt)}`);
+  try {
+
+    v.step = 1; // 既定値の設定
+    if( !opt.hasOwnProperty('array') ) opt.array = 'set';
+
+    if( v.isObj(pri) && v.isObj(sub) ){
+      v.step = 2; // sub,pri共にハッシュの場合
+      v.rv = {};
+      v.step = 2.1; // 優先・劣後Obj両方のハッシュキー(文字列)を、重複しない形でv.keysに保存
+      v.keys = new Set([...Object.keys(pri),...Object.keys(sub)]);
+      for( v.key of v.keys ){
+        if( pri.hasOwnProperty(v.key) && sub.hasOwnProperty(v.key) ){
+          v.step = 2.2; // pri,sub両方がキーを持つ
+          if( v.isObj(pri[v.key]) && v.isObj(sub[v.key]) || v.isArr(pri[v.key]) && v.isArr(sub[v.key]) ){
+            v.step = 2.21; // 配列またはオブジェクトの場合は再帰呼出
+            v.rv[v.key] = mergeDeeply(pri[v.key],sub[v.key],opt);
+          } else {
+            v.step = 2.22; // 配列でもオブジェクトでもない場合は優先変数の値をセット
+            v.rv[v.key] = pri[v.key];
+          }
+        } else {
+          v.step = 2.3; // pri,subいずれか片方しかキーを持っていない
+          v.rv[v.key] = pri.hasOwnProperty(v.key) ? pri[v.key] : sub[v.key];
+        }
+      }
+    } else if( v.isArr(pri) && v.isArr(sub) ){
+      v.step = '3 '+opt.array; // sub,pri共に配列の場合
+      switch( opt.array ){
+        case 'pri':
+          // pri: 単純にpriをセット。subは全て廃棄 ⇒ [1,2,{x:'a'},{a:10,b:20}]
+          v.rv = pri;
+          break;
+        case 'add':
+          // add: 値の重複に拘わらず、pri+subを返す ⇒ [1,2,{x:'a'},{a:10,b:20},1,3,{x:'a'},{a:30,c:40}]
+          v.rv = [...pri, ...sub];
+          break;
+        case 'str':
+          // str(strict): priに無いsubの要素をpriに追加。setと異なり、内容が同値なら重複排除<br>
+          // ⇒ [1,2,3,{x:'a'},{a:10,b:20},{a:30,c:40}]
+          v.rv = [];
+          pri.forEach(x => v.rv.push(x));
+          sub.forEach(s => {
+            v.flag = false;
+            pri.forEach(p => v.flag = v.flag || isEqual(s,p));
+            if( v.flag === false ) v.rv.push(s);
+          });
+          break;
+        default:
+          // set(既定値): priに無いsubの要素をpriに追加 ⇒ [1,2,{x:'a'},{a:10,b:20},3,{x:'a'},{a:30,c:40}]
+          v.rv = [...new Set([...pri,...sub])];
+      }
+    } else {
+      v.step = 4; // subとpriのデータ型が異なる ⇒ priを優先してセット
+      v.rv = whichType(pri,'Undefined') ? sub : pri;
+      //console.log(`l.228 pri=${stringify(pri)}, sub=${stringify(sub)} -> rv=${stringify(v.rv)}`)
+    }
+    v.step = 5;
+    //console.log(`${v.whois} normal end.`+`\npri=${stringify(pri)}`+`\nsub=${stringify(sub)}`+`\nopt=${stringify(opt)}`+`\nv.rv=${stringify(v.rv)}`)
+    return v.rv;
+
+  } catch(e) {
+    e.message = `${v.whois} abnormal end at step.${v.step}`
+    + `\n${e.message}`
+    + `\npri=${JSON.stringify(pri)}`
+    + `\nsub=${JSON.stringify(sub)}`
+    + `\nopt=${JSON.stringify(opt)}`;
+    console.error(`${e.message}\nv=${JSON.stringify(v)}`);
+    return e;
+  }
+}
+class Reception {
+
+  /**
+   * @param {Object} arg
+   * @param {string} arg.wrapper - Receptionを展開する包摂要素のCSSセレクタ
+   * @param {string[]} arg.header - シート上の項目名のリスト
+   * @param {Object[]} arg.data - シート上のデータ。{項目名:値,..}
+   * @param {Function|Arrow} arg.filter - 対象者の判定式。戻り値はboolean
+   */
+  constructor(arg){
+    const v = {whois:this.constructor.name+'.constructor',step:0,rv:null};
+    console.log(`${v.whois} start.\narg=${stringify(arg)}`);
+    try {
+
+      v.step = 1; // 既定値の設定、メンバ変数への保存
+      this.wrapper = document.querySelector(arg.wrapper || '.Reception[name="wrapper"]');
+        // {HTMLElement} Receptionを展開する包摂要素
+      this.header = arg.header; // {string[]} シート上の項目名のリスト
+      this.data = arg.data; // {Object[]} シート上のデータ。{項目名:値,..}
+      this.filter = arg.filter; // {Function|Arrow} 対象者の判定式。戻り値はboolean
+
+      v.step = 2; // スキャナ領域をメンバ変数にセット＋イベント定義
+      this.scanner = this.wrapper.querySelector('[name=scanner]');
+      this.keyword = this.wrapper.querySelector('[name="keyword"]');
+      // 「検索」ボタンクリックでキーワードを所定の要素に埋め込む
+      this.keyword.querySelector('button').addEventListener('click',e => {
+        e.target.parentNode.querySelector('[name="val"]').innerText
+        = e.target.parentNode.querySelector('input').value;
+      });
+      // 検索結果が複数時の候補者一覧表示画面
+      this.dialog = this.scanner.querySelector('dialog');
+      this.dialog.querySelector('button').addEventListener('click',()=>{
+        this.dialog.close();
+        v.entryNo = Number(this.dialog.querySelector('button').value);
+        console.log(`l.568 entryNo(${whichType(v.entryNo)})=${v.entryNo}`);
+        v.r = this.editParticipant(this.data.find(x => Number(x.entryNo) === v.entryNo));
+        if( v.r instanceof Error ) throw v.r;
+      });
+
+      v.step = 3; // 申込情報詳細画面領域をメンバ変数にセット＋イベント定義
+      this.detail = this.wrapper.querySelector('[name="detail"]');
+      // 詳細画面のボタンクリック時(受付時、参加費等の入力後)の動作定義
+      ['cancel','update','updall'].forEach(x =>
+        this.detail.querySelector(`button[name="${x}"]`)
+        .addEventListener('click',async e=>{await this.updateDetail(e)}));
+
+      v.step = 9; // 終了処理
+      console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
+      return v.rv;
+
+    } catch(e) {
+      e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
+      console.error(`${e.message}\nv=${stringify(v)}`);
+      return e;
+    }
+  }
+
+  /** targeting: 受付番号を入力して該当者を特定、申込情報編集画面を呼び出す
+   * @param {void}
+   * @returns {null}
+   */
+  async targeting(){
+    const v = {whois:this.constructor.name+'.targeting',step:0,rv:null,target:null};
+    console.log(`${v.whois} start.`);
+    try {
+
+      v.step = 1; // 事前準備：スキャナ画面を表示、詳細画面を閉鎖
+      this.scanner.style.display = 'grid';
+      this.detail.style.display = 'none';
+      this.scanner.querySelector('[name="keyword"] input').value = '';
+      this.scanner.querySelector('[name="val"]').innerText = '';
+
+      v.candidates = await (async ()=>{  v.step = 2; // 受付番号スキャン、キーワード入力
+        v.cnt = 20; // 永久ループ防止用
+        while( v.cnt > 0 ){  // 適切なキー(受付番号or氏名)が入力されるまでループ
+
+          v.step = 2.1; // scanQRからキーを取得
+          v.r = await scanQR('.Reception [name="camera"]',{field:()=>{
+            return this.scanner.querySelector('[name="val"]').innerText}});
+          if( v.r instanceof Error ) throw v.r;
+
+          v.step = 2.2; // キーを基に該当者を抽出
+          v.rv = this.data.filter(o => {return this.filter(o,v.r)});
+          if( v.rv.length > 0 ){
+            return v.rv;
+          } else {  // 該当無しならメッセージ＋クリア後、再入力
+            alert('該当無し');
+            this.scanner.querySelector('[name="keyword"] input').value = '';
+            this.scanner.querySelector('[name="val"]').innerText = '';
+            v.cnt--;
+          }
+        }
+      })();
+
+      v.target = await (()=>{  v.step = 3; // 該当者の詳細画面呼び出し
+
+        if( v.candidates.length === 1 ){
+          v.step = 3.1; // 該当が一件のみ
+          v.r = this.editParticipant(v.candidates[0]);
+          if( v.r instanceof Error ) throw v.r;
+        } else {
+          v.step = 3.2; // 該当が複数 ⇒ ダイアログでリスト表示、選択
+          v.candidates.sort((a,b)=>a['申込者カナ']<b['申込者カナ']).forEach(o => {
+            createElement({
+              attr: {name:o.entryNo},
+              children:[{tag:'ruby',text:o['申込者氏名'],children:[{tag:'rt',text:o['申込者カナ']}]}],
+              event: {click:e=>{
+                // 選択された候補者に背景色を付け、受付番号をbutton.valueにセット
+                this.dialog.querySelectorAll('div').forEach(x => x.classList.remove('act'));
+                v.e = e.target.closest('div');
+                v.e.classList.add('act');
+                this.dialog.querySelector('button').value = v.e.getAttribute('name');
+              }},
+            },this.dialog.querySelector('[name="list"]'));
+          });
+          v.step = 3.3; // 最初の選択肢が選択された状態にしてダイアログ表示
+          this.dialog.querySelector('button').value = v.candidates[0].entryNo;
+          this.dialog.querySelector('[name="list"] [name]').classList.add('act');
+          this.dialog.showModal();
+        }
+      })();
+
+      v.step = 9; // 終了処理
+      console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
+      return v.rv;
+
+    } catch(e) {
+      e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
+      console.error(`${e.message}\nv=${stringify(v)}`);
+      return e;
+    }
+  }
+
+  /** editParticipant: 申込情報編集画面を表示
+   * @param {Object.<string, any>} arg - 該当申込情報のオブジェクト
+   * @returns {null}
+   */
+  editParticipant(arg){
+    const v = {whois:this.constructor.name+'.editParticipant',step:0,rv:null};
+    console.log(`${v.whois} start.\narg=${stringify(arg)}`);
+    try {
+
+      v.step = 1; // 事前準備
+      // スキャナ画面を閉鎖、詳細画面表示
+      this.scanner.style.display = 'none';
+      this.detail.style.display = 'grid';
+      // メモ欄のクリア
+      this.detail.querySelector('textarea[name="memo"]').value = '';
+      // 既定値の設定
+      v.data = Object.assign({
+        '緊急連絡先': '(未記入)',
+        'ボランティア募集': '(不可)',
+      },arg);
+      // キャンセルの文言を修正
+      v.data['キャンセル'] = v.data['キャンセル'] ? 'canceled' : '';
+
+      v.step = 2; // 対象申込情報をdetail内の各要素に書き込み
+      v.step = 2.1; // 非参加者情報をセット
+      this.header.forEach(col => {
+        if( col.indexOf('参加者0') < 0 || col.indexOf('fee0') < 0 ){
+          // 必須項目をセット
+          v.e = this.detail.querySelector(`[name="${col}"]`);
+          if( v.e ){
+            if( col === 'editURL' ){
+              this.detail.querySelector('[name="editURL"] img').src
+              = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='
+              + v.data.editURL;
+            } else if( col === 'memo' ){
+              if( v.data['memo'] )
+                this.detail.querySelector('textarea').value = v.data['memo'];
+            } else {
+              v.e.innerText = v.data[col] ? v.data[col] : '';
+            }
+          }
+        }
+      });
+
+      v.step = 2.2; // 参加者情報をセット
+      for( v.i=1 ; v.i<=5 ; v.i++ ){
+        if( !v.data[`参加者0${v.i}氏名`] ){
+          v.step = 2.21; // 氏名未登録の参加者は空欄
+          this.detail.querySelector(`tr[name="参加者0${v.i}"]`).innerHTML = '';
+        } else {
+          v.step = 2.22; // 氏名・カナ・所属のセット
+          ['氏名','カナ','所属'].forEach(x => {
+            v.col = `参加者0${v.i}${x}`;
+            this.detail.querySelector(`[name="${v.col}"]`).innerHTML = v.data[v.col] ? v.data[v.col] : '';
+          });
+
+          v.step = 2.23; // 会費のセット
+          v.col = `fee0${v.i}`;
+          v.val = v.data[v.col] ? v.data[v.col] : '未収';
+          this.detail.querySelector(`[name="${v.col}"][value="${v.val}"]`).checked = true;
+        }
+      }
+
+      v.step = 9; // 終了処理
+      console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
+      return v.rv;
+
+    } catch(e) {
+      e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
+      console.error(`${e.message}\nv=${stringify(v)}`);
+      return e;
+    }
+  }
+
+  /** updateDetail: 詳細画面の入力内容をシートに反映
+   * 要更新箇所はfee01〜05、memoのみ。
+   * @param {string} arg - 動作内容。cancel || update || updall
+   */
+  async updateDetail(e){
+    const v = {whois:this.constructor.name+'.updateDetail',step:0,rv:null,obj:{}};
+    console.log(`${v.whois} start.`);
+    try {
+
+      v.func = e.target.getAttribute('name');
+
+      // update or updall ⇒ 入力内容で更新
+      if( v.func === 'update' || v.func === 'updall' ){
+        // 受付番号を取得
+        v.obj.entryNo = Number(this.detail.querySelector('[name="entryNo"]').innerText);
+        // fee01〜05を取得
+        for( v.i=1 ; v.i<6 ; v.i++ ){
+          v.tr = this.detail.querySelector(`tr[name="参加者0${v.i}"]`);
+          if( v.tr.innerHTML.length > 0 ){
+            v.obj['fee0'+v.i] = v.func === 'updall' ? '既収' :
+            this.detail.querySelector(`form[name="参加者0${v.i}会費"]`).elements['fee0'+v.i].value;
+          }
+        }
+        // memoを取得
+        v.memo = this.detail.querySelector('textarea[name="memo"]').value;
+        if( v.memo.length > 0 ) v.obj.memo = v.memo;
+        // 取得結果をシートに反映
+        v.r = await doGAS('SingleTableServer','master','update',v.obj,{key:'entryNo',value:v.obj.entryNo});
+        if( v.r instanceof Error ) throw v.r;
+        // 確認ダイアログ表示
+        alert('更新しました');
+      }
+
+      v.step = 9; // 終了処理
+      v.r = await this.targeting(); // 受付番号入力画面を再度呼び出し
+      if( v.r instanceof Error ) throw v.r;
+      console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
+      return v.rv;
+
+    } catch(e) {
+      e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
+      console.error(`${e.message}\nv=${stringify(v)}`);
+      return e;
+    }
+  }
+}
+/** QRコードをスキャン
+ * なお縦横いずれでも汎用的に使えるよう、撮像領域(ファインダ)は正方形とする
+ * @param {string} parent - 親要素のCSSセレクタ
+ * @param {Object} [opt={}] - オプション
+ * @param {number} opt.size - ファインダ領域のサイズ
+ * @param {number} opt.interval=300 - 撮像間隔。ミリ秒
+ * @param {number} opt.max=90000 - 最大待機時間。単位：ミリ秒
+ * @param {Function} opt.field - 入力欄を併用する場合、入力欄の値を返す関数
+ * @returns {string} スキャンしたQRコードの文字列
+ *
+ * - Qiita [html＋javascriptだけで実装したシンプルなQRコードリーダー](https://qiita.com/murasuke/items/c16e4f15ac4436ed2744)
+ * - [Promiseでsleep機能を作る](https://www.sejuku.net/blog/24629#index_id5)
+ */
+async function scanQR(parent,opt={}){
+  const v = {whois:'scanQR',rv:null,
+    max: opt.max || 90000, // 最大待機時間。単位：ミリ秒
+    interval: opt.interval || 300, // 撮像間隔。ミリ秒
+    minSize : opt.minSize || 640, // 最小撮像サイズ。px
+    sleep: (sec) =>  // 指定時間待機
+      {return new Promise(resolve => setTimeout(resolve,sec))},
+  };
+  console.log(`${v.whois} start.\nparent=${parent}\nopt=${stringify(opt)}`);
+  try {
+
+    v.step = 1; // 親要素のサイズ設定、取得
+    // 親要素の幅を最大に、高さを幅に合わせる
+    v.parent = document.querySelector(parent);
+    v.parent.style.width = '100%';
+    opt.size = opt.size || v.parent.clientWidth;
+    v.szNum = opt.size < v.parent.clientWidth // 数値単位の撮像領域幅。ex.980
+      ? opt.size : v.parent.clientWidth;
+    v.szStr = v.parent.style.height = v.szNum + 'px'; // 文字列型の撮像領域幅。ex.980px
+
+    v.step = 2; // video要素の生成
+    v.video = v.parent.querySelector('video');
+    if( !v.video ){
+      v.video = createElement({tag:'video',style:{width:v.szStr,height:v.szStr}},v.parent);
+      if( v.video instanceof Error ) throw v.video;
+    }
+    v.constraints = {
+      audio: false, // 音声は使用しない
+      video: {
+        facingMode: 'environment',
+        width: v.szNum,
+        height: v.szNum,
+      },
+    };
+    const stream = await navigator.mediaDevices.getUserMedia(v.constraints);
+    v.video.srcObject = stream;
+    v.video.play();
+
+    v.step = 3; // canvas要素の生成
+    const { width, height } = v.constraints.video;
+    v.canvas = new OffscreenCanvas(width, height);
+    const context = v.canvas.getContext('2d');
+
+    v.step = 4; // 定期的なスキャン実行
+    v.cnt = 0;
+    do {
+      context.drawImage(v.video, 0, 0, width, height);
+      const imageData = context.getImageData(0, 0, width, height);
+      const code = jsQR(imageData.data, imageData.width, imageData.height);
+      v.field = opt.field();  // 入力欄に入力されていれば!null
+      if (code || v.field) {
+        v.rv = v.field || code.data;
+      } else {
+        await v.sleep(v.interval);
+        console.log(v.cnt);
+        v.cnt += v.interval;
+      }
+    } while( v.rv === null && v.cnt < v.max );
+
+    // 終了処理
+    v.video.srcObject.getVideoTracks().forEach((track) => {
+      track.stop();
+    });
+
+    console.log(v.whois+' normal end.\n'+v.rv);
+    return v.rv;
+
+  } catch(e) {
+    e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
+    console.error(`${e.message}\nv=${stringify(v)}`);
+    return e;
+  }
+}
 /** 関数他を含め、変数を文字列化
  * - JSON.stringifyでは文字列化されない関数、シンボル、undefinedも文字列化して表示
  * - 関数はtoString()で文字列化
@@ -1036,6 +2186,137 @@ function stringify(variable,opt={addType:false}){
     e.message = `${v.whois} abnormal end at step.${v.step}`
     + `\n${e.message}`;
     console.error(`${e.message}\nv=${JSON.stringify(v)}`);
+    return e;
+  }
+}
+/** summaryTable: 集計表の表示
+ * X,Y軸のラベル要素のdata-st属性の設定値に基づき、交差するセルの値を集計する。
+ * 
+ * @param {Object} arg
+ * @param {string} arg.dom - 表のHTML要素のCSSセレクタ
+ * @param {Object.<string,any>[]} arg.data - 集計対象の基データ。[{項目名:値},..]
+ * @param {Arrow} arg.delive - 導出項目の算出関数
+ * @returns {null|Error}
+ * 
+ * ## summaryTable関連要素(HTMLElement)の構造
+ * 
+ * - div[title="summaryTable"]     ⇒ buildでの抽出(querySelector.js)時の範囲指定用
+ *   - div.summaryTable[data-st①] ⇒ 集計表の枠組み
+ *     - div[data-st②]            ⇒ 集計表内の軸ラベル要素
+ * 
+ * 1. data-st内の文字列は、項目名を'"'で囲む。また末尾の','は不可
+ *    ∵ 両端に'{...}'を付けてJSON.parseをかけるので、厳密にJSONの文法に従う
+ * 2. 軸ラベル以外のセル要素はプログラム内で枠組み要素に追加される
+ * 
+ * ## data-st①(表枠組)内に記述する要素
+ * 
+ * - f {string[]} From句のパターン集。冒頭の"from "は不要
+ * 
+ * ## data-st②(セル)内に記述する要素
+ * 
+ * - cl {string} class。軸(x/y)とレベル(l1〜n)は必須 
+ * - rc {string} grid-row, grid-column。rs/re-cs/ce形式
+ * - f {number} data-st①で指定したFrom句の配列の添字。
+ *     X軸/Y軸で択一(XOR)。両軸とも指定が無い場合、既定値0。
+ * - w {string} Where句。X,Y両軸に存在すれば' and 'で結合
+ */
+function summaryTable(arg){
+  const v = {whois:'summaryTable',step:0,rv:null,table:{},def:{}};
+  console.log(`${v.whois} start.\narg=${stringify(arg)}`);
+  try {
+
+    (()=>{  v.step = 1; // 表関係HTML要素の準備
+
+      v.step = 1.1; // 描画要素の取得
+      v.tableDom = document.querySelector(arg.dom);
+
+      v.step = 1.2; // 包摂要素で指定したパターンを取得
+      v.st = JSON.parse('{'+v.tableDom.getAttribute('data-st')+'}');
+      v.def.from = v.st.f || [];
+      v.def.where = v.st.w || '';
+
+      v.step = 1.3; // 行・列ラベルについて、data-stの内容を展開
+      v.tableDom.querySelectorAll('[data-st]').forEach(d => {
+        v.o = JSON.parse('{'+d.getAttribute('data-st')+'}');
+        // data-st.clを基にclass属性を追加
+        if( v.o.hasOwnProperty('cl') ) d.classList = v.o.cl;
+        // data-st.rcを基にgrid-row/column属性を追加
+        if( v.o.hasOwnProperty('rc') ){
+          v.m = v.o.rc.match(/(\d+) *\/ *(\d+) *- *(\d+) *\/ *(\d+)/);
+          d.style.gridRow = v.m[1] + '/' + v.m[2];
+          d.style.gridColumn = v.m[3] + '/' + v.m[4];
+          d.setAttribute('data-row',v.m[1]);  // 行の開始位置
+          d.setAttribute('data-col',v.m[3]);  // 列の開始位置
+        }
+        // data-st.s/f/wを基にSQL文作成用属性(data-from/where)を追加
+        if( v.o.hasOwnProperty('f') ) d.setAttribute('data-from',v.def.from[v.o.f]);
+        if( v.o.hasOwnProperty('w') ) d.setAttribute('data-where',v.o.w);
+      });
+    })();
+
+    (()=>{  v.step = 2; // データベースの準備
+
+      v.step = 2.1; // 引数で渡されたデータオブジェクトに導出項目を追加
+      arg.data.forEach(o => arg.delive(o));
+
+      v.step = 2.2; // 各種テーブルの作成とデータセット
+      v.r = alasql(arg.setup,[arg.data]);
+      if( v.r instanceof Error ) throw v.r;
+
+    })();
+
+    (()=>{  v.step = 3; // 表内の数値設定
+
+      v.tableDom.querySelectorAll('.x').forEach(xDom => {
+        v.step = 2.1; // X軸ラベルのSQL関係属性を取得
+        v.dom = {x:{
+          from:   xDom.getAttribute('data-from') || '',
+          where:  xDom.getAttribute('data-where') || '',
+          grid:   xDom.getAttribute('data-col') || '',
+        }};
+
+        v.tableDom.querySelectorAll('.y').forEach(yDom => {
+          v.step = 2.2; // Y軸ラベルのSQL関係属性を取得
+          v.dom.y = {
+            from:   yDom.getAttribute('data-from') || '',
+            where:  yDom.getAttribute('data-where') || '',
+            grid:   yDom.getAttribute('data-row') || '',
+          };
+
+          v.step = 2.3; // SQL文の作成
+          v.where = [];
+          if( v.def.where ) v.where.push(v.def.where);
+          if( v.dom.x.where ) v.where.push(v.dom.x.where);
+          if( v.dom.y.where ) v.where.push(v.dom.y.where);
+          v.sql = 'select * from ' + (v.dom.x.from || v.dom.y.from || v.def.from[0])
+          + (v.where.length === 0 ? '' : ` where ${v.where.join(' and ')}`);
+
+          v.step = 2.4; // 対象人数の取得
+          v.r = alasql(v.sql); if( v.r instanceof Error ) throw v.r;
+          v.num = v.r.length;
+
+          v.step = 2.5; // セル要素の追加
+          v.r = createElement({
+            text: v.num.toLocaleString(),
+            style: {
+              textAlign: 'right',
+              gridRow: v.dom.y.grid + '/' + v.dom.y.grid,
+              gridColumn: v.dom.x.grid + '/' + v.dom.x.grid,
+            }
+          },v.tableDom);
+          if( v.r instanceof Error ) throw v.r;
+
+        });
+      });
+    })();
+
+    v.step = 9; // 終了処理
+    console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
+    return v.rv;
+
+  } catch(e) {
+    e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
+    console.error(`${e.message}\nv=${stringify(v)}`);
     return e;
   }
 }
@@ -1136,12 +2417,12 @@ window.addEventListener('DOMContentLoaded',async () => {
         //   localStorageにユーザIDが存在 ⇒ (一度以上申込受付メールから遷移してきた)参加者
         //   localStorageにユーザIDが不在 ⇒ 非参加者 or 直接サイトを見た参加者なので0とする
         // 　※後者についてはメニューから「受付番号入力」を行う事で参加者扱いとする。
-        v.conf.entryNo = Number(localStorage.getItem(v.conf.storageKey));
+        v.conf.entryNo = Number(localStorage.getItem(v.conf.sys.storageKey));
       }
       vlog(v,['params','conf']);
 
       v.step = 1.4; // 受付番号をlocalStorageに保存(未確定の場合'0')
-      localStorage.setItem(v.conf.storageKey,v.conf.entryNo);
+      localStorage.setItem(v.conf.sys.storageKey,v.conf.entryNo);
 
       v.step = 1.5; // sessionStorageをクリア
       // リロードしたら再設定するため、全てクリアする
@@ -1149,8 +2430,8 @@ window.addEventListener('DOMContentLoaded',async () => {
 
       v.step = 1.6; // 認証基盤をインスタンス化
       v.eq = new encryptedQuery({
-        storageKey: v.conf.storageKey,
-        url: v.conf.masterAPI,
+        storageKey: v.conf.sys.storageKey,
+        url: v.conf.master.API,
         clientId: v.conf.entryNo,
       });
     })();
@@ -1177,7 +2458,7 @@ window.addEventListener('DOMContentLoaded',async () => {
 
         switch( v.r.status ){
           case 1: // 正当性検証OK ⇒ シート全情報をsessionStorageに保存
-            sessionStorage.setItem(v.conf.storageKey,JSON.stringify({
+            sessionStorage.setItem(v.conf.sys.storageKey,JSON.stringify({
               header:v.r.header,
               data:v.r.data,
               expire: v.r.expire,
