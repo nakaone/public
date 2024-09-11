@@ -2547,7 +2547,7 @@ window.addEventListener('DOMContentLoaded',async () => {
 
       v.step = 1.5; // sessionStorageをクリア
       // 前回のパスコード通知メール発行要求日時があればv.lastRequestに保存
-      v.lastRequest = sessionStorage.getItem('lastRequest');
+      v.lastRequest = localStorage.getItem('lastRequest');
       // リロードしたら再設定するため、全てクリアする
       sessionStorage.clear();
 
@@ -2561,7 +2561,7 @@ window.addEventListener('DOMContentLoaded',async () => {
 
     v.step = 2; // 前回のパスコード通知メール発行要求が10分以上前、または要求自体した記録がないなら発行要求
     if( v.lastRequest === null || (Date.now() - v.lastRequest) > v.conf.sys.passcodeValidityPeriod ){
-      sessionStorage.setItem('lastRequest',Date.now());
+      localStorage.setItem('lastRequest',Date.now());
       v.r = await v.eq.request();
       vlog(v,'r');
       if( v.r instanceof Error ) throw v.r;
