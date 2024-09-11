@@ -379,29 +379,29 @@ pre {border: solid 5px #999;}
           [<a data-assign="href:faq.view" target="_blank">jump</a>]</p>
         <p>短縮URL : <span data-assign="innerText:faq.shortView"></span></p>
       </div>
-      <div><img data-assign="src:faq.qrcode"></div>
+      <div><img data-assign="src:faq.qr"></div>
     </div>
     
     <!-- 一般公開サイト -->
-    <div class="title" data-assign="innerText:public.title"></div>
+    <div class="title" data-assign="innerText:publicSite.title"></div>
     <div class="tr">
       <div>
-        <p><span data-assign="innerText:public.API"></span> 
-          [<a data-assign="href:public.API" target="_blank">jump</a>]</p>
-        <p>短縮URL : <span data-assign="innerText:public.shortAPI"></span></p>
+        <p><span data-assign="innerText:publicSite.url"></span> 
+          [<a data-assign="href:publicSite.url" target="_blank">jump</a>]</p>
+        <p>短縮URL : <span data-assign="innerText:publicSite.shortURL"></span></p>
       </div>
-      <div><img data-assign="src:public.qrcode"></div>
+      <div><img data-assign="src:publicSite.qr"></div>
     </div>
     
     <!-- スタッフ専用サイト -->
-    <div class="title" data-assign="innerText:master.title"></div>
+    <div class="title" data-assign="innerText:staffSite.title"></div>
     <div class="tr">
       <div>
-        <p><span data-assign="innerText:master.API"></span> 
-          [<a data-assign="href:master.API" target="_blank">jump</a>]</p>
-        <p>短縮URL : <span data-assign="innerText:master.shortAPI"></span></p>
+        <p><span data-assign="innerText:staffSite.url"></span> 
+          [<a data-assign="href:staffSite.url" target="_blank">jump</a>]</p>
+        <p>短縮URL : <span data-assign="innerText:staffSite.shortURL"></span></p>
       </div>
-      <div><img data-assign="src:master.qrcode"></div>
+      <div><img data-assign="src:staffSite.qr"></div>
     </div>
     
     <!-- 参加申込フォーム -->
@@ -412,7 +412,7 @@ pre {border: solid 5px #999;}
           [<a data-assign="href:entry.view" target="_blank">jump</a>]</p>
         <p>短縮URL : <span data-assign="innerText:entry.shortView"></span></p>
       </div>
-      <div><img data-assign="src:entry.qrcode"></div>
+      <div><img data-assign="src:entry.qr"></div>
     </div>
     
     <!-- ボランティア募集フォーム -->
@@ -423,7 +423,7 @@ pre {border: solid 5px #999;}
           [<a data-assign="href:volunteer.view" target="_blank">jump</a>]</p>
         <p>短縮URL : <span data-assign="innerText:volunteer.shortView"></span></p>
       </div>
-      <div><img data-assign="src:volunteer.qrcode"></div>
+      <div><img data-assign="src:volunteer.qr"></div>
     </div>
     
     <!-- 参加者アンケートフォーム -->
@@ -434,7 +434,7 @@ pre {border: solid 5px #999;}
           [<a data-assign="href:participantEnquete.view" target="_blank">jump</a>]</p>
         <p>短縮URL : <span data-assign="innerText:participantEnquete.shortView"></span></p>
       </div>
-      <div><img data-assign="src:participantEnquete.qrcode"></div>
+      <div><img data-assign="src:participantEnquete.qr"></div>
     </div>
     
     <!-- 気づき投稿フォーム -->
@@ -445,7 +445,7 @@ pre {border: solid 5px #999;}
           [<a data-assign="href:awareness.view" target="_blank">jump</a>]</p>
         <p>短縮URL : <span data-assign="innerText:awareness.shortView"></span></p>
       </div>
-      <div><img data-assign="src:awareness.qrcode"></div>
+      <div><img data-assign="src:awareness.qr"></div>
     </div>
     
     <!-- おやじの会ML登録 -->
@@ -458,7 +458,7 @@ pre {border: solid 5px #999;}
         <p>登録確認 : <span data-assign="innerText:oyajiML.confirm"></span> 
           [<a data-assign="href:oyajiML.confirm" target="_blank">jump</a>]</p>
       </div>
-      <div><img data-assign="src:oyajiML.qrcode"></div>
+      <div><img data-assign="src:oyajiML.qr"></div>
     </div>
     
   </div>
@@ -2414,7 +2414,119 @@ window.addEventListener('DOMContentLoaded',async () => {
       v.loading.show();
 
       v.step = 1.2; v.conf = // 設定情報(v.conf)の作成
-{"sys":{"underDev":false,"storageKey":"config","staffML":"skz-oyaji@googlegroups.com","adminMail":"shimokitasho.oyaji@gmail.com","qrserver":"https://api.qrserver.com/v1/create-qr-code/?data=","qrSize":"&size=200x200","upv":"n","isClient":false,"auth":{"bits":1024,"maxTrial":3,"passcodeValidityPeriod":600000,"expire":172800000,"freezing":3600000,"authFlag":2,"passcodeDigit":6},"passcodeNotification":{"recipient":"メールアドレス","subject":"[連絡] 校庭キャンプ2024 パスコード通知","body":"パスコードは以下の通りです\n\n::passcode::","sender":"下北沢小おやじの会"}},"publicSite":{"title":"一般公開サイト","type":"site","url":"https://nakaone.github.io/public/camp2024/index.html","shortURL":"https://tinyurl.com/2b9lymoc","qr":"url"},"staffSite":{"title":"スタッフ専用サイト","type":"site","url":"https://nakaone.github.io/public/camp2024/staff.html","shortURL":"https://tinyurl.com/2aovhf8r","qr":"url"},"master":{"title":"「管理局」スプレッドシート","type":"spread","spread":"https://docs.google.com/spreadsheets/d/1TVoLfxJ4Ch884ZJ8vOoBUGj8HOWqXKfg742wxaVBb18/edit","sheetName":"master","IDcol":"entryNo","CPcol":"CPkey","deployId":"AKfycbywHlYXcUAhnnZ3aQ8ZtHygLCoKf29P_2FGDcdW4gaiq-k1j74z1F-1I3EEe4aHbbi2","API":"https://script.google.com/macros/s/AKfycbywHlYXcUAhnnZ3aQ8ZtHygLCoKf29P_2FGDcdW4gaiq-k1j74z1F-1I3EEe4aHbbi2/exec","headId":"AKfycbz68wWQbyN6DSbbKt3MQrMldoUpaT3cDonHBZ7_BeOK","devAPI":"https://script.google.com/macros/s/AKfycbz68wWQbyN6DSbbKt3MQrMldoUpaT3cDonHBZ7_BeOK/dev","cols":{"timestamp":"タイムスタンプ","mail":"メールアドレス","auth":"authority","CPkey":"CPkey","id":"entryNo","trial":"trial","editURL":"editURL"}},"entry":{"title":"参加申込フォーム","type":"form","formId":"1CfYByT_O_s7s2fPS76hIEpLfJqdenx5FdAdP7wR2DYY","edit":"https://docs.google.com/forms/d/1CfYByT_O_s7s2fPS76hIEpLfJqdenx5FdAdP7wR2DYY/edit","view":"https://docs.google.com/forms/d/e/1FAIpQLSfKJ5aUz4h6lTGlz6c3NjPyWMnViVQxHqwRkCnzJsRKfz9ULQ/viewform","shortView":"https://tinyurl.com/2dbjtqke","sheetName":"master","qr":"view"},"volunteer":{"title":"ボランティア募集フォーム","type":"form","edit":"https://docs.google.com/forms/d/1M-n09_cCfbjnE4ZYeu5lClGDycoqAos1xxw9Ry7giDk/edit","view":"https://docs.google.com/forms/d/e/1FAIpQLSeIr2VFqnxm_c7qgzQ-cD7rz_obus7OD0dvZWrui9j0v_cD2Q/viewform","shortView":"https://tinyurl.com/29rl5vof","sheetName":"ボランティア募集","qr":"view"},"participantEnquete":{"title":"参加者アンケート","type":"form","edit":"https://docs.google.com/forms/d/1LPvt4n57DpvYYRtuddjHm37kSmAio6slB3MYvtJet38/edit","view":"https://docs.google.com/forms/d/e/1FAIpQLSf8CsE6x3UxIFTyD7Pe1nQczq227LDmv9ypJ5kbDLmwnzjJXQ/viewform","shortView":"https://tinyurl.com/24s7tce6","sheetName":"参加者アンケート","qr":"view"},"awareness":{"title":"気づき投稿フォーム","type":"form","edit":"https://docs.google.com/forms/d/1E6C8N_H0i1WU0UfG4Tn4cECWOyZbjgYqhQzpzRtqjpQ/edit","view":"https://docs.google.com/forms/d/e/1FAIpQLSefyvYCjtTUuLaZqCG7c6k9sjnCXucsSjxhHppXWFqzhC0lRg/viewform","shortView":"https://tinyurl.com/2bpg2kga","sheetName":"気づき投稿","qr":"view"},"oyajiML":{"title":"おやじの会ML登録","type":"form","edit":"https://docs.google.com/forms/d/1wq0M7p2SCacwm3uzYAiTLr5OazMVBURjjd0I3TdtaT4/edit","view":"https://docs.google.com/forms/d/e/1FAIpQLSfbqa_vRBQYjsn2cYkPHbsc2-xSa0AFU6AwgZMIMKAKPxcyEQ/viewform","shortView":"https://tinyurl.com/23hgkfv4","sheet":"https://docs.google.com/spreadsheets/d/1ns1GRROPVIDc_s2ov2lLjbudxh0uUeOzws5bOA0_ojo/edit","confirm":"https://nakaone.github.io/library/oyajiML/1.0.0/index.html","email":"skz-oyaji@googlegroups.com","qr":"view"},"faq":{"title":"「困ったときは」(FAQサイト)","type":"site","edit":"https://sites.google.com/d/1cq0aV06FVKKeGFb4SQeEiYZjDPg5rnkL/p/1gtzJU8YHbtsR3tfrWeIPy6gB6IdCiIKU/edit","view":"https://sites.google.com/view/skz-camp2024faq/","shortView":"https://tinyurl.com/27n7sj5b","qr":"view"}}
+{
+  sys: {
+    underDev: false,
+    storageKey: 'config',
+    staffML: 'skz-oyaji@googlegroups.com',
+    adminMail: 'shimokitasho.oyaji@gmail.com',
+    qrserver: 'https://api.qrserver.com/v1/create-qr-code/?data=',
+    qrSize: '&size=200x200',
+    upv: 'n',
+    isClient: true,
+    auth: {
+      bits: 1024,
+      maxTrial: 3,
+      passcodeValidityPeriod: 600000,
+      expire: 172800000,
+      freezing: 3600000,
+      authFlag: 2,
+      passcodeDigit: 6
+    }
+  },
+  publicSite: {
+    title: '一般公開サイト',
+    type: 'site',
+    url: 'https://nakaone.github.io/public/camp2024/index.html',
+    shortURL: 'https://tinyurl.com/2b9lymoc',
+    qr: 'https://api.qrserver.com/v1/create-qr-code/?data=https://nakaone.github.io/public/camp2024/index.html'
+  },
+  staffSite: {
+    title: 'スタッフ専用サイト',
+    type: 'site',
+    url: 'https://nakaone.github.io/public/camp2024/staff.html',
+    shortURL: 'https://tinyurl.com/2aovhf8r',
+    qr: 'https://api.qrserver.com/v1/create-qr-code/?data=https://nakaone.github.io/public/camp2024/staff.html'
+  },
+  master: {
+    title: '「管理局」スプレッドシート',
+    type: 'spread',
+    spread: 'https://docs.google.com/spreadsheets/d/1TVoLfxJ4Ch884ZJ8vOoBUGj8HOWqXKfg742wxaVBb18/edit',
+    sheetName: 'master',
+    IDcol: 'entryNo',
+    CPcol: 'CPkey',
+    deployId: 'AKfycbywHlYXcUAhnnZ3aQ8ZtHygLCoKf29P_2FGDcdW4gaiq-k1j74z1F-1I3EEe4aHbbi2',
+    API: 'https://script.google.com/macros/s/AKfycbywHlYXcUAhnnZ3aQ8ZtHygLCoKf29P_2FGDcdW4gaiq-k1j74z1F-1I3EEe4aHbbi2/exec',
+    headId: 'AKfycbz68wWQbyN6DSbbKt3MQrMldoUpaT3cDonHBZ7_BeOK',
+    devAPI: 'https://script.google.com/macros/s/AKfycbz68wWQbyN6DSbbKt3MQrMldoUpaT3cDonHBZ7_BeOK/dev',
+    cols: {
+      timestamp: 'タイムスタンプ',
+      mail: 'メールアドレス',
+      auth: 'authority',
+      CPkey: 'CPkey',
+      id: 'entryNo',
+      trial: 'trial',
+      editURL: 'editURL'
+    }
+  },
+  entry: {
+    title: '参加申込フォーム',
+    type: 'form',
+    formId: '1CfYByT_O_s7s2fPS76hIEpLfJqdenx5FdAdP7wR2DYY',
+    edit: 'https://docs.google.com/forms/d/1CfYByT_O_s7s2fPS76hIEpLfJqdenx5FdAdP7wR2DYY/edit',
+    view: 'https://docs.google.com/forms/d/e/1FAIpQLSfKJ5aUz4h6lTGlz6c3NjPyWMnViVQxHqwRkCnzJsRKfz9ULQ/viewform',
+    shortView: 'https://tinyurl.com/2dbjtqke',
+    sheetName: 'master',
+    qr: 'https://api.qrserver.com/v1/create-qr-code/?data=https://docs.google.com/forms/d/e/1FAIpQLSfKJ5aUz4h6lTGlz6c3NjPyWMnViVQxHqwRkCnzJsRKfz9ULQ/viewform',
+    receiptMail: '{"recipient":"::メールアドレス::","subject":"[連絡] 校庭キャンプ2024 申込受付","body":null,"options":{"attachments":null,"bcc":null,"cc":null,"from":null,"htmlBody":"<head><style type=\\"text/css\\"> .button { display : inline-block; border-radius : 5%; font-size : 18pt; text-align : center; cursor : pointer; padding : 12px 12px; background : #6666ff; color : #ffffff; line-height : 1em; transition : .3s; box-shadow : 2px 2px 3px #666666; border : 2px solid #6666ff; } .button:hover { box-shadow : none; color : #6666ff; background : #ffffff; } </style></head><body> <p>To: <span style=\\"font-size:2rem\\">::申込者氏名::</span> 様</p> <p>下北沢小おやじの会です。<br> この度は「校庭キャンプ2024」にお申し込みいただき、ありがとうございました。<br> 以下のようにお申し込みを受け付けましたのでご連絡致します。</p> <p style=\\"font-size:2rem\\">受付番号：::entryNo::</p> <p><img src=\\"https://api.qrserver.com/v1/create-qr-code/?data=::entryNo::\\" /></p> <p>※ 上のQRコードはイベント当日受付でお示しください。</p> <hr> <p>当日の予定表や会場マップ、注意事項等を掲載したパンフレットを以下に掲載しています。 事前にご確認いただけますようお願いします。</p> <p><a class=\\"button\\" href=\\"https://nakaone.github.io/public/camp2024/index.html?n=::entryNo::\\" target=\\"_blank\\">パンフレット</a></p> <p>台風接近等の事情によりイベントが中止になる場合、このサイトで告知すると共に、 お申し込みいただいたe-mailアドレス宛にご連絡差し上げます。</p> <hr> <p>申込〜イベント当日の間に何らかの事情でお申し込み内容に変更がある場合、 またはお申し込み自体をキャンセルする場合、以下から申込内容を修正いただけますようお願いします。</p> <p><a class=\\"button\\" href=\\"::editURL::\\" target=\\"_blank\\">申込内容修正</a></p> <hr> <p>ご不明な点がございましたら、以下までご連絡お願いいたします。<br>skz-oyaji@googlegroups.com</p> <p>それでは当日のご来場をお待ちしております。</p> <p style=\\"text-align:right\\">以上</p></body>","inlineImages":null,"name":"下北沢小おやじの会","replyTo":"skz-oyaji@googlegroups.com"}}'
+  },
+  volunteer: {
+    title: 'ボランティア募集フォーム',
+    type: 'form',
+    edit: 'https://docs.google.com/forms/d/1M-n09_cCfbjnE4ZYeu5lClGDycoqAos1xxw9Ry7giDk/edit',
+    view: 'https://docs.google.com/forms/d/e/1FAIpQLSeIr2VFqnxm_c7qgzQ-cD7rz_obus7OD0dvZWrui9j0v_cD2Q/viewform',
+    shortView: 'https://tinyurl.com/29rl5vof',
+    sheetName: 'ボランティア募集',
+    qr: 'https://api.qrserver.com/v1/create-qr-code/?data=https://docs.google.com/forms/d/e/1FAIpQLSeIr2VFqnxm_c7qgzQ-cD7rz_obus7OD0dvZWrui9j0v_cD2Q/viewform'
+  },
+  participantEnquete: {
+    title: '参加者アンケート',
+    type: 'form',
+    edit: 'https://docs.google.com/forms/d/1LPvt4n57DpvYYRtuddjHm37kSmAio6slB3MYvtJet38/edit',
+    view: 'https://docs.google.com/forms/d/e/1FAIpQLSf8CsE6x3UxIFTyD7Pe1nQczq227LDmv9ypJ5kbDLmwnzjJXQ/viewform',
+    shortView: 'https://tinyurl.com/24s7tce6',
+    sheetName: '参加者アンケート',
+    qr: 'https://api.qrserver.com/v1/create-qr-code/?data=undefined'
+  },
+  awareness: {
+    title: '気づき投稿フォーム',
+    type: 'form',
+    edit: 'https://docs.google.com/forms/d/1E6C8N_H0i1WU0UfG4Tn4cECWOyZbjgYqhQzpzRtqjpQ/edit',
+    view: 'https://docs.google.com/forms/d/e/1FAIpQLSefyvYCjtTUuLaZqCG7c6k9sjnCXucsSjxhHppXWFqzhC0lRg/viewform',
+    shortView: 'https://tinyurl.com/2bpg2kga',
+    sheetName: '気づき投稿',
+    qr: 'https://api.qrserver.com/v1/create-qr-code/?data=https://docs.google.com/forms/d/e/1FAIpQLSefyvYCjtTUuLaZqCG7c6k9sjnCXucsSjxhHppXWFqzhC0lRg/viewform'
+  },
+  oyajiML: {
+    title: 'おやじの会ML登録',
+    type: 'form',
+    edit: 'https://docs.google.com/forms/d/1wq0M7p2SCacwm3uzYAiTLr5OazMVBURjjd0I3TdtaT4/edit',
+    view: 'https://docs.google.com/forms/d/e/1FAIpQLSfbqa_vRBQYjsn2cYkPHbsc2-xSa0AFU6AwgZMIMKAKPxcyEQ/viewform',
+    shortView: 'https://tinyurl.com/23hgkfv4',
+    sheet: 'https://docs.google.com/spreadsheets/d/1ns1GRROPVIDc_s2ov2lLjbudxh0uUeOzws5bOA0_ojo/edit',
+    confirm: 'https://nakaone.github.io/library/oyajiML/1.0.0/index.html',
+    email: 'skz-oyaji@googlegroups.com',
+    qr: 'https://api.qrserver.com/v1/create-qr-code/?data=https://docs.google.com/forms/d/e/1FAIpQLSfbqa_vRBQYjsn2cYkPHbsc2-xSa0AFU6AwgZMIMKAKPxcyEQ/viewform'
+  },
+  faq: {
+    title: '「困ったときは」(FAQサイト)',
+    type: 'site',
+    edit: 'https://sites.google.com/d/1cq0aV06FVKKeGFb4SQeEiYZjDPg5rnkL/p/1gtzJU8YHbtsR3tfrWeIPy6gB6IdCiIKU/edit',
+    view: 'https://sites.google.com/view/skz-camp2024faq/',
+    shortView: 'https://tinyurl.com/27n7sj5b',
+    qr: 'https://api.qrserver.com/v1/create-qr-code/?data=https://sites.google.com/view/skz-camp2024faq/'
+  }
+}
       vlog(v,'conf');
 
       v.step = 1.3; // 受付番号の特定
@@ -2434,6 +2546,8 @@ window.addEventListener('DOMContentLoaded',async () => {
       localStorage.setItem(v.conf.sys.storageKey,v.conf.entryNo);
 
       v.step = 1.5; // sessionStorageをクリア
+      // 前回のパスコード通知メール発行要求日時があればv.lastRequestに保存
+      v.lastRequest = sessionStorage.getItem('lastRequest');
       // リロードしたら再設定するため、全てクリアする
       sessionStorage.clear();
 
@@ -2445,11 +2559,14 @@ window.addEventListener('DOMContentLoaded',async () => {
       });
     })();
 
-    v.step = 2; // パスコード通知メール発行要求
-    v.r = await v.eq.request();
-    vlog(v,'r');
-    if( v.r instanceof Error ) throw v.r;
-    if( v.r.status < 0 ) throw new Error(v.r.message);
+    v.step = 2; // 前回のパスコード通知メール発行要求が10分以上前、または要求自体した記録がないなら発行要求
+    if( v.lastRequest === null || (Date.now() - v.lastRequest) > v.conf.sys.passcodeValidityPeriod ){
+      sessionStorage.setItem('lastRequest',Date.now());
+      v.r = await v.eq.request();
+      vlog(v,'r');
+      if( v.r instanceof Error ) throw v.r;
+      if( v.r.status < 0 ) throw new Error(v.r.message);
+    }
 
     v.step = 3; // パスコード入力
     v.passcode = null;
@@ -2490,7 +2607,13 @@ window.addEventListener('DOMContentLoaded',async () => {
       }
     }
 
-    (()=>{  v.step = 4; // 受付業務の準備
+    (()=>{ v.step = 4; // 画面の準備
+      
+      v.step = 4.1; // URLの埋め込み(位置指定属性を持つHTML要素に変数を代入)
+      v.r = assignVariables({data:v.conf});
+      if( v.r instanceof Error ) throw v.r;
+      
+      v.step = 4.2; // 受付業務の準備
       // v.rにシートデータが入っていること
       v.Reception = new Reception({
         wrapper: '.Reception[name="wrapper"]',
@@ -2503,9 +2626,8 @@ window.addEventListener('DOMContentLoaded',async () => {
         },
       });
       if( v.Reception instanceof Error ) throw v.Reception;
-    })();
 
-    (()=>{  v.step = 5; // メニュー作成
+      v.step = 4.3; // メニュー作成
       // ※Receptionインスタンス作成後に実行
       v.menu = new BurgerMenu({home:'ホーム',func:{
         recept: async () => {  // 受付番号or検索キー入力
@@ -2513,6 +2635,7 @@ window.addEventListener('DOMContentLoaded',async () => {
           await v.Reception.targeting();
         },
       }});
+
     })();
 
     v.step = 99; // 終了処理
