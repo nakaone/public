@@ -1170,6 +1170,41 @@ function toLocale(arg,format='yyyy-MM-ddThh:mm:ss.nnnZ'){
     return e;
   }
 }
+/** vlog: デバッグ用コンソール出力
+ * @param {Object} o - 出力対象Object
+ * @param {string|string[]} m - メンバ名
+ * @param {number|Object} l=null - 数値なら行番号、Objectならwhois,stepをメンバに持つ変数('v'を想定)
+ * @returns {void}
+ * 
+ * - ver.1.1.0 2024/09/12
+ *   - v以外の変数(ex.this)でもstep表示を可能に(lにObjectを追加)
+ *   - 階層化オブジェクトメンバの指定を可能に(v.convの追加)
+ */
+const vlog = (o,m,l=null) => {
+  // return; // デバッグ用。本番時はコメントを外す
+  const v = {
+    lType: whichType(l),  // 引数lのデータ型
+    conv: (o,s) => {s.split('.').forEach(x => o = o[x]);return o},
+  };
+
+  switch( v.lType ){
+    case 'Object': v.whois = l.whois; v.step = l.step; v.line = null; break;
+    case 'Null'  : // Numberと同じ
+    case 'Number': v.whois = o.whois; v.step = o.step; v.line = l; break;
+  }
+  v.msg = new Date().toLocaleTimeString()
+    + (v.whois ? ` ${v.whois}` : '')
+    + (v.step ? ` step.${v.step}` : '')
+    + (v.line ? ` l.${v.line}` : '');
+
+  if( whichType(m,'string') ) m = [m];
+  m.forEach(str => {
+    v.val = v.conv(o,str);
+    v.msg += `\n${str}(${whichType(v.val)})=${stringify(v.val)}`
+  });
+
+  console.log(v.msg);
+}
 /** 変数の型を判定
  * 
  * - 引数"is"が指定された場合、判定対象が"is"と等しいかの真偽値を返す。
@@ -1386,21 +1421,6 @@ function confirmEntryNo(conf){
         }
       }}},
 
-      /* 受付番号確認 : masterへの問合せが必要なので、暫定的に割愛
-      {tag:'p',style:{margin:'1rem'},html:v.msg[1]},
-      {tag:'button',text:'受付番号確認',style:{margin:'1rem',padding:'0.5rem'},event:{click:async () => {
-        v.n = window.prompt('申込時に入力したメールアドレスを入力してください');
-        if( checkFormat(v.n) === false ){
-          alert('メールアドレスの形式が正しくありません');
-        } else {
-          v.r = await fetch(conf.staffSite + '?n=' + v.n);
-          v.r = await v.r.json();
-          v.msg = v.r.status === false
-          ? `"${v.n}"は参加申込リストに存在しません。`
-          : '入力されたメールアドレス宛てに受付番号連絡メールを送信しました';
-          alert(v.msg);
-        }
-      }}},*/
     ],v.dom);
 
     v.step = 3; // 受付番号変更に伴い影響を受ける要素の設定変更
@@ -1409,7 +1429,7 @@ function confirmEntryNo(conf){
     if( v.entryNo === '0000' ){
       v.button.style.display = 'none';
     } else {
-      v.button.setAttribute('href',conf.staffSite.url + '?n=' + Number(v.entryNo));
+      v.button.setAttribute('href',(conf.sys.underDev ? conf.staffSite.dev : conf.staffSite.url) + '?n=' + Number(v.entryNo));
       v.button.style.display = '';
     }
 
@@ -1436,7 +1456,7 @@ window.addEventListener('DOMContentLoaded',async () => {
       v.step = 1.1; v.conf = // 設定情報(v.conf)の作成
 {
   sys: {
-    underDev: false,
+    underDev: true,
     storageKey: 'config',
     staffML: 'skz-oyaji@googlegroups.com',
     adminMail: 'shimokitasho.oyaji@gmail.com',
@@ -1445,7 +1465,10 @@ window.addEventListener('DOMContentLoaded',async () => {
     upv: 'n',
     isClient: true
   },
-  staffSite: { url: 'https://nakaone.github.io/public/camp2024/staff.html' },
+  staffSite: {
+    url: 'https://nakaone.github.io/public/camp2024/staff.html',
+    dev: 'file:///Users/ena.kaon/Desktop/GitHub/public/camp2024/staff.html'
+  },
   entry: {
     view: 'https://docs.google.com/forms/d/e/1FAIpQLSfKJ5aUz4h6lTGlz6c3NjPyWMnViVQxHqwRkCnzJsRKfz9ULQ/viewform',
     shortView: 'https://tinyurl.com/2dbjtqke',
@@ -1500,7 +1523,7 @@ window.addEventListener('DOMContentLoaded',async () => {
     (()=>{ v.step = 3; // 画面の準備
 
       v.step = 3.1; // URLの埋め込み(位置指定属性を持つHTML要素に変数を代入)
-      v.r = assignVariables({data:{
+      v.data = {data:{
         adminMail: v.conf.sys.adminMail,
         entryForm: v.conf.entry.view,
         entryFormShort: v.conf.entry.shortView,
@@ -1508,8 +1531,10 @@ window.addEventListener('DOMContentLoaded',async () => {
         volunteerTitle: v.conf.volunteer.title,
         volunteerShort: v.conf.volunteer.shortView,
         volunteerQR: v.conf.volunteer.qr,
-        staffSite: `${v.conf.staffSite.url}?${v.conf.sys.upv}=${v.conf.entryNo}`,
-      }});
+        staffSite: `${v.conf.sys.underDev?v.conf.staffSite.dev:v.conf.staffSite.url}?${v.conf.sys.upv}=${v.conf.entryNo}`,
+      }};
+      vlog(v,'data')
+      v.r = assignVariables(v.data);
       if( v.r instanceof Error ) throw v.r;
 
       v.step = 3.2; // 受付番号入力・変更画面の作成

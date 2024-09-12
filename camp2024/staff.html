@@ -1144,15 +1144,16 @@ class encryptedQuery {
    * @param {string} arg.pUP='x' - 平文送信時のURLクエリパラメータの変数名(Plain URL Parameter)
    * @param {string} arg.eUP='y' - 暗号文〃(encrypted URL Parameter)
    * @param {number} arg.expire=172800000 - クライアント側鍵の有効期間。既定値48時間
+   * @param {number} [arg.bits=1024] - クライアント側で鍵ペアを生成する場合の鍵長。既定値はconfig.jsで設定
    * === clientでのみ使用するパラメータ ==================
    * @param {string} arg.url - 問合せ先(server=WebAPI)のURL
    * @param {number|string} arg.clientId - クライアントのID。例：受付番号(entryNo)
-   * @param {number} [arg.bits] - クライアント側で鍵ペアを生成する場合の鍵長。既定値はconfig.jsで設定
    * === serverでのみ使用するパラメータ ==================
    * @param {SingleTable} arg.master - サーバ側でユーザ情報を保持するシート
    * @param {string} arg.IDcol - 当該シート上でのユーザ側を特定する欄名。ex.'entryNo'
    * @param {string} arg.CPcol - 当該シート上でユーザ側公開鍵を保持する欄名。ex.'CPkey'
    * @param {string} arg.upv - URLクエリパラメータ文字列。URL Parameter Variable
+   * @param {number} arg.passcodeValidityPeriod=600000 - パスコードの有効期間。ミリ秒、既定値10分
    * @returns 
    * 
    */
@@ -1185,7 +1186,7 @@ class encryptedQuery {
         this.conf = JSON.parse(sessionStorage.getItem(this.storageKey)) || {};
 
         v.step = 2.3; // 任意パラメータに既定値設定
-        arg.bits = arg.bits || this.conf.sys.auth.bits;
+        arg.bits = arg.bits || 1024;
 
         v.step = 2.3; // クライアント側鍵ペアの設定
         if( this.conf.CPkey ){
@@ -1214,6 +1215,7 @@ class encryptedQuery {
         if( arg.master ) this.master = arg.master; else throw new Error('master is not defined.');
         if( arg.IDcol ) this.IDcol = arg.IDcol; else throw new Error('IDcol is not defined.');
         if( arg.CPcol ) this.CPcol = arg.CPcol; else throw new Error('CPcol is not defined.');
+        this.passcodeValidityPeriod = this.passcodeValidityPeriod || 600000;
 
         v.step = 3.2; // 実行環境がサーバ側(GAS)かつDocumentPropertiesに保存されているなら取得
         this.conf = JSON.parse(PropertiesService.getDocumentProperties().getProperty(arg.storageKey));
@@ -1293,7 +1295,7 @@ class encryptedQuery {
       // step.2 : サーバ側に問合せ実行、結果検証
       // -------------------------------------------------
 
-      v.step = 2.1; // 問合せの実行
+      v.step = 2.1; // 問合せの実行、ネットワークエラーなら弾く
       v.r = await fetch(v.url,{
         method: 'GET',
         headers: {
@@ -1302,22 +1304,19 @@ class encryptedQuery {
         }
       });
       vlog(v,'r');
-      console.log(v.r);
-
-      v.step = 2.2; // ネットワークエラー
       if( !v.r.ok ) throw new Error(`[fetch error] status=${v.r.status}`);
 
-      v.step = 2.3; // オブジェクト化
+      v.step = 2.2; // オブジェクト化
       v.obj = await v.r.json();
       vlog(v,'obj');
 
-      v.step = 2.4; // 分岐先関数では無く、response()で起きたエラーの場合はthrow
+      v.step = 2.3; // 分岐先関数では無く、response()で起きたエラーの場合はthrow
       // ※分岐先関数でのエラーは本関数(response)の戻り値として本関数呼出元に返す
       if( v.obj.isOK === false ){
-        throw new Error(v.res.message);
+        throw new Error(v.obj.message);
       }
 
-      v.step = 2.5;
+      v.step = 2.4;
       v.res = v.obj.rv;
       vlog(v,'res');
 
@@ -2330,23 +2329,39 @@ function summaryTable(arg){
   }
 }
 /** vlog: デバッグ用コンソール出力
- * @param {Object} v - 出力対象Object
- * @param {string} m - メンバ名
- * @param {number} l=null - 行番号
+ * @param {Object} o - 出力対象Object
+ * @param {string|string[]} m - メンバ名
+ * @param {number|Object} l=null - 数値なら行番号、Objectならwhois,stepをメンバに持つ変数('v'を想定)
  * @returns {void}
+ * 
+ * - ver.1.1.0 2024/09/12
+ *   - v以外の変数(ex.this)でもstep表示を可能に(lにObjectを追加)
+ *   - 階層化オブジェクトメンバの指定を可能に(v.convの追加)
  */
-const vlog = (v,m,l=null) => {
+const vlog = (o,m,l=null) => {
   // return; // デバッグ用。本番時はコメントを外す
+  const v = {
+    lType: whichType(l),  // 引数lのデータ型
+    conv: (o,s) => {s.split('.').forEach(x => o = o[x]);return o},
+  };
 
-  let h = new Date().toLocaleTimeString() + ' ';
-  h += l !== null ? `l.${l} ` : '';
-  h += v.whois ? v.whois + ' ' : '';
-  h += v.step ? `step ${v.step} ` : '';
-  h += h.length > 0 ? ': ' : '';
-  if( whichType(m,'String') ) m = [m];
-  const msg = [];
-  m.forEach(x => msg.push(`${x}(${whichType(v[x])})=${stringify(v[x])}`));
-  console.log(h+msg.join('\n'));
+  switch( v.lType ){
+    case 'Object': v.whois = l.whois; v.step = l.step; v.line = null; break;
+    case 'Null'  : // Numberと同じ
+    case 'Number': v.whois = o.whois; v.step = o.step; v.line = l; break;
+  }
+  v.msg = new Date().toLocaleTimeString()
+    + (v.whois ? ` ${v.whois}` : '')
+    + (v.step ? ` step.${v.step}` : '')
+    + (v.line ? ` l.${v.line}` : '');
+
+  if( whichType(m,'string') ) m = [m];
+  m.forEach(str => {
+    v.val = v.conv(o,str);
+    v.msg += `\n${str}(${whichType(v.val)})=${stringify(v.val)}`
+  });
+
+  console.log(v.msg);
 }
 /** 変数の型を判定
  * 
@@ -2416,7 +2431,7 @@ window.addEventListener('DOMContentLoaded',async () => {
       v.step = 1.2; v.conf = // 設定情報(v.conf)の作成
 {
   sys: {
-    underDev: false,
+    underDev: true,
     storageKey: 'config',
     staffML: 'skz-oyaji@googlegroups.com',
     adminMail: 'shimokitasho.oyaji@gmail.com',
@@ -2531,7 +2546,7 @@ window.addEventListener('DOMContentLoaded',async () => {
 
       v.step = 1.3; // 受付番号の特定
       v.params = new URLSearchParams(window.location.search);
-      v.conf.entryNo = v.params.get('n') || 0;  // URLパラメータをlocalStorageより優先
+      v.conf.entryNo = v.params.get(v.conf.sys.upv) || 0;  // URLパラメータをlocalStorageより優先
       if( v.conf.entryNo === 0 ){
         // v.conf.entryNo > 0 ⇒ URLパラメータでユーザIDが指定されている(=申込受付メールからの遷移)
         // v.conf.entryNo === 0 ⇒ URLパラメータでの指定は無し
@@ -2546,27 +2561,27 @@ window.addEventListener('DOMContentLoaded',async () => {
       localStorage.setItem(v.conf.sys.storageKey,v.conf.entryNo);
 
       v.step = 1.5; // sessionStorageをクリア
-      // 前回のパスコード通知メール発行要求日時があればv.lastRequestに保存
-      v.lastRequest = localStorage.getItem('lastRequest');
       // リロードしたら再設定するため、全てクリアする
       sessionStorage.clear();
 
       v.step = 1.6; // 認証基盤をインスタンス化
       v.eq = new encryptedQuery({
+        isClient: v.conf.sys.isClient,
         storageKey: v.conf.sys.storageKey,
+        //pUP
+        //eUP
+        expire: v.conf.sys.expire,
         url: v.conf.master.API,
         clientId: v.conf.entryNo,
+        bits: v.conf.sys.auth.bits,
       });
     })();
 
     v.step = 2; // 前回のパスコード通知メール発行要求が10分以上前、または要求自体した記録がないなら発行要求
-    if( v.lastRequest === null || (Date.now() - v.lastRequest) > v.conf.sys.passcodeValidityPeriod ){
-      localStorage.setItem('lastRequest',Date.now());
-      v.r = await v.eq.request();
-      vlog(v,'r');
-      if( v.r instanceof Error ) throw v.r;
-      if( v.r.status < 0 ) throw new Error(v.r.message);
-    }
+    v.r = await v.eq.request();
+    vlog(v,'r');
+    if( v.r instanceof Error ) throw v.r;
+    if( v.r.status < 0 ) throw new Error(v.r.message);
 
     v.step = 3; // パスコード入力
     v.passcode = null;
@@ -2609,11 +2624,7 @@ window.addEventListener('DOMContentLoaded',async () => {
 
     (()=>{ v.step = 4; // 画面の準備
       
-      v.step = 4.1; // URLの埋め込み(位置指定属性を持つHTML要素に変数を代入)
-      v.r = assignVariables({data:v.conf});
-      if( v.r instanceof Error ) throw v.r;
-      
-      v.step = 4.2; // 受付業務の準備
+      v.step = 4.1; // 受付業務の準備
       // v.rにシートデータが入っていること
       v.Reception = new Reception({
         wrapper: '.Reception[name="wrapper"]',
@@ -2627,7 +2638,7 @@ window.addEventListener('DOMContentLoaded',async () => {
       });
       if( v.Reception instanceof Error ) throw v.Reception;
 
-      v.step = 4.3; // メニュー作成
+      v.step = 4.2; // メニュー作成
       // ※Receptionインスタンス作成後に実行
       v.menu = new BurgerMenu({home:'ホーム',func:{
         recept: async () => {  // 受付番号or検索キー入力
@@ -2635,7 +2646,12 @@ window.addEventListener('DOMContentLoaded',async () => {
           await v.Reception.targeting();
         },
       }});
+      if( v.menu instanceof Error ) throw v.menu;
 
+      v.step = 4.3; // URLの埋め込み(位置指定属性を持つHTML要素に変数を代入)
+      v.r = assignVariables({data:v.conf});
+      if( v.r instanceof Error ) throw v.r;
+      
     })();
 
     v.step = 99; // 終了処理
