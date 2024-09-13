@@ -212,6 +212,37 @@ data-assign="innerText:volunteerShort"></span></li>
       <div data-BurgerMenu="id:'設定、その他'">
         <div data-BurgerMenu="id:'受付番号確認・入力'"></div>
         <div data-BurgerMenu="id:'スタッフ専用サイト'">
+<h1 id="スタッフ専用サイトとは">「スタッフ専用サイト」とは？</h1>
+<p>現在ご覧になっているサイトは、誰でも閲覧可能なサイトです。</p>
+<p>スタッフは受付等で参加申込情報(個人情報)も扱うため、パスコードによる認証が必要な別ページを用意しています。</p>
+<p>閲覧のためにはスタッフとして事前に登録しておく必要があります。</p>
+<h1 id="スタッフ専用サイトの開き方">スタッフ専用サイトの開き方</h1>
+<p>スタッフ専用サイトは参加申込情報(個人情報)も扱うため、パスコード入力が必要な別ページになっています。</p>
+<p>パスコードはメールで通知されますが、システム上の制約で途中でエラーになる場合があります。その場合、以下の手順で開いてください。</p>
+<ol>
+<li>
+<span data-assign="onclick:copyStaffUrl"
+style="color:blue;font-weight:900;background:#ddf;padding:0.3rem">
+ここ</span>をクリックしてスタッフ専用サイトのURLをコピー<br> <span
+data-assign="innerText:staffSite" style="font-size:0.8rem"></span>
+</li>
+<li>
+chrome等のブラウザを開き、新規にウィンドウ(タブ)を作成、ペーストしてサイトを開く
+</li>
+<li>
+パスコード通知メールが来るので、メールアプリでパスコード(数値6桁)を確認
+</li>
+<li>
+メールアプリからブラウザに戻る。<br>「スタッフ専用サイトは認証が必要です」とのエラーが出ていたら、OKをクリックして再読込(リロード)する
+</li>
+<li>
+パスコード入力ダイアログにパスコードを入力
+</li>
+<li>
+スタッフ専用サイトが開きます
+</li>
+</ol>
+<!--
 <style>
 .button {
   display       : inline-block;
@@ -233,27 +264,34 @@ data-assign="innerText:volunteerShort"></span></li>
   background    : #ffffff;     /* 文字色     */
 }
 </style>
-<p><a class="button" data-assign="href:staffSite" target="_blank">スタッフ専用サイトを開く</a></p>
-<h2 id="スタッフ専用サイトとは">「スタッフ専用サイト」とは？</h2>
-<p>現在ご覧になっているサイトは、誰でも閲覧可能なサイトです。</p>
-<p>スタッフ専用サイトは、事前に登録を行うことで以下の機能を利用可能にしたサイトです。</p>
-<ol type="1">
-<li>スタッフ業務マニュアル</li>
-<li>参加受付業務(QRコードまたは参加者名からの検索＋受付登録)</li>
-<li>参加者集計(参加形態×属性別の申込数・参加者数のリアルタイム集計)</li>
-<li>気づき投稿(スタッフ視点で気づいた点の投稿)</li>
-<li>リンク集</li>
-</ol>
-<p>こちらは一部で個人情報やシステム設定情報を扱うため、①スタッフとしての事前登録、②利用時の認証を必要としています。</p>
-<h2 id="事前登録の方法">事前登録の方法</h2>
-<ol type="1">
-<li><p>申込時に登録</p>
-<p>参加応募フォームの質問「申込者の参加」で「スタッフとして申込者のみ参加」を選択</p></li>
-<li><p>システム管理者にメールで個別連絡</p>
-<p>システム管理者(<span
-data-assign="innerText:adminMail"></span>)宛に、お名前とメールアドレスを連絡</p></li>
-</ol>
-<p>なお在校生保護者・おやじの会メンバ以外のお申し込み等、スタッフ業務を行うか不明確な場合は登録を保留・お断りさせていただく場合があります。</p>
+<a class="button" data-assign="href:staffSite" target="_blank">スタッフ専用サイトを開く</a>
+
+ 「スタッフ専用サイト」とは？
+
+現在ご覧になっているサイトは、誰でも閲覧可能なサイトです。
+
+スタッフ専用サイトは、事前に登録を行うことで以下の機能を利用可能にしたサイトです。
+
+1. スタッフ業務マニュアル
+1. 参加受付業務(QRコードまたは参加者名からの検索＋受付登録)
+1. 参加者集計(参加形態×属性別の申込数・参加者数のリアルタイム集計)
+1. 気づき投稿(スタッフ視点で気づいた点の投稿)
+1. リンク集
+
+こちらは一部で個人情報やシステム設定情報を扱うため、①スタッフとしての事前登録、②利用時の認証を必要としています。
+
+ 事前登録の方法
+
+1. 申込時に登録
+
+   参加応募フォームの質問「申込者の参加」で「スタッフとして申込者のみ参加」を選択
+
+1. システム管理者にメールで個別連絡
+
+   システム管理者(<span data-assign="innerText:adminMail"></span>)宛に、お名前とメールアドレスを連絡
+
+なお在校生保護者・おやじの会メンバ以外のお申し込み等、スタッフ業務を行うか不明確な場合は登録を保留・お断りさせていただく場合があります。
+-->
         </div>
         <div data-BurgerMenu="id:'アンケート',func:'pEnquete',allow:2"></div>
         <div data-BurgerMenu="id:'本システムについて'">
@@ -1474,16 +1512,6 @@ function confirmEntryNo(conf){
 
     ],v.dom);
 
-    v.step = 3; // 受付番号変更に伴い影響を受ける要素の設定変更
-    v.step = 3.1; // スタッフ専用サイトのentryNoも書き換え
-    v.button = document.querySelector('.screen[name="スタッフ専用サイト"] a');
-    if( v.entryNo === '0000' ){
-      v.button.style.display = 'none';
-    } else {
-      v.button.setAttribute('href',(conf.sys.underDev ? conf.staffSite.dev : conf.staffSite.url) + '?n=' + Number(v.entryNo));
-      v.button.style.display = '';
-    }
-
     v.step = 9; // 終了処理
     console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
     return v.rv;
@@ -1583,6 +1611,10 @@ window.addEventListener('DOMContentLoaded',async () => {
         volunteerShort: v.conf.volunteer.shortView,
         volunteerQR: v.conf.volunteer.qr,
         staffSite: `${v.conf.sys.underDev?v.conf.staffSite.dev:v.conf.staffSite.url}?${v.conf.sys.upv}=${v.conf.entryNo}`,
+        copyStaffUrl: // スタッフ専用サイトのURLコピー(onclick)
+          `let url='${v.conf.sys.underDev?v.conf.staffSite.dev:v.conf.staffSite.url}`
+          + `?${v.conf.sys.upv}='+localStorage.getItem('${v.conf.sys.storageKey}');` // entryNoは実行時に取得
+          + `navigator.clipboard.writeText(url).then(alert('コピーしました'))`,
       }};
       vlog(v,'data')
       v.r = assignVariables(v.data);
