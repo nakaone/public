@@ -2426,7 +2426,10 @@ window.addEventListener('DOMContentLoaded',async () => {
       v.loading = new LoadingIcon();
       v.loading.show();
 
-      v.step = 1.2; v.conf = // 設定情報(v.conf)の作成
+      v.step = 1.2; // リロードしたらsessionStorageを全てクリア
+      sessionStorage.clear();
+
+      v.step = 1.3; v.conf = // 設定情報(v.conf)の作成
 {
   sys: {
     underDev: false,
@@ -2542,7 +2545,7 @@ window.addEventListener('DOMContentLoaded',async () => {
 }
       vlog(v,'conf');
 
-      v.step = 1.3; // 受付番号の特定
+      v.step = 1.4; // 受付番号の特定
       v.params = new URLSearchParams(window.location.search);
       v.conf.entryNo = v.params.get(v.conf.sys.upv) || 0;  // URLパラメータをlocalStorageより優先
       if( v.conf.entryNo === 0 ){
@@ -2554,13 +2557,12 @@ window.addEventListener('DOMContentLoaded',async () => {
         v.conf.entryNo = Number(localStorage.getItem(v.conf.sys.storageKey));
       }
       vlog(v,['params','conf']);
+      if( v.conf.entryNo === 0 ) throw new Error('受付番号が特定できません。\n'
+      + '一般公開サイトで「メニュー > 設定、その他 > 受付番号確認・入力」で受付番号を設定するか、'
+      + '本サイトURL末尾に"〜?n=X"(Xは受付番号)を付与してアクセスしてください。');
 
-      v.step = 1.4; // 受付番号をlocalStorageに保存(未確定の場合'0')
+      v.step = 1.5; // 受付番号をlocalStorageに保存(未確定の場合'0')
       localStorage.setItem(v.conf.sys.storageKey,v.conf.entryNo);
-
-      v.step = 1.5; // sessionStorageをクリア
-      // リロードしたら再設定するため、全てクリアする
-      sessionStorage.clear();
 
       v.step = 1.6; // 認証基盤をインスタンス化
       v.eq = new encryptedQuery({
@@ -2613,9 +2615,6 @@ window.addEventListener('DOMContentLoaded',async () => {
         }
       } else {
         // ダイアログでキャンセルされた場合、内容を消去して終了
-        v.loading.hide();
-        document.querySelector('.BurgerMenu[name="wrapper"]').innerHTML = '';
-        document.querySelectorAll('script').forEach(dom => dom.innerHTML = '');
         throw new Error('スタッフ専用サイトは認証が必要です');
       }
     }
@@ -2659,6 +2658,9 @@ window.addEventListener('DOMContentLoaded',async () => {
   } catch(e) {
     e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
     console.error(`${e.message}\nv=${JSON.stringify(v)}`);
+    v.loading.hide();
+    document.querySelector('.BurgerMenu[name="wrapper"]').innerHTML = '';
+    document.querySelectorAll('script').forEach(dom => dom.innerHTML = '');
     alert(e.message);
   }
 });

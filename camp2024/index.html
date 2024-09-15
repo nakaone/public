@@ -1541,8 +1541,12 @@ window.addEventListener('DOMContentLoaded',async () => {
     isClient: true
   },
   staffSite: {
+    title: 'スタッフ専用サイト',
+    type: 'site',
     url: 'https://nakaone.github.io/public/camp2024/staff.html',
-    dev: 'file:///Users/ena.kaon/Desktop/GitHub/public/camp2024/staff.html'
+    dev: 'file:///Users/ena.kaon/Desktop/GitHub/public/camp2024/staff.html',
+    shortURL: 'https://tinyurl.com/2aovhf8r',
+    qr: 'https://api.qrserver.com/v1/create-qr-code/?data=https://nakaone.github.io/public/camp2024/staff.html'
   },
   entry: {
     title: '参加申込フォーム',
@@ -1599,25 +1603,14 @@ window.addEventListener('DOMContentLoaded',async () => {
     (()=>{ v.step = 3; // 画面の準備
 
       v.step = 3.1; // URLの埋め込み(位置指定属性を持つHTML要素に変数を代入)
-      v.conf.staffSite.url = `${v.conf.sys.underDev?v.conf.staffSite.dev:v.conf.staffSite.url}?${v.conf.sys.upv}=${v.conf.entryNo}`;
-      v.conf.staffSite.copyStaffUrl // スタッフ専用サイトのURLコピー(onclick)
-      = `let url='${v.conf.sys.underDev?v.conf.staffSite.dev:v.conf.staffSite.url}`
-      + `?${v.conf.sys.upv}='+localStorage.getItem('${v.conf.sys.storageKey}');` // entryNoは実行時に取得
-      + `navigator.clipboard.writeText(url).then(alert('コピーしました'))`;
-      v.data = {data:v.conf /*{
-        adminMail: v.conf.sys.adminMail,
-        entryForm: v.conf.entry.view,
-        entryFormShort: v.conf.entry.shortView,
-        entryFormQR: v.conf.entry.qr,
-        volunteerTitle: v.conf.volunteer.title,
-        volunteerShort: v.conf.volunteer.shortView,
-        volunteerQR: v.conf.volunteer.qr,
-        staffSite: `${v.conf.sys.underDev?v.conf.staffSite.dev:v.conf.staffSite.url}?${v.conf.sys.upv}=${v.conf.entryNo}`,
-        copyStaffUrl: // スタッフ専用サイトのURLコピー(onclick)
-          `let url='${v.conf.sys.underDev?v.conf.staffSite.dev:v.conf.staffSite.url}`
-          + `?${v.conf.sys.upv}='+localStorage.getItem('${v.conf.sys.storageKey}');` // entryNoは実行時に取得
-          + `navigator.clipboard.writeText(url).then(alert('コピーしました'))`,
-      }*/};
+      v.conf.staffSite.getUrl = () => {
+        // entryNoは変更される可能性があるため、実行時に取得
+        return (v.conf.sys.underDev ? v.conf.staffSite.dev : v.conf.staffSite.url)
+        + '?' + v.conf.sys.upv + '=' + localStorage.getItem(v.conf.sys.storageKey);
+      }
+      v.conf.staffSite.copyStaffUrl // 「スタッフ専用サイト」ページの「ここ」クリック時の動作定義
+      = `navigator.clipboard.writeText('${v.conf.staffSite.getUrl()}').then(alert('コピーしました'));`
+      v.data = {data:v.conf};
       vlog(v,'data')
       v.r = assignVariables(v.data);
       if( v.r instanceof Error ) throw v.r;
