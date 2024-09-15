@@ -2589,7 +2589,11 @@ window.addEventListener('DOMContentLoaded',async () => {
     for( v.cnt=0 ; v.cnt<3 ; v.cnt++ ){
 
       v.step = 3.1; // パスコード入力ダイアログ表示
-      v.passcode = window.prompt(v.msg + 'メール記載のパスコードを入力してください');
+      v.passcode = window.prompt(v.msg + 'メール記載のパスコードを入力してください。'
+        + 'パスコード確認のため一度メールアプリに切り替え、'
+        + '「認証が必要です」とのメッセージが出た場合、'
+        + 'ブラウザをリロードしてパスコード入力してください。'
+      );
 
       if( v.passcode ){
         v.step = 3.2; // パスコード有効性検証要求
