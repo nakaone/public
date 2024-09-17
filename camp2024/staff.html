@@ -317,10 +317,7 @@ pre {border: solid 5px #999;}
         </ol>
       </div>
     </div>
-    <div data-BurgerMenu="id:'お気づきの点',func:'awareness'"></div>
-    <!--div data-BurgerMenu="id:'写真共有'">
-      <h1>写真共有</h1>
-    </div-->
+    <div data-BurgerMenu="id:'気づき投稿',func:'awareness'"></div>
     <div data-BurgerMenu="id:'リンク集'">
       <h1>リンク集</h1>
 <div class="LinkCollection">
@@ -2693,6 +2690,9 @@ window.addEventListener('DOMContentLoaded',async () => {
         recept: async () => {  // 受付番号or検索キー入力
           changeScreen('受付業務'); // data-BurgerMenu:id
           await v.Reception.targeting();
+        },
+        awareness: () => {  // 「お気づきの点」フォームへ遷移
+          window.open(v.conf.awareness.view,'_blank');
         },
       }});
       if( v.menu instanceof Error ) throw v.menu;
