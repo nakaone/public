@@ -130,6 +130,7 @@ pre {border: solid 5px #999;}
   width: 200px;
   height: 200px;
 }
+[title="summaryTable"] td {text-align: right;}
 </style>
 </head>
 <body>
@@ -311,7 +312,8 @@ pre {border: solid 5px #999;}
         <div title="wrapper"></div>
         <ol>
           <li>申込口数におやじの会メンバの申込は含まれません</li>
-          <li>宿泊には日帰り予定の保護者を含む(例：母申込で日帰り、子供＋父がテント泊)</li>
+          <li>宿泊には日帰り予定の保護者を含みます(例：母申込で日帰り、子供＋父がテント泊)</li>
+          <li>「ボランティア=できる」と回答いただいた方も「おやじの会」にはカウントしていません</li>
         </ol>
       </div>
     </div>
@@ -2662,7 +2664,7 @@ window.addEventListener('DOMContentLoaded',async () => {
         tbody: [
           {tag:'tr',children:[{tag:'th',attr:{colspan:3},text:'申込口数'}]},
           {tag:'tr',children:[
-            {tag:'th',attr:{rowspan:13},text:'申込人数'},
+            {tag:'th',attr:{rowspan:12},text:'申込人数'},
             {tag:'th',attr:{rowspan:7},text:'在校生'},
             {tag:'th',text:'1年生'}
           ]},
@@ -2680,7 +2682,7 @@ window.addEventListener('DOMContentLoaded',async () => {
           {tag:'tr',children:[{tag:'th',text:'保護者'}]},
           {tag:'tr',children:[{tag:'th',text:'関係者計'}]},
           {tag:'tr',children:[{tag:'th',attr:{colspan:2},text:'申込人数計'}]},
-          {tag:'tr',children:[{tag:'th',attr:{colspan:2},text:'おやじの会'}]},
+          {tag:'tr',children:[{tag:'th',attr:{colspan:3},text:'おやじの会'}]},
         ],
       });
       if( v.r instanceof Error ) throw v.r;
