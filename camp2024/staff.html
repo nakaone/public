@@ -106,29 +106,6 @@ pre {border: solid 5px #999;}
     grid-column: 1/13; grid-template-columns: repeat(3, 1fr); gap: 1rem;}
   .Reception [name="detail"] [name="button"] button {
     width:100%; aspect-ratio: 1/1; font-size: 2rem;}
-.summaryTable {
-  display: grid;
-  grid-template-columns: 1rem 5rem repeat(9, 4rem);
-  grid-template-rows: repeat(11, 1.5rem);
-  gap: 0.2rem;
-  margin: 1rem;
-}
-.summaryTable div {
-  padding: 0.2rem;
-  border-top: solid 1px #aaa;
-  border-left: solid 1px #aaa;
-  box-sizing: border-box;
-  white-space: nowrap;
-}
-.summaryTable .l1, .summaryTable .l2, .summaryTable .l3 {
-  background: #eee;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  white-space: normal;
-}
-.summaryTable .l1 {z-index: 1;}
-.summaryTable .l2 {z-index: 2;}
-.summaryTable .l3 {z-index: 3;}
 .LinkCollection .title {
   margin: 2rem 20px 10px 20px;
   padding: 10px;
@@ -329,37 +306,14 @@ pre {border: solid 5px #999;}
     </div>
     </div></div>
     <div data-BurgerMenu="id:'参加者集計'">
-      <h1>参加者集計</h1>
-<div class="summaryTable" title="table01" data-st="&quot;f&quot;:[&quot;entries inner join members on entries.entryNo=members.entryNo&quot;,&quot;entries&quot;]">
-
-  <!-- 左上空白部分 -->
-  <div style="grid-column:1/3;grid-row:1/4;"></div>
-
-  <!-- X軸(class="x") -->
-  <div data-st="&quot;cl&quot;:&quot;x l1&quot;,&quot;rc&quot;:&quot;1/4-3/9&quot;,&quot;w&quot;:&quot;isCancel=false&quot;">参加予定</div>
-  <div data-st="&quot;cl&quot;:&quot;x l2&quot;,&quot;rc&quot;:&quot;2/4-4/9&quot;,&quot;w&quot;:&quot;isCancel=false and isOyaji=false&quot;">一般参加</div>
-  <div data-st="&quot;cl&quot;:&quot;x l3&quot;,&quot;rc&quot;:&quot;3/4-5/6&quot;,&quot;w&quot;:&quot;isCancel=false and isOyaji=false and `宿泊、テント`=\&quot;宿泊する(テントあり)\&quot;&quot;">テント</div>
-  <div data-st="&quot;cl&quot;:&quot;x l3&quot;,&quot;rc&quot;:&quot;3/4-6/7&quot;,&quot;w&quot;:&quot;isCancel=false and isOyaji=false and `宿泊、テント`=\&quot;宿泊する(テントなし)\&quot;&quot;">体育館</div>
-  <div data-st="&quot;cl&quot;:&quot;x l3&quot;,&quot;rc&quot;:&quot;3/4-7/8&quot;,&quot;w&quot;:&quot;isCancel=false and isOyaji=false and `宿泊、テント`=\&quot;宿泊しない\&quot;&quot;">日帰り</div>
-  <div data-st="&quot;cl&quot;:&quot;x l2&quot;,&quot;rc&quot;:&quot;2/4-8/9&quot;,&quot;w&quot;:&quot;isCancel=false and isOyaji=true&quot;">おやじの会</div>
-  <div data-st="&quot;cl&quot;:&quot;x l1&quot;,&quot;rc&quot;:&quot;1/4-9/12&quot;,&quot;w&quot;:&quot;isCancel=true&quot;">キャンセル</div>
-  <div data-st="&quot;cl&quot;:&quot;x l2&quot;,&quot;rc&quot;:&quot;2/4-10/11&quot;,&quot;w&quot;:&quot;isCancel=true and isOyaji=false&quot;">一般参加</div>
-  <div data-st="&quot;cl&quot;:&quot;x l2&quot;,&quot;rc&quot;:&quot;2/4-11/12&quot;,&quot;w&quot;:&quot;isCancel=true and isOyaji=true&quot;">おやじの会</div>
-
-  <!-- Y軸(class="y") -->
-  <div data-st="&quot;cl&quot;:&quot;y l1&quot;,&quot;rc&quot;:&quot;4/5-1/3&quot;,&quot;f&quot;:1">申込口数</div><!-- 口数ベースなのでfrom句パターンNo.1を指定 -->
-  <div data-st="&quot;cl&quot;:&quot;y l1&quot;,&quot;rc&quot;:&quot;5/15-1/3&quot;">申込人数</div>
-  <div data-st="&quot;cl&quot;:&quot;y l2&quot;,&quot;rc&quot;:&quot;6/7-2/3&quot;,&quot;w&quot;:&quot;`所属`=\&quot;未就学児\&quot;&quot;">未就学児</div>
-  <div data-st="&quot;cl&quot;:&quot;y l2&quot;,&quot;rc&quot;:&quot;7/8-2/3&quot;,&quot;w&quot;:&quot;`所属`=\&quot;1年生\&quot;&quot;">1年生</div>
-  <div data-st="&quot;cl&quot;:&quot;y l2&quot;,&quot;rc&quot;:&quot;8/9-2/3&quot;,&quot;w&quot;:&quot;`所属`=\&quot;2年生\&quot;&quot;">2年生</div>
-  <div data-st="&quot;cl&quot;:&quot;y l2&quot;,&quot;rc&quot;:&quot;9/10-2/3&quot;,&quot;w&quot;:&quot;`所属`=\&quot;3年生\&quot;&quot;">3年生</div>
-  <div data-st="&quot;cl&quot;:&quot;y l2&quot;,&quot;rc&quot;:&quot;10/11-2/3&quot;,&quot;w&quot;:&quot;`所属`=\&quot;4年生\&quot;&quot;">4年生</div>
-  <div data-st="&quot;cl&quot;:&quot;y l2&quot;,&quot;rc&quot;:&quot;11/12-2/3&quot;,&quot;w&quot;:&quot;`所属`=\&quot;5年生\&quot;&quot;">5年生</div>
-  <div data-st="&quot;cl&quot;:&quot;y l2&quot;,&quot;rc&quot;:&quot;12/13-2/3&quot;,&quot;w&quot;:&quot;`所属`=\&quot;6年生\&quot;&quot;">6年生</div>
-  <div data-st="&quot;cl&quot;:&quot;y l2&quot;,&quot;rc&quot;:&quot;13/14-2/3&quot;,&quot;w&quot;:&quot;`所属`=\&quot;卒業生\&quot;&quot;">卒業生</div>
-  <div data-st="&quot;cl&quot;:&quot;y l2&quot;,&quot;rc&quot;:&quot;14/15-2/3&quot;,&quot;w&quot;:&quot;`所属`=\&quot;保護者\&quot;&quot;">保護者</div>
-
-</div>
+      <div title="summaryTable">
+        <h1>参加申込口数・人数集計</h1>
+        <div title="wrapper"></div>
+        <ol>
+          <li>申込口数におやじの会メンバの申込は含まれません</li>
+          <li>宿泊には日帰り予定の保護者を含む(例：母申込で日帰り、子供＋父がテント泊)</li>
+        </ol>
+      </div>
     </div>
     <div data-BurgerMenu="id:'お気づきの点',func:'awareness'"></div>
     <!--div data-BurgerMenu="id:'写真共有'">
@@ -2195,126 +2149,125 @@ function stringify(variable,opt={addType:false}){
     return e;
   }
 }
-/** summaryTable: 集計表の表示
- * X,Y軸のラベル要素のdata-st属性の設定値に基づき、交差するセルの値を集計する。
- * 
+/** summaryTable: 集計表を作成
  * @param {Object} arg
- * @param {string} arg.dom - 表のHTML要素のCSSセレクタ
- * @param {Object.<string,any>[]} arg.data - 集計対象の基データ。[{項目名:値},..]
- * @param {Arrow} arg.delive - 導出項目の算出関数
- * @returns {null|Error}
+ * @param {string} arg.wrapper - tableの包摂要素(div)を指定するCSSセレクタ
+ * @param {Object[]} arg.data - 集計表の元となるデータ。1行1Objectの配列
+ * @param {string[]} arg.cols - 横軸の項目名
+ * @param {string[]} arg.rows - 縦軸の項目名
+ * @param {string[]} arg.colsFormula - 横軸の集計項目の算式。但し加減に限る
+ * @param {string[]} arg.rowsFormula - 縦軸の集計項目の算式
+ * @param {function} arg.normalize - データを正規化する関数
+ * @param {Object} arg.thead - ヘッダ部を作成するcreateElementオブジェクト
+ * @param {Object} arg.tbody - ボディ部を作成するcreateElementオブジェクト。但し計数項目・導出項目は除く
  * 
- * ## summaryTable関連要素(HTMLElement)の構造
+ * - 空白行は想定しない(全てのセルが計数項目または導出項目の前提)
+ * - Google Spread [表形式仕様・テストデータ](https://docs.google.com/spreadsheets/d/1fvCYOfp35LivbZlQHIhnGaujpCUeoI7u2qydFrMFem0/edit?gid=1400698249#gid=1400698249)
  * 
- * - div[title="summaryTable"]     ⇒ buildでの抽出(querySelector.js)時の範囲指定用
- *   - div.summaryTable[data-st①] ⇒ 集計表の枠組み
- *     - div[data-st②]            ⇒ 集計表内の軸ラベル要素
+ * **normalizeの仕様**
  * 
- * 1. data-st内の文字列は、項目名を'"'で囲む。また末尾の','は不可
- *    ∵ 両端に'{...}'を付けてJSON.parseをかけるので、厳密にJSONの文法に従う
- * 2. 軸ラベル以外のセル要素はプログラム内で枠組み要素に追加される
- * 
- * ## data-st①(表枠組)内に記述する要素
- * 
- * - f {string[]} From句のパターン集。冒頭の"from "は不要
- * 
- * ## data-st②(セル)内に記述する要素
- * 
- * - cl {string} class。軸(x/y)とレベル(l1〜n)は必須 
- * - rc {string} grid-row, grid-column。rs/re-cs/ce形式
- * - f {number} data-st①で指定したFrom句の配列の添字。
- *     X軸/Y軸で択一(XOR)。両軸とも指定が無い場合、既定値0。
- * - w {string} Where句。X,Y両軸に存在すれば' and 'で結合
+ * - 引数：1行分のオブジェクト
+ *   ex.`{"申込者の参加": "参加予定(宿泊なし)","宿泊、テント": "宿泊しない","参加者01所属": "1年生","参加者02所属": "2年生","参加者03所属": "2年生"}`
+ * - 戻り値：1件毎に分割されたオブジェクトの配列。メンバはrow,colのみ、値はarg.rows/colsに存在する文字列
+ *   ex.`[{row:"申込口数",col:"日帰り"},{row:"1年生",col:"日帰り"},{row:"2年生",col:"日帰り"},{row:"2年生",col:"日帰り"}]`
  */
 function summaryTable(arg){
-  const v = {whois:'summaryTable',step:0,rv:null,table:{},def:{}};
+  const v = {whois:'summaryTable',step:0,rv:null,data:[]};
   console.log(`${v.whois} start.\narg=${stringify(arg)}`);
   try {
 
-    (()=>{  v.step = 1; // 表関係HTML要素の準備
+    v.step = 1; // データを正規化する
+    arg.data.forEach(o => v.data.push(...arg.normalize(o)));
+    vlog(v,'data');
 
-      v.step = 1.1; // 描画要素の取得
-      v.tableDom = document.querySelector(arg.dom);
+    v.step = 2; // 計数項目の集計
+    v.sql = 'select `row`,`col`,count(*) as `num` from ? group by `row`,`col`;';
+    v.table = alasql(v.sql,[v.data]);
+    vlog(v,'table');
 
-      v.step = 1.2; // 包摂要素で指定したパターンを取得
-      v.st = JSON.parse('{'+v.tableDom.getAttribute('data-st')+'}');
-      v.def.from = v.st.f || [];
-      v.def.where = v.st.w || '';
+    v.step = 3; // 横方向での導出項目の計算
+    arg.colsFormula.forEach(formula => {
+      v.step = 3.1;
+      v.m = formula.match(/^(.+?)=(.+)$/);
+      v.left = v.m[1];
+      v.fm = [];
+      v.cols = v.m[2].replaceAll(/([\+\-])/g,"\t$1").split('\t');
+      v.cols.forEach(col => {
+        v.m = col.match(/^([\+\-])(.+)$/);
+        if( v.m ) v.fm.push({sign:v.m[1]==='+',name:v.m[2]});
+        else v.fm.push({sign:true,name:col});
+      });
+      vlog(v,['m','cols','to','fm']);
 
-      v.step = 1.3; // 行・列ラベルについて、data-stの内容を展開
-      v.tableDom.querySelectorAll('[data-st]').forEach(d => {
-        v.o = JSON.parse('{'+d.getAttribute('data-st')+'}');
-        // data-st.clを基にclass属性を追加
-        if( v.o.hasOwnProperty('cl') ) d.classList = v.o.cl;
-        // data-st.rcを基にgrid-row/column属性を追加
-        if( v.o.hasOwnProperty('rc') ){
-          v.m = v.o.rc.match(/(\d+) *\/ *(\d+) *- *(\d+) *\/ *(\d+)/);
-          d.style.gridRow = v.m[1] + '/' + v.m[2];
-          d.style.gridColumn = v.m[3] + '/' + v.m[4];
-          d.setAttribute('data-row',v.m[1]);  // 行の開始位置
-          d.setAttribute('data-col',v.m[3]);  // 列の開始位置
+      arg.rows.forEach(row => {
+        v.step = 3.2; // 集計結果を格納するセルを特定、v.cellとする
+        v.cell = v.table.find(x => x.row === row && x.col === v.left);
+        if( v.cell === undefined ){
+          v.cell = {row:row,col:v.left,num:0};
+          v.table.push(v.cell);
         }
-        // data-st.s/f/wを基にSQL文作成用属性(data-from/where)を追加
-        if( v.o.hasOwnProperty('f') ) d.setAttribute('data-from',v.def.from[v.o.f]);
-        if( v.o.hasOwnProperty('w') ) d.setAttribute('data-where',v.o.w);
-      });
-    })();
 
-    (()=>{  v.step = 2; // データベースの準備
-
-      v.step = 2.1; // 引数で渡されたデータオブジェクトに導出項目を追加
-      arg.data.forEach(o => arg.delive(o));
-
-      v.step = 2.2; // 各種テーブルの作成とデータセット
-      v.r = alasql(arg.setup,[arg.data]);
-      if( v.r instanceof Error ) throw v.r;
-
-    })();
-
-    (()=>{  v.step = 3; // 表内の数値設定
-
-      v.tableDom.querySelectorAll('.x').forEach(xDom => {
-        v.step = 2.1; // X軸ラベルのSQL関係属性を取得
-        v.dom = {x:{
-          from:   xDom.getAttribute('data-from') || '',
-          where:  xDom.getAttribute('data-where') || '',
-          grid:   xDom.getAttribute('data-col') || '',
-        }};
-
-        v.tableDom.querySelectorAll('.y').forEach(yDom => {
-          v.step = 2.2; // Y軸ラベルのSQL関係属性を取得
-          v.dom.y = {
-            from:   yDom.getAttribute('data-from') || '',
-            where:  yDom.getAttribute('data-where') || '',
-            grid:   yDom.getAttribute('data-row') || '',
-          };
-
-          v.step = 2.3; // SQL文の作成
-          v.where = [];
-          if( v.def.where ) v.where.push(v.def.where);
-          if( v.dom.x.where ) v.where.push(v.dom.x.where);
-          if( v.dom.y.where ) v.where.push(v.dom.y.where);
-          v.sql = 'select * from ' + (v.dom.x.from || v.dom.y.from || v.def.from[0])
-          + (v.where.length === 0 ? '' : ` where ${v.where.join(' and ')}`);
-
-          v.step = 2.4; // 対象人数の取得
-          v.r = alasql(v.sql); if( v.r instanceof Error ) throw v.r;
-          v.num = v.r.length;
-
-          v.step = 2.5; // セル要素の追加
-          v.r = createElement({
-            text: v.num.toLocaleString(),
-            style: {
-              textAlign: 'right',
-              gridRow: v.dom.y.grid + '/' + v.dom.y.grid,
-              gridColumn: v.dom.x.grid + '/' + v.dom.x.grid,
-            }
-          },v.tableDom);
-          if( v.r instanceof Error ) throw v.r;
-
+        v.step = 3.3; // 式に現れた項目毎に加減
+        v.fm.forEach(col => {
+          v.cell.num += ((v.table.find(x => x.row === row && x.col === col.name)
+          || {num:0}).num) * (col.sign ? 1 : -1);
         });
+        vlog(v,'cell');
       });
-    })();
+    });
+
+    v.step = 4; // 縦方向での導出項目の計算
+    arg.rowsFormula.forEach(formula => {
+      v.step = 4.1;
+      v.m = formula.match(/^(.+?)=(.+)$/);
+      v.left = v.m[1];
+      v.fm = [];
+      v.rows = v.m[2].replaceAll(/([\+\-])/g,"\t$1").split('\t');
+      v.rows.forEach(row => {
+        v.m = row.match(/^([\+\-])(.+)$/);
+        if( v.m ) v.fm.push({sign:v.m[1]==='+',name:v.m[2]});
+        else v.fm.push({sign:true,name:row});
+      });
+      vlog(v,['m','rows','to','fm']);
+
+      arg.cols.forEach(col => {
+        v.step = 4.2; // 集計結果を格納するセルを特定、v.cellとする
+        v.cell = v.table.find(x => x.row === v.left && x.col === col);
+        if( v.cell === undefined ){
+          v.cell = {row:v.left,col:col,num:0};
+          v.table.push(v.cell);
+        }
+
+        v.step = 4.3; // 式に現れた項目毎に加減
+        v.fm.forEach(row => {
+          v.cell.num += ((v.table.find(x => x.row === row.name && x.col === col)
+          || {num:0}).num) * (row.sign ? 1 : -1);
+        });
+        vlog(v,'cell');
+      });
+    });
+
+    for( v.i=0 ; v.i<arg.tbody.length ; v.i++ ){
+      v.step = 5.1; // 表要素の作成：行単位
+      v.tr = arg.tbody[v.i].children;
+      for( v.j=0 ; v.j<arg.cols.length ; v.j++ ){
+        v.step = 5.2; // 列単位
+        v.val = (v.table.find(x => x.row === arg.rows[v.i] && x.col === arg.cols[v.j]) || {num:0}).num;
+        v.tr.push({tag:'td',text:v.val});
+      }
+      vlog(v,'tr')
+    }
+
+
+    v.step = 5.3; // 表の作成
+    v.r = createElement({
+      children:[
+        {tag:'table',children:[
+          {tag:'thead',children:arg.thead},
+          {tag:'tbody',children:arg.tbody},
+        ]}
+    ]},document.querySelector(arg.wrapper));
+    if( v.r instanceof Error ) throw v.r;
 
     v.step = 9; // 終了処理
     console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
@@ -2638,7 +2591,101 @@ window.addEventListener('DOMContentLoaded',async () => {
       });
       if( v.Reception instanceof Error ) throw v.Reception;
 
-      v.step = 4.2; // メニュー作成
+      v.step = 4.2; // 参加者集計の作成
+      v.r = summaryTable({
+        wrapper: 'div[title="summaryTable"] [title="wrapper"]',
+        data: v.r.data,
+        cols: ['テント','体育館','宿泊計','日帰り','参加計','参加取消'],
+        rows: ['申込口数',
+          '1年生','2年生','3年生','4年生','5年生','6年生','在校生計',
+          '未就学児','卒業生','保護者','関係者計','申込人数計','おやじの会'],
+        colsFormula: ['宿泊計=テント+体育館','参加計=宿泊計+日帰り'],
+        rowsFormula: [
+          '在校生計=1年生+2年生+3年生+4年生+5年生+6年生',
+          '関係者計=未就学児+卒業生+保護者',
+          '申込人数計=在校生計+関係者計',
+        ],
+        normalize: o => { /* データの正規化方法の定義
+          1行分のObject = {
+            "申込者の参加": "参加予定(宿泊なし)",
+            "宿泊、テント": "宿泊しない",
+            "参加者01所属": "1年生",
+            "参加者02所属": "2年生",
+            "参加者03所属": "2年生"
+          }
+          
+          [{row:"申込口数",col:"日帰り"},
+          {row:"1年生",col:"日帰り"},
+          {row:"2年生",col:"日帰り"}, // 1件1Objとする(まとめない)
+          {row:"2年生",col:"日帰り"}]
+          */
+          const v = {rv:[],
+            cancel: (o['キャンセル'] && o['キャンセル'].length > 0 ? true : false),
+            oyaji: (o['申込者の参加'].match(/おやじ/) ? true : false),
+            stay: (o['宿泊、テント'] === '宿泊しない' ? false : true),
+            tent: (o['宿泊、テント'].match(/あり/) ? true : false),
+          };
+          v.col = v.cancel  // 計上する欄の特定
+            ? '参加取消'
+            : ( v.oyaji
+              ? (v.stay ? '宿泊計' : '日帰り')
+              : (v.stay ? (v.tent ? 'テント' : '体育館') : '日帰り'));
+  
+          if( v.oyaji === false ) // 申込口数の登録
+            v.rv.push({row:'申込口数',col:v.col});
+  
+          if( v.oyaji ) v.rv.push({row:'おやじの会',col:v.col}); // 申込者の登録
+          else if( o['申込者の参加'].match(/参加予定/) ) v.rv.push({row:'保護者',col:v.col});
+  
+          for( v.i=1 ; v.i<6 ; v.i++ ) // 参加者01〜05の登録
+            if( o[`参加者0${v.i}所属`] ) v.rv.push({row:o[`参加者0${v.i}所属`],col:v.col});
+  
+          return v.rv;
+        },
+        thead: [
+          {tag:'tr',children:[
+            {tag:'th',attr:{colspan:3,rowspan:3}},
+            {tag:'th',attr:{colspan:5},text:'参加予定'},
+            {tag:'th',attr:{rowspan:3},text:'参加取消'},
+          ]},
+          {tag:'tr',children:[
+            {tag:'th',attr:{colspan:3},text:'宿泊'},
+            {tag:'th',attr:{rowspan:2},text:'日帰り'},
+            {tag:'th',attr:{rowspan:2},text:'参加計'},
+          ]},
+          {tag:'tr',children:[
+            {tag:'th',text:'テント'},
+            {tag:'th',text:'体育館'},
+            {tag:'th',text:'宿泊計'},
+          ]},
+        ],
+        tbody: [
+          {tag:'tr',children:[{tag:'th',attr:{colspan:3},text:'申込口数'}]},
+          {tag:'tr',children:[
+            {tag:'th',attr:{rowspan:13},text:'申込人数'},
+            {tag:'th',attr:{rowspan:7},text:'在校生'},
+            {tag:'th',text:'1年生'}
+          ]},
+          {tag:'tr',children:[{tag:'th',text:'2年生'}]},
+          {tag:'tr',children:[{tag:'th',text:'3年生'}]},
+          {tag:'tr',children:[{tag:'th',text:'4年生'}]},
+          {tag:'tr',children:[{tag:'th',text:'5年生'}]},
+          {tag:'tr',children:[{tag:'th',text:'6年生'}]},
+          {tag:'tr',children:[{tag:'th',text:'在校生計'}]},
+          {tag:'tr',children:[
+            {tag:'th',attr:{rowspan:4},text:'関係者'},
+            {tag:'th',text:'未就学児'},
+          ]},
+          {tag:'tr',children:[{tag:'th',text:'卒業生'}]},
+          {tag:'tr',children:[{tag:'th',text:'保護者'}]},
+          {tag:'tr',children:[{tag:'th',text:'関係者計'}]},
+          {tag:'tr',children:[{tag:'th',attr:{colspan:2},text:'申込人数計'}]},
+          {tag:'tr',children:[{tag:'th',attr:{colspan:2},text:'おやじの会'}]},
+        ],
+      });
+      if( v.r instanceof Error ) throw v.r;
+
+      v.step = 4.3; // メニュー作成
       // ※Receptionインスタンス作成後に実行
       v.menu = new BurgerMenu({home:'ホーム',func:{
         recept: async () => {  // 受付番号or検索キー入力
@@ -2648,10 +2695,10 @@ window.addEventListener('DOMContentLoaded',async () => {
       }});
       if( v.menu instanceof Error ) throw v.menu;
 
-      v.step = 4.3; // URLの埋め込み(位置指定属性を持つHTML要素に変数を代入)
+      v.step = 4.4; // URLの埋め込み(位置指定属性を持つHTML要素に変数を代入)
       v.r = assignVariables({data:v.conf});
       if( v.r instanceof Error ) throw v.r;
-      
+
     })();
 
     v.step = 99; // 終了処理
