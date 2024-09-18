@@ -106,6 +106,16 @@ pre {border: solid 5px #999;}
     grid-column: 1/13; grid-template-columns: repeat(3, 1fr); gap: 1rem;}
   .Reception [name="detail"] [name="button"] button {
     width:100%; aspect-ratio: 1/1; font-size: 2rem;}
+.screen[name="スタッフ名簿"] h2 {background: linear-gradient(transparent 70%, #4666ff 70%);}
+.screen[name="スタッフ名簿"] .name {
+  font-size:1.4rem;
+  margin-top: 1.4rem;
+  padding: 0.25rem 0.5rem;
+  color: #001ca7;
+  background: transparent;
+  border-left: solid 70px #8496efb3;
+}
+.screen[name="スタッフ名簿"] .memo {color: #001ca7;font-size:0.8rem}
 .LinkCollection .title {
   margin: 2rem 20px 10px 20px;
   padding: 10px;
@@ -317,6 +327,7 @@ pre {border: solid 5px #999;}
         </ol>
       </div>
     </div>
+    <div data-BurgerMenu="id:'スタッフ名簿'"></div>
     <div data-BurgerMenu="id:'気づき投稿',func:'awareness'"></div>
     <div data-BurgerMenu="id:'リンク集'">
       <h1>リンク集</h1>
@@ -2155,6 +2166,84 @@ async function scanQR(parent,opt={}){
     return e;
   }
 }
+function staffList(arg){
+  const v = {whois:'staffList',step:0,rv:null,data:[],dObj:[[],[],[]]};
+  console.log(`${v.whois} start.\narg=${stringify(arg)}`);
+  try {
+
+    v.step = 1; // sessionStorageからスタッフ名簿データを取得
+    v.raw = JSON.parse(sessionStorage.getItem('config')).staff;
+    v.raw.sort((a,b)=>{  // メールアドレス昇順・タイムスタンプ降順にソート
+      [la,lb] = [a['メールアドレス'].toLowerCase(),b['メールアドレス'].toLowerCase()];
+      return la > lb ? 1 : (la < lb ? -1 : (
+        new Date(a['タイムスタンプ']).getTime() < new Date(b['タイムスタンプ']).getTime() ? 1 : -1
+      ));
+    });
+    vlog(v,'raw');
+
+    v.step = 2; // 重複するメールアドレスは後から登録した方を優先。但し空欄はそれ以前のデータで補完
+    v.prev = ''; v.c = -1;
+    v.raw.forEach(o => {
+      v.step = 2.1; // 重複していない分は新規登録
+      if( o['メールアドレス'] !== v.prev ){
+        o.unix = new Date(o['タイムスタンプ']).getTime(); // 後のソート用
+        v.data[++v.c] = o;
+        v.prev = o['メールアドレス'];
+      } else {
+        v.data[v.c] = Object.assign(o,v.data[v.c]);
+      }
+      v.step = 2.2; // 種別の判定
+      // 申込者の参加 == 'おやじ' ⇒ 種別：専業(0) ＋備考
+      // 申込者の参加 != 'おやじ'
+      //   ボランティア == 'できる' ⇒ 種別：兼業(1) ＋宿泊、テント＋備考
+      //   ボランティア != 'できる' ⇒ 種別：支援(2) ＋手伝い内容＋備考
+      v.data[v.c]['種別'] = (v.data[v.c]['申込者の参加'] || '').indexOf('おやじ') >= 0
+      ? '専業' : ( v.data[v.c]['ボランティア'] === 'できる' ) ? '兼業' : '支援';
+      v.step = 2.3; // 備考内の改行をbrに置換
+      if( v.data[v.c]['備考'] )
+        v.data[v.c]['備考'] = v.data[v.c]['備考'].replaceAll(/\n/g,'<br>');
+    })
+    vlog(v,'data');
+
+    v.html = {
+      '専業': '<h2>スタッフ専業(おやじの会メンバ)</h2>'
+        + '<p class="memo">※おやじの会メンバをはじめとする子供が参加しないスタッフ</p>',
+      '兼業': '<h2>参加者兼スタッフ</h2>'
+      + '<p class="memo">※おやじの会メンバを含め、子供が参加するが申込時にボランティア可にチェックいただいた方々</p>',
+      '支援': '<h2>ボランティア</h2>'
+      + '<p class="memo">参加申込フォームからの登録は無く、ボランティア募集フォームからのみ登録いただいた方々。</p>',
+    }
+
+    v.step = 4; // おやじの会メンバ
+    v.data.sort((a,b)=>{return a.unix < b.unix ? -1 : 1});
+    v.data.forEach(o => {
+      v.html[o['種別']] += `<p class="name"><span class="num"></span> ${o['氏名']}<p>`;
+      if( o['種別'] === '兼業' && o['宿泊、テント'] ){
+        v.html['兼業'] += `<p><b>宿泊、テント</b> : ${o['宿泊、テント']}</p>`;
+      }
+      if( o['種別'] === '支援' && o['手伝い内容'] ){
+        v.html['支援'] += `<p><b>手伝い内容</b> : ${o['手伝い内容']}</p>`;
+      }
+      if( o['備考'] ) v.html[o['種別']] += `<p class="note">${o['備考']}<p>`;
+    });
+
+    document.querySelector(arg).innerHTML
+    = `<h1>スタッフ名簿</h1>` + v.html['専業'] + v.html['兼業'] + v.html['支援'];
+    v.cnt = 1;
+    document.querySelectorAll(arg+' span.num').forEach(o => {
+      o.innerText = v.cnt++;
+    });
+
+    v.step = 9; // 終了処理
+    console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
+    return v.rv;
+
+  } catch(e) {
+    e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
+    console.error(`${e.message}\nv=${stringify(v)}`);
+    return e;
+  }
+}
 /** 関数他を含め、変数を文字列化
  * - JSON.stringifyでは文字列化されない関数、シンボル、undefinedも文字列化して表示
  * - 関数はtoString()で文字列化
@@ -2636,6 +2725,7 @@ window.addEventListener('DOMContentLoaded',async () => {
             sessionStorage.setItem(v.conf.sys.storageKey,JSON.stringify({
               header:v.r.header,
               data:v.r.data,
+              staff: v.r.staff,
               expire: v.r.expire,
             }));
             v.cnt = 3;
@@ -2783,6 +2873,10 @@ window.addEventListener('DOMContentLoaded',async () => {
       v.r = assignVariables({data:v.conf});
       if( v.r instanceof Error ) throw v.r;
 
+      v.step = 4.5; // スタッフ名簿の作成
+      // メニュー作成後に実行(∵CSSセレクタはBurgerMenu実行後のもの)
+      v.r = staffList('.screen[name="スタッフ名簿"]');
+      if( v.r instanceof Error ) throw v.r;
     })();
 
     v.step = 99; // 終了処理
