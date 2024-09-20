@@ -86,7 +86,6 @@ pre {border: solid 5px #999;}
   .Reception [name="detail"] h2 {margin:0.5rem 0;padding: 0.5rem 1rem;border-left: 5px solid #000;background: #f4f4f4;grid-column: 1/13;}
   .Reception [name="detail"] div {grid-column: 1/13;}
   /* detail領域 申込情報 */
-  .Reception [name="detail"] [name="キャンセル"] {margin:2rem 0;font-size:3rem; color:red;}
   .Reception [name="detail"] .c19 {grid-column: 1/9;} /* column 1 to 9 */
   .Reception [name="detail"] .c9d {grid-column: 9/13;grid-row: 3/7;} /* column 9 to 13(=0x0d) */
   .Reception [name="detail"] ruby.big span {font-size: 1.5rem;}
@@ -228,7 +227,7 @@ pre {border: solid 5px #999;}
   
     <div name="detail"><!-- 申込情報詳細画面 -->
       <div name="entryNo" style="display: none;"></div>
-      <div name="キャンセル"></div>
+      <h1 style="grid-column: 1/13;">申込情報検索結果</h1>
       <h2>申込情報</h2>
       <div class="c19"><ruby class="big"><span name="申込者氏名">嶋津　邦浩</span><rt name="申込者カナ" class="big">シマヅ　クニヒロ</rt></ruby></div>
       <div name="editURL" class="c9d">
@@ -2108,8 +2107,6 @@ class Reception {
         '緊急連絡先': '(未記入)',
         'ボランティア募集': '(不可)',
       },arg);
-      // キャンセルの文言を修正
-      v.data['キャンセル'] = v.data['キャンセル'] ? 'canceled' : '';
 
       v.step = 2; // 対象申込情報をdetail内の各要素に書き込み
       v.step = 2.1; // 非参加者情報をセット
@@ -2118,7 +2115,16 @@ class Reception {
           // 必須項目をセット
           v.e = this.detail.querySelector(`[name="${col}"]`);
           if( v.e ){
-            if( col === 'editURL' ){
+            if( col === '申込者氏名' ){
+              v.e.innerHTML = v.data['キャンセル']
+              ? `<span style="color:red">【取消】${v.data[col]}</span>`
+              : v.data[col];
+            } else if( col === 'ボランティア募集' ){
+              v.e.innerHTML = `<span style="color:red">${
+                v.data['申込者の参加'].match(/おやじ/) ? 'おやじの会'
+                : ( v.data['ボランティア募集'] ? 'できる' : '—' )
+              }</span>`;
+            } else if( col === 'editURL' ){
               this.detail.querySelector('[name="editURL"] img').src
               = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='
               + v.data.editURL;
