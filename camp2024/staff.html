@@ -329,6 +329,7 @@ pre {border: solid 5px #999;}
     </div>
     <div data-BurgerMenu="id:'スタッフ名簿'"></div>
     <div data-BurgerMenu="id:'気づき投稿',func:'awareness'"></div>
+    <div data-BurgerMenu="id:'メール一斉配信'"></div>
     <div data-BurgerMenu="id:'リンク集'">
       <h1>リンク集</h1>
 <div class="LinkCollection">
@@ -503,6 +504,133 @@ function assignVariables(arg){
     console.error(`${e.message}\nv=${stringify(v)}`);
     return e;
   }
+}
+class bulkMail {
+  /** @constructor
+   * @param {Object} arg
+   * @param {Object} arg.conf - 設定情報
+   * @param {string|HTMLElement} arg.parent - 包摂要素、またはそのCSSセレクタ
+   * @param {encryptedQuery} arg.eq - encryptedQueryのインスタンス
+   * @param {LoadingIcon} arg.li - LoadingIconのインスタンス
+   */
+  constructor(arg=null){
+    const v = {whois:this.constructor.name+'.constructor',step:0,rv:null};
+    console.log(`${v.whois} start.\narg=${stringify(arg)}`);
+    try {
+
+      // 引数のメンバ変数への格納
+      Object.keys(arg).forEach(x => this[x] = arg[x]);
+      this.parent = typeof arg.parent === 'string' ? document.querySelector(arg.parent) : arg.parent;
+
+      // メール一斉配信の要素を作成
+      v.width = '80%';
+      createElement({attr:{class:'bulkMail',title:'wrapper'},children:[
+        {tag:'h1',text:'一斉メール配信'},
+        {tag:'table',style:{width:'100%'},children:[
+          {tag:'tr',children:[
+            {tag:'th',text:'宛先'},
+            {tag:'td',children:[{tag:'select',attr:{title:'宛先'},children:[
+              {tag:'option',attr:{value:'スタッフ'},text:'スタッフ'},
+              {tag:'option',attr:{value:'参加者'},text:'参加者'},
+            ]}]},
+          ]},
+          {tag:'tr',children:[
+            {tag:'th',text:'題名'},
+            {tag:'td',children:[
+              {tag:'input',attr:{title:'題名'},style:{width:v.width}}
+            ]},
+          ]},
+          {tag:'tr',children:[
+            {tag:'th',text:'種別'},
+            {tag:'td',children:[{tag:'select',attr:{title:'種別'},children:[
+              {tag:'option',attr:{value:'plain'},text:'プレーンテキストメール'},
+              {tag:'option',attr:{value:'html'},text:'HTMLメール'},
+            ]}]},
+          ]},
+          {tag:'tr',children:[
+            {tag:'th',text:'本文'},
+            {tag:'td',children:[
+              {tag:'textarea',style:{width:v.width,height:'10rem'}}
+            ]},
+          ]},
+          {tag:'tr',children:[
+            {tag:'th',text:'発信者'},
+            {tag:'td',children:[
+              {tag:'input',attr:{title:'発信者',value:'下北沢小おやじの会'},style:{width:v.width}}
+            ]},
+          ]},
+          {tag:'tr',children:[
+            {tag:'th',text:'返信先'},
+            {tag:'td',children:[
+              {tag:'input',attr:{title:'返信先',value:arg.conf.sys.staffML},style:{width:v.width}}
+            ]},
+          ]},
+          {tag:'tr',children:[
+            {tag:'th',text:'状態'},
+            {tag:'td',children:[{tag:'select',attr:{title:'状態'},children:[
+              {tag:'option',attr:{value:'保留'},text:'保留'},
+              {tag:'option',attr:{value:'実行'},text:'即時'},
+            ]}]},
+          ]},
+        ]},
+        {tag:'button',text:'送信',event:{click:e=>{this.request(e)}},
+        style:{fontSize:'1.4rem',padding:'0.3rem',margin:'1rem'}},
+        {tag:'ol',children:[
+          {tag:'li',text:'「スタッフ」はおやじの会＋ボランティア、'
+          + '「参加者」は参加者全員に送信されます。'},
+          {tag:'li',text:'全員同じ文面になります。文言の埋め込みは非対応。'},
+          {tag:'li',text:'HTMLメールの場合、bodyタグ内部のみで可(html,meta,body等は不要)'},
+          {tag:'li',html:'状態を「保留」とした場合、システム管理者としてGMailを開き、下書きフォルダから送信する必要があります。'
+            + '<br>「即時」とした場合は即時送信されますので、確認・取消はできません。'},
+        ]},
+      ]},this.parent);
+
+      v.step = 9; // 終了処理
+      console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
+      return v.rv;
+
+    } catch(e) {
+      e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
+      console.error(`${e.message}\nv=${stringify(v)}`);
+      return e;
+    }
+  }
+
+  async request(){
+    const v = {whois:this.constructor.name+'.request',step:0,rv:null};
+    console.log(`${v.whois} start.`);
+    try {
+
+      // 待機画面表示
+      this.li.show();
+
+      v.vals = {
+        func: 'bulkMail',
+        to: this.parent.querySelector('select[title="宛先"]').value,
+        subject: this.parent.querySelector('input[title="題名"]').value,
+        type: this.parent.querySelector('select[title="種別"]').value,
+        body: this.parent.querySelector('textarea').value,
+        name: this.parent.querySelector('input[title="発信者"]').value,
+        replyTo: this.parent.querySelector('input[title="返信先"]').value,
+        hold: this.parent.querySelector('select[title="状態"]').value === '保留' ? true : false,
+      }
+      vlog(v,'vals');
+
+      v.r = await this.eq.request(v.vals);
+      if( v.r instanceof Error ) throw v.r;
+
+      v.step = 9; // 終了処理
+      this.li.hide();   // 待機画面消去
+      console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
+      return v.rv;
+
+    } catch(e) {
+      e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
+      console.error(`${e.message}\nv=${stringify(v)}`);
+      return e;
+    }
+  }
+
 }
 /**
  * @classdesc htmlからdata-BurgerMenu属性を持つ要素を抽出、ハンバーガーメニューを作成
@@ -2608,6 +2736,7 @@ window.addEventListener('DOMContentLoaded',async () => {
       editURL: 'editURL'
     }
   },
+  staff: { title: 'スタッフ名簿', type: 'spread', sheetName: 'スタッフ名簿' },
   entry: {
     title: '参加申込フォーム',
     type: 'form',
@@ -2663,7 +2792,7 @@ window.addEventListener('DOMContentLoaded',async () => {
     edit: 'https://sites.google.com/d/1cq0aV06FVKKeGFb4SQeEiYZjDPg5rnkL/p/1gtzJU8YHbtsR3tfrWeIPy6gB6IdCiIKU/edit',
     view: 'https://sites.google.com/view/skz-camp2024faq/',
     shortView: 'https://tinyurl.com/27n7sj5b',
-    qr: 'https://api.qrserver.com/v1/create-qr-code/?data=https://sites.google.com/view/skz-camp2024faq/'
+    qr: 'https://api.qrserver.com/v1/create-qr-code/?data=undefined'
   }
 }
       vlog(v,'conf');
@@ -2877,6 +3006,16 @@ window.addEventListener('DOMContentLoaded',async () => {
       // メニュー作成後に実行(∵CSSセレクタはBurgerMenu実行後のもの)
       v.r = staffList('.screen[name="スタッフ名簿"]');
       if( v.r instanceof Error ) throw v.r;
+
+      v.step = 4.6; // メール一斉配信の作成
+      v.r = new bulkMail({
+        conf: v.conf,
+        parent: '[data-BurgerMenu="id:\'メール一斉配信\'"]',
+        eq: v.eq,
+        li: v.loading,
+      });
+      if( v.r instanceof Error ) throw v.r;
+  
     })();
 
     v.step = 99; // 終了処理

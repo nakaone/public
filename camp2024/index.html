@@ -215,6 +215,7 @@ data-assign="innerText:sys.staffML"></span> にお願いします。</li>
 <h1 id="スタッフ専用サイトの開き方">スタッフ専用サイトの開き方</h1>
 <p>スタッフ専用サイトは参加申込情報(個人情報)も扱うため、パスコード入力が必要な別ページになっています。</p>
 <p>パスコードはメールで通知されますが、システム上の制約で途中でエラーになる場合があります。その場合、以下の手順で開いてください。</p>
+<p>※「<a data-assign="href:faq.view" target="_blank">困ったときは</a>(FAQ)」の「スタッフ専用サイトにログインできない」でもログイン手順を説明しています。</p>
 <ol>
 <li>
 <span data-assign="onclick:staffSite.copyStaffUrl"
@@ -224,8 +225,10 @@ data-assign="innerText:staffSite.shortURL"
 style="font-size:0.8rem"></span>
 </li>
 <li>
-chrome等の<span
-style="font-size:2rem;color:red">ブラウザを開き、新規にウィンドウ(タブ)を作成</span>、ペーストしてサイトを開く
+<span
+style="color:red">【重要】</span>(申込受付メールから本サイトを開いていた場合)一度メールアプリを閉じる
+<li>
+chrome等のブラウザを開き、新規にウィンドウ(タブ)を作成、ペーストしてサイトを開く
 </li>
 <li>
 パスコード通知メールが来るので、メールアプリでパスコード(数値6桁)を確認
@@ -240,56 +243,6 @@ style="font-size:2rem;color:red">ブラウザを開き、新規にウィンド�
 スタッフ専用サイトが開きます
 </li>
 </ol>
-<!--
-<style>
-.button {
-  display       : inline-block;
-  border-radius : 5%;          /* 角丸       */
-  font-size     : 18pt;        /* 文字サイズ */
-  text-align    : center;      /* 文字位置   */
-  cursor        : pointer;     /* カーソル   */
-  padding       : 12px 12px;   /* 余白       */
-  background    : #6666ff;     /* 背景色     */
-  color         : #ffffff;     /* 文字色     */
-  line-height   : 1rem;         /* 1行の高さ  */
-  transition    : .3s;         /* なめらか変化 */
-  box-shadow    : 2px 2px 3px #666666;  /* 影の設定 */
-  border        : 2px solid #6666ff;    /* 枠の指定 */
-}
-.button:hover {
-  box-shadow    : none;        /* カーソル時の影消去 */
-  color         : #6666ff;     /* 背景色     */
-  background    : #ffffff;     /* 文字色     */
-}
-</style>
-<a class="button" data-assign="href:staffSite" target="_blank">スタッフ専用サイトを開く</a>
-
- 「スタッフ専用サイト」とは？
-
-現在ご覧になっているサイトは、誰でも閲覧可能なサイトです。
-
-スタッフ専用サイトは、事前に登録を行うことで以下の機能を利用可能にしたサイトです。
-
-1. スタッフ業務マニュアル
-1. 参加受付業務(QRコードまたは参加者名からの検索＋受付登録)
-1. 参加者集計(参加形態×属性別の申込数・参加者数のリアルタイム集計)
-1. 気づき投稿(スタッフ視点で気づいた点の投稿)
-1. リンク集
-
-こちらは一部で個人情報やシステム設定情報を扱うため、①スタッフとしての事前登録、②利用時の認証を必要としています。
-
- 事前登録の方法
-
-1. 申込時に登録
-
-   参加応募フォームの質問「申込者の参加」で「スタッフとして申込者のみ参加」を選択
-
-1. システム管理者にメールで個別連絡
-
-   システム管理者(<span data-assign="innerText:adminMail"></span>)宛に、お名前とメールアドレスを連絡
-
-なお在校生保護者・おやじの会メンバ以外のお申し込み等、スタッフ業務を行うか不明確な場合は登録を保留・お断りさせていただく場合があります。
--->
         </div>
         <div data-BurgerMenu="id:'本システムについて'">
 <h1 id="おまつり奉行とは">「おまつり奉行」とは？</h1>
@@ -1563,7 +1516,8 @@ window.addEventListener('DOMContentLoaded',async () => {
   },
   participantEnquete: {
     view: 'https://docs.google.com/forms/d/e/1FAIpQLSf8CsE6x3UxIFTyD7Pe1nQczq227LDmv9ypJ5kbDLmwnzjJXQ/viewform'
-  }
+  },
+  faq: { view: 'https://sites.google.com/view/skz-camp2024faq/' }
 }
 
       v.step = 1.2; // 受付番号の特定
