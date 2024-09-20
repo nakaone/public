@@ -2136,8 +2136,10 @@ class Reception {
       for( v.i=1 ; v.i<=5 ; v.i++ ){
         if( !v.data[`参加者0${v.i}氏名`] ){
           v.step = 2.21; // 氏名未登録の参加者は空欄
-          this.detail.querySelector(`tr[name="参加者0${v.i}"]`).innerHTML = '';
+          //this.detail.querySelector(`tr[name="参加者0${v.i}"]`).innerHTML = '';
+          this.detail.querySelector(`tr[name="参加者0${v.i}"]`).style.display = 'none';
         } else {
+          this.detail.querySelector(`tr[name="参加者0${v.i}"]`).style.display = 'table-row';
           v.step = 2.22; // 氏名・カナ・所属のセット
           ['氏名','カナ','所属'].forEach(x => {
             v.col = `参加者0${v.i}${x}`;
