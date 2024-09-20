@@ -236,7 +236,7 @@ pre {border: solid 5px #999;}
       </div>
       <div name="メールアドレス" class="c19">nakaone.kunihiro@gmail.com</div>
       <div class="c19" name="緊急連絡先">090-6511-1788</div>
-      <div class="c19">ボランティア：<span name="ボランティア募集"></span></div>
+      <div class="c19" name="ボランティア募集"></div>
 
       <h2>参加者情報</h2>
       <table style="grid-column: 1/13;"><tbody><tr name="参加者00">
@@ -1975,6 +1975,7 @@ class Reception {
    * @param {Function|Arrow} arg.filter - 対象者の判定式。戻り値はboolean
    * @param {encryptedQuery} arg.eq - encryptedQueryのインスタンス
    * @param {Object} arg.conf - config情報オブジェクト
+   * @param {LoadingIcon} arg.li - 待機画面
    */
   constructor(arg){
     const v = {whois:this.constructor.name+'.constructor',step:0,rv:null};
@@ -1989,6 +1990,7 @@ class Reception {
       this.filter = arg.filter; // {Function|Arrow} 対象者の判定式。戻り値はboolean
       this.eq = arg.eq;
       this.conf = arg.conf;
+      this.li = arg.li;
 
       v.step = 2; // スキャナ領域をメンバ変数にセット＋イベント定義
       this.scanner = this.wrapper.querySelector('[name=scanner]');
@@ -2118,8 +2120,9 @@ class Reception {
       this.detail.querySelector('textarea[name="memo"]').value = '';
       // 既定値の設定
       v.data = Object.assign({
-        '緊急連絡先': '(未記入)',
+        '緊急連絡先': '(緊急連絡先未記入)',
         'ボランティア募集': '(不可)',
+        '備考': '(未記入)',
       },arg);
 
       v.step = 2; // 対象申込情報をdetail内の各要素に書き込み
@@ -2135,8 +2138,8 @@ class Reception {
               : v.data[col];
             } else if( col === 'ボランティア募集' ){
               v.e.innerHTML = `<span style="color:red">${
-                v.data['申込者の参加'].match(/おやじ/) ? 'おやじの会'
-                : ( v.data['ボランティア募集'] ? 'できる' : '—' )
+                v.data['申込者の参加'].match(/おやじ/) ? 'おやじの会メンバ'
+                : ( v.data['ボランティア募集'] ? '参加者兼スタッフ' : '' )
               }</span>`;
             } else if( col === 'editURL' ){
               this.detail.querySelector('[name="editURL"] img').src
@@ -2223,7 +2226,9 @@ class Reception {
         vlog(v,'obj');
 
         v.step = 5; // 取得結果をシートに反映
+        this.li.show();
         v.r = await this.eq.request(v.obj);
+        this.li.hide();
         if( v.r instanceof Error ) throw v.r;
         if( v.r.isOK === false ) throw new Error(v.r.message);
 
@@ -2930,6 +2935,7 @@ window.addEventListener('DOMContentLoaded',async () => {
         },
         eq: v.eq,
         conf: v.conf,
+        li: v.loading,
       });
       if( v.Reception instanceof Error ) throw v.Reception;
 
