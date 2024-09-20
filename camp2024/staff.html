@@ -1962,6 +1962,8 @@ class Reception {
    * @param {string[]} arg.header - シート上の項目名のリスト
    * @param {Object[]} arg.data - シート上のデータ。{項目名:値,..}
    * @param {Function|Arrow} arg.filter - 対象者の判定式。戻り値はboolean
+   * @param {encryptedQuery} arg.eq - encryptedQueryのインスタンス
+   * @param {Object} arg.conf - config情報オブジェクト
    */
   constructor(arg){
     const v = {whois:this.constructor.name+'.constructor',step:0,rv:null};
@@ -1974,6 +1976,8 @@ class Reception {
       this.header = arg.header; // {string[]} シート上の項目名のリスト
       this.data = arg.data; // {Object[]} シート上のデータ。{項目名:値,..}
       this.filter = arg.filter; // {Function|Arrow} 対象者の判定式。戻り値はboolean
+      this.eq = arg.eq;
+      this.conf = arg.conf;
 
       v.step = 2; // スキャナ領域をメンバ変数にセット＋イベント定義
       this.scanner = this.wrapper.querySelector('[name=scanner]');
@@ -1988,7 +1992,6 @@ class Reception {
       this.dialog.querySelector('button').addEventListener('click',()=>{
         this.dialog.close();
         v.entryNo = Number(this.dialog.querySelector('button').value);
-        console.log(`l.568 entryNo(${whichType(v.entryNo)})=${v.entryNo}`);
         v.r = this.editParticipant(this.data.find(x => Number(x.entryNo) === v.entryNo));
         if( v.r instanceof Error ) throw v.r;
       });
@@ -2179,27 +2182,41 @@ class Reception {
     console.log(`${v.whois} start.`);
     try {
 
+      v.step = 1; // update or updall ⇒ 入力内容で更新
       v.func = e.target.getAttribute('name');
-
-      // update or updall ⇒ 入力内容で更新
       if( v.func === 'update' || v.func === 'updall' ){
-        // 受付番号を取得
-        v.obj.entryNo = Number(this.detail.querySelector('[name="entryNo"]').innerText);
-        // fee01〜05を取得
+
+        v.step = 2; // 受付番号を取得
+        v.obj = {
+          func: 'updateParticipant',  // サーバ側分岐用関数内部の分岐用
+          entryNo: Number(this.detail.querySelector('[name="entryNo"]').innerText),
+          data: {},
+        }
+
+        v.step = 3; // fee01〜05を取得
         for( v.i=1 ; v.i<6 ; v.i++ ){
           v.tr = this.detail.querySelector(`tr[name="参加者0${v.i}"]`);
           if( v.tr.innerHTML.length > 0 ){
-            v.obj['fee0'+v.i] = v.func === 'updall' ? '既収' :
+            v.obj.data['fee0'+v.i] = v.func === 'updall' ? '既収' :
             this.detail.querySelector(`form[name="参加者0${v.i}会費"]`).elements['fee0'+v.i].value;
           }
         }
-        // memoを取得
+
+        v.step = 4; // memoを取得
         v.memo = this.detail.querySelector('textarea[name="memo"]').value;
-        if( v.memo.length > 0 ) v.obj.memo = v.memo;
-        // 取得結果をシートに反映
-        v.r = await doGAS('SingleTableServer','master','update',v.obj,{key:'entryNo',value:v.obj.entryNo});
+        if( v.memo.length > 0 ) v.obj.data.memo = v.memo;
+        vlog(v,'obj');
+
+        v.step = 5; // 取得結果をシートに反映
+        v.r = await this.eq.request(v.obj);
         if( v.r instanceof Error ) throw v.r;
-        // 確認ダイアログ表示
+        if( v.r.isOK === false ) throw new Error(v.r.message);
+
+        v.step = 6; // 最新の参加者情報をインスタンス変数とsessionStorageに格納
+        this.data = this.conf.data = v.r.data;
+        sessionStorage.setItem(this.conf.sys.storageKey,JSON.stringify(this.conf));
+
+        v.step = 7; // 確認ダイアログ表示
         alert('更新しました');
       }
 
@@ -2896,6 +2913,8 @@ window.addEventListener('DOMContentLoaded',async () => {
           return !isNaN(key) ? Number(o.entryNo) === Number(key)
           : (o['申込者氏名'].indexOf(key) >= 0 || o['申込者カナ'].indexOf(key) >= 0)
         },
+        eq: v.eq,
+        conf: v.conf,
       });
       if( v.Reception instanceof Error ) throw v.Reception;
 
