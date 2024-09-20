@@ -239,10 +239,21 @@ pre {border: solid 5px #999;}
       <div class="c19">ボランティア：<span name="ボランティア募集"></span></div>
 
       <h2>参加者情報</h2>
-      <table style="grid-column: 1/13;"><tbody><tr name="参加者01">
+      <table style="grid-column: 1/13;"><tbody><tr name="参加者00">
         <td><ruby>
-          <span name="参加者01氏名">嶋津　邦浩</span>
-          <rt name="参加者01カナ">シマヅ　クニヒロ</rt>
+          <span name="参加者00氏名">嶋津　邦浩</span>
+          <rt name="参加者00カナ">シマヅ　クニヒロ</rt>
+        </ruby></td>
+        <td name="参加者00所属">卒業生</td>
+        <td><form name="参加者00会費">
+          <label><input type="radio" name="fee00" value="未収"><span>未収</span></label>
+          <label><input type="radio" name="fee00" value="既収"><span>既収</span></label>
+          <label><input type="radio" name="fee00" value="無料"><span>無料</span></label>  
+        </form></td>
+      </tr><tr name="参加者01">
+        <td><ruby>
+          <span name="参加者01氏名">嶋津　弘子</span>
+          <rt name="参加者01カナ">シマヅ　ヒロコ</rt>
         </ruby></td>
         <td name="参加者01所属">卒業生</td>
         <td><form name="参加者01会費">
@@ -2142,10 +2153,14 @@ class Reception {
       });
 
       v.step = 2.2; // 参加者情報をセット
-      for( v.i=1 ; v.i<=5 ; v.i++ ){
+      if( v.data['申込者の参加'].match(/^参加予定/) ){
+        v.data['参加者00氏名'] = v.data['申込者氏名'];
+        v.data['参加者00カナ'] = v.data['申込者カナ'];
+        v.data['参加者00所属'] = '保護者';
+      }
+      for( v.i=0 ; v.i<=5 ; v.i++ ){
         if( !v.data[`参加者0${v.i}氏名`] ){
           v.step = 2.21; // 氏名未登録の参加者は空欄
-          //this.detail.querySelector(`tr[name="参加者0${v.i}"]`).innerHTML = '';
           this.detail.querySelector(`tr[name="参加者0${v.i}"]`).style.display = 'none';
         } else {
           this.detail.querySelector(`tr[name="参加者0${v.i}"]`).style.display = 'table-row';
