@@ -338,6 +338,69 @@ pre {border: solid 5px #999;}
       </div>
     </div>
     <div data-BurgerMenu="id:'スタッフ名簿'"></div>
+    <div data-BurgerMenu="id:要確認の応募">
+<style>
+      [data-BurgerMenu="id:要確認の応募"] .template {display: none;}
+      [data-BurgerMenu="id:要確認の応募"] h2,h3,p,table,details {margin: 1rem;}
+      [data-BurgerMenu="id:要確認の応募"] .button {
+        display       : inline-block;
+        border-radius : 5%;          /* 角丸       */
+        font-size     : 18pt;        /* 文字サイズ */
+        text-align    : center;      /* 文字位置   */
+        cursor        : pointer;     /* カーソル   */
+        padding       : 12px 12px;   /* 余白       */
+        background    : #000066;     /* 背景色     */
+        color         : #ffffff;     /* 文字色     */
+        line-height   : 1em;         /* 1行の高さ  */
+        transition    : .3s;         /* なめらか変化 */
+        box-shadow    : 6px 6px 3px #666666;  /* 影の設定 */
+        border        : 2px solid #000066;    /* 枠の指定 */
+      }
+      [data-BurgerMenu="id:要確認の応募"] .button:hover {
+        box-shadow    : none;        /* カーソル時の影消去 */
+        color         : #000066;     /* 背景色     */
+        background    : #ffffff;     /* 文字色     */
+      }
+    </style>
+
+    <div class="main">
+      <h1>要確認の応募</h1>
+      <div class="list"></div>
+      <div class="detail"></div>
+      <div class="sample"></div>
+    </div>
+
+    <div class="template" title="重複申込">
+      <p>[連絡] 校庭キャンプ2024 重複申込分をキャンセルしました</p>
+      <p>To: ::申込者氏名:: 様</p>
+      <p>Fm: 下北沢小おやじの会</p>
+      <p>この度お申し込みいただいた「校庭キャンプ2024」ですが、複数回申込が行われていたため一つを残して他をキャンセル処理させていただきました。</p>
+      <p>お手元に何通か申込受付メールが届いているかと存じますが【最後のものが有効】です(最後以外はキャンセルした旨の通知)。</p>
+      <p>当日受付では以下のQRコードを提示してください。</p>
+      <p><img src="https://api.qrserver.com/v1/create-qr-code/?data=::entryNo::"></p>
+      <p>また参加者の変更やキャンセルを行う場合、以下から行ってください。</p>
+      <p><a href="::editURL::" target="_blank" class="button">申込内容の修正</a></p>
+      <p>それでは当日、会場でお待ちしております。</p>
+    </div>
+    <div class="template" title="申込者も参加者として登録">
+      <p>To: ::申込者氏名:: 様</p>
+      <p>Fm: 下北沢小おやじの会</p>
+      <p>この度お申し込みいただいた「校庭キャンプ2024」ですが、申込者(::申込者氏名::様)が参加者としても二重登録されていました。</p>
+      <p>入力フォームがわかりづらく申し訳ありません。当方で参加者としての登録は削除させていただきました。</p>
+      <p>なお「申込者も参加」でご連絡いただいておりますので、::申込者氏名:: 様の参加に問題はありません。</p>
+      <p>修正内容の確認、また参加者の変更やキャンセルを行う場合、以下から行ってください。</p>
+      <p><a href="::editURL::" target="_blank" class="button">申込内容の修正</a></p>
+      <p>それでは当日、会場でお待ちしております。</p>      
+    </div>
+    <div class="template" title="参加者情報の部分欠損">
+      <p>To: ::申込者氏名:: 様</p>
+      <p>Fm: 下北沢小おやじの会</p>
+      <p>この度お申し込みいただいた「校庭キャンプ2024」ですが、申込者(::申込者氏名::様)の【所属】が未記入でした。</p>
+      <p>御手数おかけしますが、以下より修正いただけますようお願いします。</p>
+      <p><a href="::editURL::" target="_blank" class="button">申込内容の修正</a></p>
+      <p>それでは当日、会場でお待ちしております。</p>
+    </div>
+    </div>
     <div data-BurgerMenu="id:'気づき投稿',func:'awareness'"></div>
     <div data-BurgerMenu="id:'メール一斉配信'"></div>
     <div data-BurgerMenu="id:'リンク集'">
@@ -2122,7 +2185,7 @@ class Reception {
       v.data = Object.assign({
         '緊急連絡先': '(緊急連絡先未記入)',
         'ボランティア募集': '(不可)',
-        '備考': '(未記入)',
+        '備考': '(無記入)',
       },arg);
 
       v.step = 2; // 対象申込情報をdetail内の各要素に書き込み
@@ -2657,6 +2720,266 @@ const vlog = (o,m,l=null) => {
 
   console.log(v.msg);
 }
+class warnings {
+  /** @constructor
+   * 応募情報をチェック、不適切な応募があれば一覧を表示
+   * @param {Object} arg
+   * @param {string} arg.parent - 包摂要素のCSSセレクタ
+   * @param {Object[]} arg.data - 応募情報
+   */
+  constructor(arg){
+    const v = {whois:this.constructor.name+'.constructor',step:0,rv:null};
+    console.log(`${v.whois} start. parent=${arg.parent}\ndata[0]=${arg.data[0]}`);
+    try {
+
+      v.step = 1;
+      this.wrapper = document.querySelector(arg.parent);
+      if( !this.wrapper ) throw new Error('Invalid parent.');
+
+      v.step = 2;
+      this.data = arg.data;
+
+      v.step = 3;
+      v.r = this.defineCheckPoints();
+      if( v.r instanceof Error ) throw v.r;
+
+      v.step = 4;
+      v.r = this.makeList();
+      if( v.r instanceof Error ) throw v.r;
+
+      v.step = 9; // 終了処理
+      console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
+      return v.rv;
+
+    } catch(e) {
+      e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
+      console.error(`${e.message}\nv=${stringify(v)}`);
+      return e;
+    }
+  }
+
+  /** defineCheckPoints: チェックポイントの定義、チェック実行
+   * チェックポイントをthis.pointsとして定義、実データをチェックした結果を
+   * 当該チェックポイントの子要素detailsとして作成(this.points[n].details)
+   * @param {void}
+   * @returns {void}
+   */
+  defineCheckPoints(){
+    const v = {whois:this.constructor.name+'.constructor',step:0,rv:null};
+    console.log(`${v.whois} start.`);
+    try {
+
+      v.step = 1; // チェック項目の定義
+      this.points = [
+        {
+          title: '重複申込',
+          explanation: '同一メールアドレスが複数回出現',
+          criteria: d => {  // エラー申請を出力。d=v.conf.data
+            const sql = 'select m01.* from ? as m01'
+            + ' inner join '
+            + '(select `メールアドレス`,count (*) as num from ? group by `メールアドレス`) as m02'
+            + ' on m01.`メールアドレス` = m02.`メールアドレス`'
+            + ' where m02.num > 1 order by `メールアドレス`;';
+            return alasql(sql,[d,d]);
+          },
+          influence: ['受付時に「キャンセル」が検索されて混乱する','参加者数のカウントミスを誘発'],
+          deal: [
+            'システム管理者が重複する申込の内容を確認、どれか一つを残し他は「キャンセル」を設定して更新',
+            '有効にする申込の更新は最後に行う。なお内容の修正は無くても必ず更新する。',
+            '参加者に文例のようなメールを手動で送信する',
+          ],
+          table: [  // valはtdのinnerHTMLを返す関数
+            {label:'No',val:o=>String(o['entryNo'])},
+            {label:'e-mail',val:o=>o['メールアドレス']},
+            {label:'申込者',val:o=>o['申込者氏名']},
+            {label:'リンク',val:o=>`<a target="_blank" href=${o['editURL']}>申込</a>`},
+          ],
+        },{
+          title: '申込者も参加者として登録',
+          explanation: '空白以外の文字列が申込者名と参加者n氏名で一致',
+          criteria: d => {
+            const rv = [];
+            d.forEach(o => {
+              const entryName = o['申込者氏名'].replaceAll(/\s/g,'');
+              let flag = false;
+              for( let i=1 ; i<6 ; i++ ){
+                if( (o[`参加者0${i}氏名`] || '').replaceAll(/\s/g,'') === entryName ) flag = true;
+              }
+              if( flag ) rv.push(o);
+            });
+            return rv;
+          },
+          influence: ['受付時のミスで、参加費を重複して徴収する可能性'],
+          deal: ['システム管理者側で修正後に連絡、内容確認して貰う'],
+          table: [  // valはtdのinnerHTMLを返す関数
+            {label:'No',val:o=>String(o['entryNo'])},
+            {label:'e-mail',val:o=>o['メールアドレス']},
+            {label:'申込者',val:o=>o['申込者氏名']},
+            {label:'リンク',val:o=>`<a target="_blank" href=${o['editURL']}>申込</a>`},
+          ],
+        },{
+          title: '参加者情報の部分欠損',
+          explanation: '参加者氏名・カナ・所属の一部項目のみ入力済',
+          criteria: d => {
+            const rv = [];
+            d.forEach(o => {
+              for( let i=1 ; i<6 ; i++ ){
+                let flag = (o[`参加者0${i}氏名`] ? 1 : 0) + (o[`参加者0${i}カナ`] ? 2 : 0) + (o[`参加者0${i}所属`] ? 4 : 0);
+                if( 0 < flag && flag < 7 ){
+                  rv.push(o);
+                  continue;
+                }
+              }
+            });
+            return rv;
+          },
+          influence: ['所属が空白の場合、参加費算定で算入されない'],
+          deal: ['申込者にメールで連絡し、修正して貰う'],
+          table: [  // valはtdのinnerHTMLを返す関数
+            {label:'No',val:o=>String(o['entryNo'])},
+            {label:'e-mail',val:o=>o['メールアドレス']},
+            {label:'申込者',val:o=>o['申込者氏名']},
+            {label:'リンク',val:o=>`<a target="_blank" href=${o['editURL']}>申込</a>`},
+          ],
+        }
+      ];
+      
+      v.step = 2; // チェック結果をthis.points[n].detailsに格納
+      this.points.forEach(p => {
+        p.details = p.criteria(this.data);
+        if( p.details instanceof Error ) throw p.details;
+        vlog(v,'r')
+      });
+
+      v.step = 9; // 終了処理
+      console.log(`${v.whois} normal end.`);
+      return v.rv;
+
+    } catch(e) {
+      e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
+      console.error(`${e.message}\nv=${stringify(v)}`);
+      return e;
+    }
+  }
+
+  /** makeList: チェックポイントの一覧を作成
+   * @param {void}
+   * @returns {void}
+   */
+  makeList(){
+    const v = {whois:this.constructor.name+'.makeList',step:0,rv:null};
+    console.log(`${v.whois} start.`);
+    try {
+
+      v.step = 1; // point毎のリスト作成
+      v.dom = this.wrapper.querySelector('.list');
+      v.tbody = {tag:'tbody',children:[]};
+      for( v.i=0 ; v.i<this.points.length ; v.i++ ){
+        v.tbody.children.push({
+          tag:'tr',children:[
+            {tag:'td',style:{textAlign:'right'},text:v.i+1},
+            //{tag:'td',text:},
+            {tag:'td',children:[
+              {tag:'span',attr:{title:v.i},text:this.points[v.i].title,event:{click:e=>{this.makeDetail(e,this.points)}}}
+            ]},
+            {tag:'td',text:this.points[v.i].details.length},
+          ]
+        });
+        vlog(v,'tbody')
+      }
+
+      v.step = 2; // 枠の作成
+      v.r = createElement({tag:'table',children:[
+        {tag:'thead',children:[{tag:'tr',children:[
+          {tag:'th',text:'No'},
+          {tag:'th',text:'内容'},
+          {tag:'th',text:'件数'},
+        ]}]},
+        v.tbody,
+      ]},v.dom);
+      if( v.r instanceof Error ) throw v.r;
+
+      v.step = 9; // 終了処理
+      console.log(`${v.whois} normal end.`);
+      return v.rv;
+
+    } catch(e) {
+      e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
+      console.error(`${e.message}\nv=${stringify(v)}`);
+      return e;
+    }
+  }
+
+  /** makeDetail: チェックポイントに該当する申込の一覧を作成
+   * @param {Event} e - チェックポイントの選択(クリック)により発生したイベントオブジェクト
+   * @param {Object} points - defineCheckPointsで作成されたチェックポイント(this.points)
+   * @returns {void}
+   */
+  makeDetail(e,points){
+    const v = {whois:this.constructor.name+'.makeDetail',step:0,rv:null,influence:[],deal:[]};
+    console.log(`${v.whois} start.`);
+    try {
+
+      v.step = 1; // 事前準備
+      v.point = points[Number(e.target.getAttribute('title'))];
+      vlog(v,'point')
+      v.dom = this.wrapper.querySelector('.detail');
+      v.dom.innerHTML = '';
+
+      v.step = 2; // thead
+      v.thead = {tag:'thead',children:[{tag:'tr',children:[]}]};
+      v.point.table.forEach(x => v.thead.children[0].children.push({tag:'th',text:x.label}));
+      vlog(v,'thead')
+
+      v.step = 3; // tbody
+      vlog(v,'point.details')
+      v.tbody = {tag:'tbody',children:[]};
+      v.point.details.forEach(x => {
+        console.log('l.257',x);
+        v.tr = {tag:'tr',children:[]};
+        v.point.table.forEach(y => {
+          v.tr.children.push({tag:'td',html:y.val(x)});
+        });
+        v.tbody.children.push(v.tr);
+      });
+      vlog(v,'tbody')
+
+      v.step = 4; // 全体
+      v.point.influence.forEach(x => v.influence.push({tag:'li',text:x}));
+      v.point.deal.forEach(x => v.deal.push({tag:'li',text:x}));
+      v.obj = {children:[
+        {tag:'h2',text:v.point.title},
+        {tag:'p',text:v.point.explanation},
+        {tag:'h3',text:'影響'},
+        {tag:'ol',children:v.influence},
+        {tag:'h3',text:'対応'},
+        {tag:'ol',children:v.deal},
+        {tag:'details',children:[
+          {tag:'summary',text:'文例(イメージ)'},
+          {html:this.wrapper.querySelector(`.template[title="${v.point.title}"]`).innerHTML},
+        ]},
+        {tag:'details',children:[
+          {tag:'summary',text:'文例(ソース)'},
+          {text:`<style>${this.wrapper.querySelector('style').innerHTML.replaceAll(/\[data\-BurgerMenu="id:要確認の応募"\]/g,'')}</style>`
+            +`<body>${this.wrapper.querySelector(`.template[title="${v.point.title}"]`).innerHTML}</body>`},
+        ]},
+        {tag:'table',children:[v.thead,v.tbody]},
+      ]}
+      vlog(v,'obj')
+      v.r = createElement(v.obj,v.dom);
+      if( v.r instanceof Error ) throw v.r;
+
+      v.step = 9; // 終了処理
+      console.log(`${v.whois} normal end.`);
+      return v.rv;
+
+    } catch(e) {
+      e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
+      console.error(`${e.message}\nv=${stringify(v)}`);
+      return e;
+    }
+  }
+}
 /** 変数の型を判定
  * 
  * - 引数"is"が指定された場合、判定対象が"is"と等しいかの真偽値を返す。
@@ -2896,6 +3219,7 @@ window.addEventListener('DOMContentLoaded',async () => {
 
         switch( v.r.status ){
           case 1: // 正当性検証OK ⇒ シート全情報をsessionStorageに保存
+            ['header','data','staff','expire'].forEach(x => v.conf[x] = v.r[x]);
             sessionStorage.setItem(v.conf.sys.storageKey,JSON.stringify({
               header:v.r.header,
               data:v.r.data,
@@ -3063,6 +3387,13 @@ window.addEventListener('DOMContentLoaded',async () => {
         li: v.loading,
       });
       if( v.r instanceof Error ) throw v.r;
+
+      v.step = 4.7; // 「要確認の応募」の作成
+      vlog(v,'conf.data');
+      v.warnings = new warnings({
+        parent:'[data-BurgerMenu="id:要確認の応募"]',
+        data:v.conf.data
+      });
   
     })();
 
