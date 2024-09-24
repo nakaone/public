@@ -368,8 +368,9 @@ pre {border: solid 5px #999;}
       <div class="list"></div>
       <div class="detail"></div>
       <div class="sample"></div>
+      <div class="individual"></div>
     </div>
-
+    
     <div class="template" title="重複申込">
       <p>[連絡] 校庭キャンプ2024 重複申込分をキャンセルしました</p>
       <p>To: ::申込者氏名:: 様</p>
@@ -383,6 +384,7 @@ pre {border: solid 5px #999;}
       <p>それでは当日、会場でお待ちしております。</p>
     </div>
     <div class="template" title="申込者も参加者として登録">
+      <p>[連絡] 校庭キャンプ2024 申込者を参加者から削除しました</p>
       <p>To: ::申込者氏名:: 様</p>
       <p>Fm: 下北沢小おやじの会</p>
       <p>この度お申し込みいただいた「校庭キャンプ2024」ですが、申込者(::申込者氏名::様)が参加者としても二重登録されていました。</p>
@@ -393,6 +395,7 @@ pre {border: solid 5px #999;}
       <p>それでは当日、会場でお待ちしております。</p>      
     </div>
     <div class="template" title="参加者情報の部分欠損">
+      <p>[依頼] 校庭キャンプ2024 参加者情報の補足入力</p>
       <p>To: ::申込者氏名:: 様</p>
       <p>Fm: 下北沢小おやじの会</p>
       <p>この度お申し込みいただいた「校庭キャンプ2024」ですが、申込者(::申込者氏名::様)の【所属】が未記入でした。</p>
@@ -1377,6 +1380,61 @@ function createPassword(len=16,opt={lower:true,upper:true,symbol:true,numeric:tr
     v.rv = e;
   } finally {
     return v.rv;
+  }
+}
+/** embedObjectInText: テキストの指定位置にオブジェクトメンバの値を埋め込む
+ * 
+ * @param {string} source - テキスト
+ * @param {Object} data - 埋め込むオブジェクト
+ * @param {string} rex='::(.+?)::' - 位置指定文字列。文字列部分は括弧で囲む
+ * @returns {string}
+ * 
+ * - オブジェクトメンバに存在しない位置指定文字列は変換しない
+ * - 埋め込むオブジェクトが階層化している場合、ピリオドで区切る
+ * - dataは配列不可だが、メンバは配列可
+ */
+function embedObjectInText(source,data,rex='::(.+?)::'){
+  const v = {whois:'embedObjectInText',step:0,rv:source};
+  console.log(`${v.whois} start.`);
+  try {
+
+    v.step = 1; // テキストから位置指定文字列を抽出
+    v.map = Array.from(new Set(source.match(new RegExp(rex,'g'))));
+    vlog(v,'map');
+
+    for( v.i=0 ; v.i<v.map.length ; v.i++ ){
+      v.step = 2; // オブジェクトのメンバ名を抽出、階層別に分離
+      v.m1 = v.map[v.i].match(new RegExp(rex))[1].split('.');
+      vlog(v,'m1')
+
+      v.step = 3; // 代入する値を特定
+      v.target = data;
+      for( v.d=0 ; v.d<v.m1.length ; v.d++ ){
+        // 配列か判断
+        v.m2 = v.m1[v.d].match(/^(.+?)\[(\d+)\]$/);
+        if( v.m2 ){
+          // 配列の場合、メンバ名と添字で値を特定
+          v.target = v.target[v.m2[1]][Number(v.m2[2])];
+        } else {
+          // 配列では無い場合、メンバ名で値を特定
+          v.target = v.target[v.m1[v.d]];
+        }
+      }
+
+      v.step = 4; // 全置換を実行
+      // 配列添字の鉤括弧は文字列として扱うよう置換
+      v.l = v.map[v.i].replaceAll(/\[/g,'\\[').replaceAll(/\]/g,'\\]');
+      v.rv = v.rv.replaceAll(new RegExp(v.l,'g'),v.target);
+    }
+
+    v.step = 9; // 終了処理
+    console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
+    return v.rv;
+
+  } catch(e) {
+    e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
+    console.error(`${e.message}\nv=${stringify(v)}`);
+    return e;
   }
 }
 class encryptedQuery {
@@ -2729,23 +2787,50 @@ class warnings {
    */
   constructor(arg){
     const v = {whois:this.constructor.name+'.constructor',step:0,rv:null};
-    console.log(`${v.whois} start. parent=${arg.parent}\ndata[0]=${arg.data[0]}`);
+    console.log(`${v.whois} start. parent=${arg.parent}\ndata[0]=${stringify(arg.data[0])}`);
     try {
 
-      v.step = 1;
+      v.step = 1; // 事前準備
+      this.parent = arg.parent;
       this.wrapper = document.querySelector(arg.parent);
       if( !this.wrapper ) throw new Error('Invalid parent.');
 
       v.step = 2;
-      this.data = arg.data;
+      v.sql = 'select * from ? where `キャンセル` is null;'
+      this.data = alasql(v.sql,[arg.data]);
+      vlog(this,'data',v);
 
-      v.step = 3;
+      v.step = 3; // チェックポイントの定義、チェック実行
       v.r = this.defineCheckPoints();
       if( v.r instanceof Error ) throw v.r;
 
-      v.step = 4;
+      v.step = 4;　// チェックポイント一覧の作成
       v.r = this.makeList();
       if( v.r instanceof Error ) throw v.r;
+
+      v.step = 9; // 終了処理
+      console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
+      return v.rv;
+
+    } catch(e) {
+      e.message = `${v.whois} abnormal end at step.${v.step}\n${e.message}`;
+      console.error(`${e.message}\nv=${stringify(v)}`);
+      return e;
+    }
+  }
+
+  /** individualSample: エラー申込毎に文例を作成
+   * @param {Event}
+   * @returns {void}
+   */
+  individualSample(arg){
+    const v = {whois:this.constructor.name+'.individualSample',step:0,rv:null};
+    console.log(`${v.whois} start.`,arg.target);
+    try {
+
+      v.step = 1; // データ収集
+      document.querySelector(`[data-BurgerMenu="id:要確認の応募"] div.individual`).innerHTML
+      = document.querySelector(`[data-BurgerMenu="id:要確認の応募"] div[title="${arg.target.getAttribute('title')}"]`).innerHTML;
 
       v.step = 9; // 終了処理
       console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
@@ -2765,7 +2850,7 @@ class warnings {
    * @returns {void}
    */
   defineCheckPoints(){
-    const v = {whois:this.constructor.name+'.constructor',step:0,rv:null};
+    const v = {whois:this.constructor.name+'.defineCheckPoints',step:0,rv:null};
     console.log(`${v.whois} start.`);
     try {
 
@@ -2792,7 +2877,8 @@ class warnings {
             {label:'No',val:o=>String(o['entryNo'])},
             {label:'e-mail',val:o=>o['メールアドレス']},
             {label:'申込者',val:o=>o['申込者氏名']},
-            {label:'リンク',val:o=>`<a target="_blank" href=${o['editURL']}>申込</a>`},
+            {label:'リンク',val:o=>`<a target="_blank" href=${o['editURL']}>申込</a>`
+            + ` <a href="#" class="sample" title="重複申込:${o.entryNo}">文例</a>`},
           ],
         },{
           title: '申込者も参加者として登録',
@@ -2815,7 +2901,8 @@ class warnings {
             {label:'No',val:o=>String(o['entryNo'])},
             {label:'e-mail',val:o=>o['メールアドレス']},
             {label:'申込者',val:o=>o['申込者氏名']},
-            {label:'リンク',val:o=>`<a target="_blank" href=${o['editURL']}>申込</a>`},
+            {label:'リンク',val:o=>`<a target="_blank" href=${o['editURL']}>申込</a>`
+            + ` <a href="#" class="sample" title="申込者も参加者として登録:${o.entryNo}">文例</a>`},
           ],
         },{
           title: '参加者情報の部分欠損',
@@ -2839,7 +2926,8 @@ class warnings {
             {label:'No',val:o=>String(o['entryNo'])},
             {label:'e-mail',val:o=>o['メールアドレス']},
             {label:'申込者',val:o=>o['申込者氏名']},
-            {label:'リンク',val:o=>`<a target="_blank" href=${o['editURL']}>申込</a>`},
+            {label:'リンク',val:o=>`<a target="_blank" href=${o['editURL']}>申込</a>`
+            + ` <a href="#" class="sample" title="参加者情報の部分欠損:${o.entryNo}">文例</a>`},
           ],
         }
       ];
@@ -2848,8 +2936,24 @@ class warnings {
       this.points.forEach(p => {
         p.details = p.criteria(this.data);
         if( p.details instanceof Error ) throw p.details;
-        vlog(v,'r')
       });
+
+      v.step = 3; // 申込毎の文例を作成
+      v.samples = [];
+      for( v.p=0 ; v.p<this.points.length ; v.p++ ){
+        v.template = this.wrapper.querySelector(`.template[title="${this.points[v.p].title}"]`).innerHTML;
+        for( v.d=0 ; v.d<(this.points[v.p].details || []).length ; v.d++ ){
+          v.r = embedObjectInText(v.template,this.points[v.p].details[v.d]);
+          if( v.r instanceof Error ) throw v.r;
+          v.samples.push({
+            attr:{title:`${this.points[v.p].title}:${this.points[v.p].details[v.d].entryNo}`},
+            style:{display:'none'},
+            html: v.r,
+          });
+        }
+      }
+      v.r = createElement(v.samples,this.wrapper);
+      if( v.r instanceof Error ) throw v.r;
 
       v.step = 9; // 終了処理
       console.log(`${v.whois} normal end.`);
@@ -2889,14 +2993,17 @@ class warnings {
       }
 
       v.step = 2; // 枠の作成
-      v.r = createElement({tag:'table',children:[
-        {tag:'thead',children:[{tag:'tr',children:[
-          {tag:'th',text:'No'},
-          {tag:'th',text:'内容'},
-          {tag:'th',text:'件数'},
-        ]}]},
-        v.tbody,
-      ]},v.dom);
+      v.r = createElement([
+        {tag:'p',text:'※ 内容欄をクリックすると詳細表示'},
+        {tag:'table',children:[
+          {tag:'thead',children:[{tag:'tr',children:[
+            {tag:'th',text:'No'},
+            {tag:'th',text:'内容'},
+            {tag:'th',text:'件数'},
+          ]}]},
+          v.tbody,
+        ]},
+      ],v.dom);
       if( v.r instanceof Error ) throw v.r;
 
       v.step = 9; // 終了処理
@@ -2968,6 +3075,11 @@ class warnings {
       vlog(v,'obj')
       v.r = createElement(v.obj,v.dom);
       if( v.r instanceof Error ) throw v.r;
+
+      v.step = 5; // 「文例」にイベント設定
+      this.wrapper.querySelectorAll(this.parent+' a.sample').forEach(o => {
+        o.addEventListener('click',this.individualSample);
+      });
 
       v.step = 9; // 終了処理
       console.log(`${v.whois} normal end.`);
