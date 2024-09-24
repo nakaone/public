@@ -2980,13 +2980,13 @@ class warnings {
           ],
         },{
           title: '参加者情報の部分欠損',
-          explanation: '参加者氏名・カナ・所属の一部項目のみ入力済',
+          explanation: '参加者氏名・所属の片方のみ入力済',
           criteria: d => {
             const rv = [];
             d.forEach(o => {
               for( let i=1 ; i<6 ; i++ ){
-                let flag = (o[`参加者0${i}氏名`] ? 1 : 0) + (o[`参加者0${i}カナ`] ? 2 : 0) + (o[`参加者0${i}所属`] ? 4 : 0);
-                if( 0 < flag && flag < 7 ){
+                let flag = (o[`参加者0${i}氏名`] ? 1 : 0) + (o[`参加者0${i}所属`] ? 2 : 0);
+                if( 0 < flag && flag < 3 ){
                   rv.push(o);
                   continue;
                 }
