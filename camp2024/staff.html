@@ -654,7 +654,7 @@ class bulkMail {
         {tag:'ol',children:[
           {tag:'li',text:'「スタッフ」はおやじの会＋ボランティア、'
           + '「参加者」は参加者全員に送信されます。'},
-          {tag:'li',text:'全員同じ文面になります。文言の埋め込みは非対応。'},
+          {tag:'li',text:'シートデータを埋め込む場合は「::(項目名)::」で指定(例：「::氏名::」)'},
           {tag:'li',text:'HTMLメールの場合、bodyタグ内部のみで可(html,meta,body等は不要)'},
           {tag:'li',html:'状態を「保留」とした場合、システム管理者としてGMailを開き、下書きフォルダから送信する必要があります。'
             + '<br>「即時」とした場合は即時送信されますので、確認・取消はできません。'},
@@ -1395,7 +1395,7 @@ function createPassword(len=16,opt={lower:true,upper:true,symbol:true,numeric:tr
  */
 function embedObjectInText(source,data,rex='::(.+?)::'){
   const v = {whois:'embedObjectInText',step:0,rv:source};
-  console.log(`${v.whois} start.`);
+  console.log(`${v.whois} start.\ndata(${whichType(data)})=${stringify(data)}`);
   try {
 
     v.step = 1; // テキストから位置指定文字列を抽出
