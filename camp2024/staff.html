@@ -70,10 +70,18 @@ code {
 }
 pre {border: solid 5px #999;}
 /* Reception共通 */
-  .Reception div {display: grid;}
-  .Reception rt {font-size: 0.6rem;}
   .Reception dialog {margin: auto;box-shadow: 0 0 1rem black;padding: 1rem;}
   .Reception dialog::backdrop {background-color: #ddd;/*backdrop-filter: blur(8px);*/}
+  .Reception p {margin:0.5rem 1rem;}
+  .Reception input[type="radio"] {height: 1rem; width: 1rem; margin-left: 2rem; margin-right: 0.2rem;}
+  .Reception hr {
+    margin-left: 1rem;
+    height:0px;
+    border-radius: 2px;
+    border: 2px solid hsl(0, 0%, 60%);
+    width: 80%;
+  }
+  .Reception li {margin: 1rem}
 
   /* scanner領域 */
   .Reception [name="scanner"] [name="keyword"] {display: block;margin:1rem;}
@@ -81,30 +89,12 @@ pre {border: solid 5px #999;}
   .Reception [name="scanner"] [name="keyword"] button {display: inline-block;font-size: 2rem;}
   .Reception [name="scanner"] dialog .act {background-color: #ddd;}
 
-  /* detail領域 */
-  .Reception [name="detail"] {padding:1rem;grid-template-columns: repeat(12, 1fr);}
-  .Reception [name="detail"] h2 {margin:0.5rem 0;padding: 0.5rem 1rem;border-left: 5px solid #000;background: #f4f4f4;grid-column: 1/13;}
-  .Reception [name="detail"] div {grid-column: 1/13;}
-  /* detail領域 申込情報 */
-  .Reception [name="detail"] .c19 {grid-column: 1/9;} /* column 1 to 9 */
-  .Reception [name="detail"] .c9d {grid-column: 9/13;grid-row: 3/7;} /* column 9 to 13(=0x0d) */
-  .Reception [name="detail"] ruby.big span {font-size: 1.5rem;}
-  .Reception [name="detail"] rt.big {font-size: 1rem;}
-  .Reception [name="detail"] img {margin:auto;}
-  .Reception [name="detail"] sub {font-size:0.8rem;text-align: center;}
-  /* detail領域 参加者情報 */
-  .Reception [name="detail"] table {grid-column: 1/13}
-  .Reception [name="detail"] td {border: none;}
-  .Reception [name="detail"] input {margin:0 0.6rem;transform: scale(3.0);}
-  /* detail領域 その他 */
-  .Reception [name="detail"] .c14 {grid-column: 1/4;}
-  .Reception [name="detail"] .c4d {grid-column: 4/13;margin-bottom: 0.6rem;}
-  .Reception [name="detail"] textarea {height: 5rem;}
-  /* detail領域 ボタン */
-  .Reception [name="detail"] [name="button"] { margin: 1rem;
-    grid-column: 1/13; grid-template-columns: repeat(3, 1fr); gap: 1rem;}
-  .Reception [name="detail"] [name="button"] button {
-    width:100%; aspect-ratio: 1/1; font-size: 2rem;}
+  .Reception [name="detail"] button {
+    width: 250px;
+    aspect-ratio: 1 / 1;
+    margin: auto;
+    font-size: 2rem;
+  }
 .screen[name="スタッフ名簿"] h2 {background: linear-gradient(transparent 70%, #4666ff 70%);}
 .screen[name="スタッフ名簿"] .name {
   font-size:1.4rem;
@@ -209,133 +199,7 @@ pre {border: solid 5px #999;}
 </ol>
       </div>
     </div>
-    <div data-BurgerMenu="id:'受付業務',func:'recept'"><div class="Reception" name="wrapper">
-<div name="scanner"><!-- スキャナ＋キーワード入力領域 -->
-      <div name="camera"></div><!-- スキャナ領域。scanQRの包摂要素 -->
-      <div name="keyword"><!-- キーワード入力領域 -->
-        <p>受付番号、または申込者の氏名・カナ(一部可)を入力してください</p>
-        <input type="text">
-        <button>検索</button>
-        <div name="val" style="display: none;"></div>
-      </div>
-      <dialog><!-- 検索結果が複数時の候補者一覧表示画面 -->
-        <p>複数の候補が見つかりました</p>
-        <div name="list"></div>
-        <button>選択</button>
-      </dialog>
-    </div>
-  
-    <div name="detail"><!-- 申込情報詳細画面 -->
-      <div name="entryNo" style="display: none;"></div>
-      <h1 style="grid-column: 1/13;">申込情報検索結果</h1>
-      <h2>申込情報</h2>
-      <div class="c19"><ruby class="big"><span name="申込者氏名">嶋津　邦浩</span><rt name="申込者カナ" class="big">シマヅ　クニヒロ</rt></ruby></div>
-      <div name="editURL" class="c9d">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&amp;data=https://chiilabo.co.jp/2024-05/wordpress-replace-qr-code-generater-api-post/">
-        <sub>申込フォーム修正</sub>
-      </div>
-      <div name="メールアドレス" class="c19">nakaone.kunihiro@gmail.com</div>
-      <div class="c19" name="緊急連絡先">090-6511-1788</div>
-      <div class="c19" name="ボランティア募集"></div>
-
-      <h2>参加者情報</h2>
-      <table style="grid-column: 1/13;"><tbody><tr name="参加者00">
-        <td><ruby>
-          <span name="参加者00氏名">嶋津　邦浩</span>
-          <rt name="参加者00カナ">シマヅ　クニヒロ</rt>
-        </ruby></td>
-        <td name="参加者00所属">卒業生</td>
-        <td><form name="参加者00会費">
-          <label><input type="radio" name="fee00" value="未入場"><span>未入場</span></label>
-          <label><input type="radio" name="fee00" value="未収"><span>未収</span></label>
-          <label><input type="radio" name="fee00" value="既収"><span>既収</span></label>
-          <label><input type="radio" name="fee00" value="無料"><span>無料</span></label>  
-        </form></td>
-      </tr><tr name="参加者01">
-        <td><ruby>
-          <span name="参加者01氏名">嶋津　弘子</span>
-          <rt name="参加者01カナ">シマヅ　ヒロコ</rt>
-        </ruby></td>
-        <td name="参加者01所属">卒業生</td>
-        <td><form name="参加者01会費">
-          <label><input type="radio" name="fee01" value="未入場"><span>未入場</span></label>
-          <label><input type="radio" name="fee01" value="未収"><span>未収</span></label>
-          <label><input type="radio" name="fee01" value="既収"><span>既収</span></label>
-          <label><input type="radio" name="fee01" value="無料"><span>無料</span></label>  
-        </form></td>
-      </tr><tr name="参加者02">
-        <td><ruby>
-          <span name="参加者02氏名">嶋津　弘子</span>
-          <rt name="参加者02カナ">シマヅ　ヒロコ</rt>
-        </ruby></td>
-        <td name="参加者02所属">卒業生</td>
-        <td><form name="参加者02会費">
-          <label><input type="radio" name="fee02" value="未入場"><span>未入場</span></label>
-          <label><input type="radio" name="fee02" value="未収"><span>未収</span></label>
-          <label><input type="radio" name="fee02" value="既収"><span>既収</span></label>
-          <label><input type="radio" name="fee02" value="無料"><span>無料</span></label>  
-        </form></td>
-      </tr><tr name="参加者03">
-        <td><ruby>
-          <span name="参加者03氏名">嶋津　諒</span>
-          <rt name="参加者03カナ">シマヅ　リョウ</rt>
-        </ruby></td>
-        <td name="参加者03所属">卒業生</td>
-        <td><form name="参加者03会費">
-          <label><input type="radio" name="fee03" value="未入場"><span>未入場</span></label>
-          <label><input type="radio" name="fee03" value="未収"><span>未収</span></label>
-          <label><input type="radio" name="fee03" value="既収"><span>既収</span></label>
-          <label><input type="radio" name="fee03" value="無料"><span>無料</span></label>  
-        </form></td>
-      </tr><tr name="参加者04">
-        <td><ruby>
-          <span name="参加者04氏名">嶋津　史奈</span>
-          <rt name="参加者04カナ">シマヅ　フミナ</rt>
-        </ruby></td>
-        <td name="参加者04所属">卒業生</td>
-        <td><form name="参加者04会費">
-          <label><input type="radio" name="fee04" value="未入場"><span>未入場</span></label>
-          <label><input type="radio" name="fee04" value="未収"><span>未収</span></label>
-          <label><input type="radio" name="fee04" value="既収"><span>既収</span></label>
-          <label><input type="radio" name="fee04" value="無料"><span>無料</span></label>  
-        </form></td>
-      </tr><tr name="参加者05">
-        <td><ruby>
-          <span name="参加者05氏名">嶋津　悠奈</span>
-          <rt name="参加者05カナ">シマヅ　ユウナ</rt>
-        </ruby></td>
-        <td name="参加者05所属">卒業生</td>
-        <td><form name="参加者05会費">
-          <label><input type="radio" name="fee05" value="未入場"><span>未入場</span></label>
-          <label><input type="radio" name="fee05" value="未収"><span>未収</span></label>
-          <label><input type="radio" name="fee05" value="既収"><span>既収</span></label>
-          <label><input type="radio" name="fee05" value="無料"><span>無料</span></label>  
-        </form></td>
-      </tr></tbody></table>
-
-      <h2>その他</h2>
-      <div class="c14">申込者の参加</div>
-      <div class="c4d" name="申込者の参加">参加予定(宿泊あり)</div>
-      <div class="c14">宿泊、テント</div>
-      <div class="c4d" name="宿泊、テント">宿泊する(テントあり)</div>
-      <div class="c14">引取者氏名</div>
-      <div class="c4d" name="引取者氏名">申込者が参加して帰宅時の付添もするのでお迎えは不要</div>
-      <div class="c14">備考</div>
-      <div class="c4d" name="備考">(無記入)</div>
-      <div class="c14">メモ</div>
-      <div><textarea name="memo" placeholder="受付時等にスタッフが記入"></textarea></div>
-
-      <div name="button">
-        <button name="cancel">取消</button>
-        <button name="update">更新</button>
-        <button name="updall">全員<br>受領</button>
-      </div>
-      <ol>
-        <li>リストの全員分を受領した場合は「全員受領」、一部未入場が残る場合は個別に設定して「更新」</li>
-        <li>入力ミスが有った場合、正しい状態にして「更新」すれば修正可</li>
-      </ol>
-    </div>
-    </div></div>
+    <div data-BurgerMenu="id:'受付業務',func:'recept'"></div>
     <div data-BurgerMenu="id:'参加者集計'">
       <div title="summaryTable">
         <h1>参加申込口数・人数集計</h1>
@@ -2100,39 +1964,86 @@ class Reception {
 
   /**
    * @param {Object} arg
-   * @param {string} arg.wrapper - Receptionを展開する包摂要素のCSSセレクタ
+   * @param {string} arg.parent - Receptionを展開する包摂要素のCSSセレクタ
    * @param {string[]} arg.header - シート上の項目名のリスト
    * @param {Object[]} arg.data - シート上のデータ。{項目名:値,..}
    * @param {Function|Arrow} arg.filter - 対象者の判定式。戻り値はboolean
    * @param {encryptedQuery} arg.eq - encryptedQueryのインスタンス
    * @param {Object} arg.conf - config情報オブジェクト
-   * @param {LoadingIcon} arg.li - 待機画面
+   * @param {LoadingIcon} arg.li - 待機画面のインスタンス
    */
   constructor(arg){
     const v = {whois:this.constructor.name+'.constructor',step:0,rv:null};
-    console.log(`${v.whois} start.\narg=${stringify(arg)}`);
+    console.log(`${v.whois} start.\narg(${whichType(arg)})=${stringify(arg)}`);
     try {
 
-      v.step = 1; // 既定値の設定、メンバ変数への保存
-      this.wrapper = document.querySelector(arg.wrapper || '.Reception[name="wrapper"]');
-        // {HTMLElement} Receptionを展開する包摂要素
-      this.header = arg.header; // {string[]} シート上の項目名のリスト
-      this.data = arg.data; // {Object[]} シート上のデータ。{項目名:値,..}
-      this.filter = arg.filter; // {Function|Arrow} 対象者の判定式。戻り値はboolean
-      this.eq = arg.eq;
-      this.conf = arg.conf;
-      this.li = arg.li;
+      // --------------------------------------------
+      // step.1 事前準備
+      // --------------------------------------------
+      v.step = 1.1; // 既定値の設定、メンバ変数への保存
+      Object.keys(arg).forEach(x => this[x] = arg[x]);
 
-      v.step = 2; // スキャナ領域をメンバ変数にセット＋イベント定義
+      v.step = 1.2; // 包摂要素をthis.wrapperとして作成
+      v.r = this.wrapper = createElement(
+        {attr:{class:'Reception',name:'wrapper'}},
+      document.querySelector(this.parent));
+      vlog(v,'r');
+      if( v.r instanceof Error ) throw v.r;
+
+      // --------------------------------------------
+      // step.2 スキャナ＋キーワード入力領域の作成
+      // --------------------------------------------
+      v.step = 2.1; // HTML要素(領域)の作成
+      v.r = createElement([
+        // 検索画面
+        {attr:{name:'scanner'},children:[
+          {attr:{name:'camera'}}, // スキャナ領域。scanQRの包摂要素
+          {attr:{name:'keyword'},children:[ // キーワード入力領域
+            {tag:'p',text:'受付番号、または申込者の氏名・カナ(一部可)を入力してください'},
+            {tag:'input',attr:{type:'text'}},
+            {tag:'button',text:'検索'},
+            {attr:{name:'val'},style:{display:'none'}},
+          ]},
+        ]},
+        // 候補者一覧表示画面
+        {tag:'dialog',children:[
+          {tag:'p',text:'複数の候補が見つかりました'},
+          {attr:{name:'list'}},
+          {tag:'button',text:'選択'},
+        ]},
+        // 申込情報詳細画面
+        {attr:{name:'detail'},children:[
+          {tag:'h1',text:'申込情報検索結果'},
+          {attr:{name:'info'}},
+          {attr:{name:'button'},style:{display:'grid',gridTemplateColumns:'1fr 1fr 1fr'},children:[
+            {tag:'button',attr:{name:'cancel'},text:'取消'},
+            {tag:'button',attr:{name:'update'},text:'更新'},
+            {tag:'button',attr:{name:'updall'},html:'全員<br>受領'},
+          ]},
+        ]},
+      ],this.wrapper);
+      vlog(v,'r');
+      if( v.r instanceof Error ) throw v.r;
+
+      v.step = 2.2; // インスタンス変数への格納
       this.scanner = this.wrapper.querySelector('[name=scanner]');
-      this.keyword = this.wrapper.querySelector('[name="keyword"]');
+      this.keyword = this.scanner.querySelector('[name="keyword"]');
+      this.dialog = this.wrapper.querySelector('dialog');
+      this.detail = this.wrapper.querySelector('[name="detail"]');
+      this.info = this.detail.querySelector('[name="info"]');
+
+      // --------------------------------------------
+      // step.3 各画面要素のイベント動作定義
+      // --------------------------------------------
+      v.step = 3.1; // 検索画面(スキャナ＋キーワード入力領域)
       // 「検索」ボタンクリックでキーワードを所定の要素に埋め込む
       this.keyword.querySelector('button').addEventListener('click',e => {
         e.target.parentNode.querySelector('[name="val"]').innerText
         = e.target.parentNode.querySelector('input').value;
       });
+
+      v.step = 3.2; // 候補者一覧表示画面
       // 検索結果が複数時の候補者一覧表示画面
-      this.dialog = this.scanner.querySelector('dialog');
       this.dialog.querySelector('button').addEventListener('click',()=>{
         this.dialog.close();
         v.entryNo = Number(this.dialog.querySelector('button').value);
@@ -2140,15 +2051,13 @@ class Reception {
         if( v.r instanceof Error ) throw v.r;
       });
 
-      v.step = 3; // 申込情報詳細画面領域をメンバ変数にセット＋イベント定義
-      this.detail = this.wrapper.querySelector('[name="detail"]');
-      // 詳細画面のボタンクリック時(受付時、参加費等の入力後)の動作定義
+      v.step = 3.3; // 申込情報詳細画面
       ['cancel','update','updall'].forEach(x =>
         this.detail.querySelector(`button[name="${x}"]`)
         .addEventListener('click',async e=>{await this.updateDetail(e)}));
 
       v.step = 9; // 終了処理
-      console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
+      console.log(`${v.whois} normal end.`);
       return v.rv;
 
     } catch(e) {
@@ -2239,77 +2148,195 @@ class Reception {
    * @returns {null}
    */
   editParticipant(arg){
-    const v = {whois:this.constructor.name+'.editParticipant',step:0,rv:null};
+    const v = {whois:this.constructor.name+'.editParticipant',step:0,rv:null,
+      icon:'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',
+    };
     console.log(`${v.whois} start.\narg=${stringify(arg)}`);
     try {
 
-      v.step = 1; // 事前準備
-      // スキャナ画面を閉鎖、詳細画面表示
+      // --------------------------------------------
+      // step.1 事前準備
+      // --------------------------------------------
+      v.step = 1.1; // スキャナ画面を閉鎖
       this.scanner.style.display = 'none';
       this.detail.style.display = 'grid';
-      // メモ欄のクリア
-      this.detail.querySelector('textarea[name="memo"]').value = '';
-      // 既定値の設定
+
+      v.step = 1.2; // 申込情報をv.dataにセット、既定値の設定
       v.data = Object.assign({
-        '緊急連絡先': '(緊急連絡先未記入)',
+        '緊急連絡先': '(空欄)',
+        '引取者氏名': '(空欄)',
         'ボランティア募集': '(不可)',
-        '備考': '(無記入)',
+        '備考': '(空欄)',
       },arg);
 
-      v.step = 2; // 対象申込情報をdetail内の各要素に書き込み
-      v.step = 2.1; // 非参加者情報をセット
-      this.header.forEach(col => {
-        if( col.indexOf('参加者0') < 0 || col.indexOf('fee0') < 0 ){
-          // 必須項目をセット
-          v.e = this.detail.querySelector(`[name="${col}"]`);
-          if( v.e ){
-            if( col === '申込者氏名' ){
-              v.e.innerHTML = v.data['キャンセル']
-              ? `<span style="color:red">【取消】${v.data[col]}</span>`
-              : v.data[col];
-            } else if( col === 'ボランティア募集' ){
-              v.e.innerHTML = `<span style="color:red">${
-                v.data['申込者の参加'].match(/おやじ/) ? 'おやじの会メンバ'
-                : ( v.data['ボランティア募集'] ? '参加者兼スタッフ' : '' )
-              }</span>`;
-            } else if( col === 'editURL' ){
-              this.detail.querySelector('[name="editURL"] img').src
-              = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='
-              + v.data.editURL;
-            } else if( col === 'memo' ){
-              if( v.data['memo'] )
-                this.detail.querySelector('textarea').value = v.data['memo'];
-            } else {
-              v.e.innerText = v.data[col] ? v.data[col] : '';
-            }
-          }
-        }
-      });
-
-      v.step = 2.2; // 参加者情報をセット
-      if( v.data['申込者の参加'].match(/^参加予定/) ){
+      v.step = 1.3; // 申込者も参加するなら追加
+      v.isAlso = v.data['申込者の参加'].match(/^参加予定/) ? true : false;
+      if( v.isAlso ){
         v.data['参加者00氏名'] = v.data['申込者氏名'];
         v.data['参加者00カナ'] = v.data['申込者カナ'];
         v.data['参加者00所属'] = '保護者';
       }
-      for( v.i=0 ; v.i<=5 ; v.i++ ){
-        if( !v.data[`参加者0${v.i}氏名`] ){
-          v.step = 2.21; // 氏名未登録の参加者は空欄
-          this.detail.querySelector(`tr[name="参加者0${v.i}"]`).style.display = 'none';
-        } else {
-          this.detail.querySelector(`tr[name="参加者0${v.i}"]`).style.display = 'table-row';
-          v.step = 2.22; // 氏名・カナ・所属のセット
-          ['氏名','カナ','所属'].forEach(x => {
-            v.col = `参加者0${v.i}${x}`;
-            this.detail.querySelector(`[name="${v.col}"]`).innerHTML = v.data[v.col] ? v.data[v.col] : '';
-          });
 
-          v.step = 2.23; // 会費のセット
-          v.col = `fee0${v.i}`;
-          v.val = v.data[v.col] ? v.data[v.col] : '未入場';
-          this.detail.querySelector(`[name="${v.col}"][value="${v.val}"]`).checked = true;
+      // --------------------------------------------
+      // step.2 申込者情報(ヘッダ)の作成
+      // --------------------------------------------
+      v.header = {tag:'p',children:[]};
+      v.name = {  // 申込者氏名
+        tag:'ruby',
+        text:v.data['申込者氏名'],
+        style:{fontSize:'1.8rem'},
+        children:[{tag:'rt',style:{fontSize:'0.8rem'},text:v.data['申込者カナ']}],
+      };
+      v.header.children.push(v.name);
+      // 申込者がキャンセル済なら赤文字＋取消線
+      if( v.data['キャンセル'] ){
+        Object.assign(v.name.style,{color:'red',textDecoration:'line-through'});
+        //v.name.style = {color:'red',textDecoration:'line-through'}
+      }
+      // テント泊ならアイコンを追加
+      if( v.data['宿泊、テント'].match(/テントあり/) ){
+        v.header.children.push({tag:'span',html:'&#x26fa;',style:{fontSize:'2rem',marginLeft:'1rem'}});
+      }
+      // 申込者がスタッフならアイコンを追加
+      if( v.data['申込者の参加'].match(/おやじ/) || v.data['ボランティア募集'] ){
+        v.header.children.push({tag:'span',html:'&#x1f49d;',style:{fontSize:'2rem',marginLeft:'1rem'}});
+      }
+      // 詳細情報表示アイコンを追加
+      v.header.children.push({
+        tag:'img',
+        attr:{src:'data:image/webp;base64,'+v.icon},
+        style:{marginLeft:'5rem'},
+        event:{click:()=>{
+          const dom = document.querySelector(`${this.parent} [title="entryInformation"]`);
+          dom.style.display = dom.style.display === 'none' ? 'block' : 'none';
+        }},
+      });
+
+      // 特記事項
+      v.memo = v.data.memo ? {
+        text:v.data.memo,
+        style:{margin:'1rem',border:'solid 5px pink',padding:'1rem'},
+      } : null;
+
+      // --------------------------------------------
+      // step.3 申込者情報(詳細)の作成
+      // --------------------------------------------
+      v.step = 3;
+      vlog(v,'data.memo');
+      v.info = {attr:{title:'entryInformation'},style:{display:'none'},children:[
+        {tag:'ol',children:[
+          {tag:'li',html:'上の名前が赤字＋取消線：キャンセル済の申込<br>'
+            + '例：<span style="color:red;text-decoration:line-through">織田　信長</span>'},
+          {tag:'li',html:'<span style="font-size:2rem">&#x26fa;</span>：テント泊。アイコンなしは体育館泊または日帰り'},
+          {tag:'li',html:'<span style="font-size:2rem">&#x1f49d;</span>：おやじの会メンバまたはボランティア可'},
+          {tag:'li',html:'リストの全員分を受領した場合は「全員受領」、一部未入場が残る場合は個別に設定して「更新」'},
+          {tag:'li',html:'入力ミスが有った場合、もう一度検索して、正しい状態にして「更新」すれば修正可'},
+          {tag:'li',html:'他のスタッフと共有すべき情報は下の「特記事項」欄に記入。<br>記入された情報は上の氏名直下に常時表示される'},
+        ]},
+        {tag:'table',style:{margin:'1rem auto 1rem 2rem'},children:[
+          {tag:'tr',children:[
+            {tag:'th',text:'e-mail'},
+            {tag:'td',text:v.data['メールアドレス']},
+          ]},
+          {tag:'tr',children:[
+            {tag:'th',text:'緊急連絡先'},
+            {tag:'td',text:(v.data['緊急連絡先']||'')},
+          ]},
+          {tag:'tr',children:[
+            {tag:'th',text:'申込者の参加'},
+            {tag:'td',text:(v.data['申込者の参加']||'')},
+          ]},
+          {tag:'tr',children:[
+            {tag:'th',text:'宿泊、テント'},
+            {tag:'td',text:(v.data['宿泊、テント']||'')},
+          ]},
+          {tag:'tr',children:[
+            {tag:'th',text:'引取者氏名'},
+            {tag:'td',text:(v.data['引取者氏名']||'')},
+          ]},
+          {tag:'tr',children:[
+            {tag:'th',text:'ボランティア'},
+            {tag:'td',text:(v.data['ボランティア募集']||'')},
+          ]},
+          {tag:'tr',children:[
+            {tag:'th',text:'備考'},
+            {tag:'td',text:(v.data['備考']||'')},
+          ]},
+          {tag:'tr',children:[
+            {tag:'th',text:'キャンセル'},
+            {tag:'td',text:(v.data['キャンセル']||'')},
+          ]},
+          {tag:'tr',children:[
+            {tag:'th',text:'特記事項'},
+            {tag:'td',children:[{
+              tag:'textarea',
+              style:{width:'18rem',height:'5rem'},
+              attr:{placeholder:"受付時等にスタッフが記入"},
+              text: v.data.memo || '',
+            }]},
+          ]},
+        ]}
+      ]};
+
+      // --------------------------------------------
+      // step.4 参加者明細の作成
+      // --------------------------------------------
+      v.member = {children:[]};
+      v.amount = 0; // 参加費(請求額)合計
+      for( v.i=0 ; v.i<6 ; v.i++ ){
+
+        v.step = 4.1; // 氏名も所属もない参加者はスキップ
+        if( !v.data[`参加者0${v.i}氏名`] && !v.data[`参加者0${v.i}所属`] )
+          continue;
+
+        v.step = 4.2; // 参加者名＋所属
+        v.member.children.push({tag:'p',children:[
+          {tag:'ruby',text:v.data[`参加者0${v.i}氏名`],children:[
+            {tag:'rt',style:{fontSize:'0.6rem'},text:(v.data[`参加者0${v.i}カナ`]||'')},
+          ]},
+          {tag:'span',style:{marginLeft:'1rem'},text:v.data[`参加者0${v.i}所属`]},
+        ]});
+
+        v.step = 4.3; // 参加費(ラジオボタンの作成)
+        if( !v.data['fee0'+v.i] ) v.data['fee0'+v.i] = '未入場';  // 空欄なら未入場
+        v.fee = [];
+        ['未入場','未収','既収','無料'].forEach(x => {
+          v.fee.push({tag:'label',children:[{
+            tag:'input',
+            attr:{type:'radio',name:'fee0'+v.i,value:x},
+            logical:{checked:(x === v.data['fee0'+v.i])}
+          },{tag:'span',text:x}]})
+        });
+        v.member.children.push({tag:'p',children:[
+          {tag:'form',attr:{name:`参加者0${v.i}会費`,title:v.data[`参加者0${v.i}所属`]},children:v.fee},
+        ]});
+
+        v.step = 4.4; // 請求額に加算
+        if( v.data['fee0'+v.i] === '未入場' && v.data[`参加者0${v.i}所属`] !== '未就学児' ){
+          v.amount += 500;
         }
       }
+
+      // --------------------------------------------
+      // step.5 包摂要素への追加
+      // --------------------------------------------
+      this.info.innerHTML = '';
+      v.r = createElement([
+        // 受付番号(隠し項目)
+        {attr:{name:'entryNo'},style:{display:'none'},text:v.data.entryNo},
+        v.header,    // 申込者情報(ヘッダ)
+        v.memo,      // 特記事項
+        {tag:'hr'},
+        v.info,      // 申込者情報(詳細)
+        v.member,    // 参加者明細
+        {tag:'hr'},
+        {            // 参加費(請求額)
+          tag:'p',
+          style:{textAlign:'right',fontSize:'1.4rem',margin:'1rem 5rem'},
+          text:'参加費 : '+v.amount.toLocaleString('ja-JP',{style:'currency',currency:'JPY'})
+        },
+      ],this.info);
+      if( v.r instanceof Error ) throw v.r;
 
       v.step = 9; // 終了処理
       console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
@@ -2341,23 +2368,25 @@ class Reception {
           entryNo: Number(this.detail.querySelector('[name="entryNo"]').innerText),
           data: {},
         }
+        vlog(v,'obj');
 
         v.step = 3; // fee00〜05を取得
         for( v.i=0 ; v.i<6 ; v.i++ ){
-          v.tr = this.detail.querySelector(`tr[name="参加者0${v.i}"]`);
-          if( v.tr.innerHTML.length > 0 ){
+          v.dom = this.detail.querySelector(`form[name="参加者0${v.i}会費"]`);
+          if( v.dom ){
             v.obj.data['fee0'+v.i] = v.func === 'updall'
-            ? (v.obj.data[`参加者0${v.i}所属`] === '未就学児' ? '無料' : '既収')
-            : this.detail.querySelector(`form[name="参加者0${v.i}会費"]`).elements['fee0'+v.i].value;
+            ? (v.dom.getAttribute('title') === '未就学児' ? '無料' : '既収')
+            : v.dom.elements['fee0'+v.i].value;
           }
         }
+        vlog(v,'obj');
 
         v.step = 4; // 受付担当・入場時刻を設定
         v.obj.data.entryTime = toLocale(new Date());
         v.obj.data.receptionist = this.conf.entryNo;
 
         v.step = 5; // memoを取得
-        v.memo = this.detail.querySelector('textarea[name="memo"]').value;
+        v.memo = this.detail.querySelector('textarea').value;
         if( v.memo.length > 0 ) v.obj.data.memo = v.memo;
         vlog(v,'obj');
 
@@ -2373,7 +2402,7 @@ class Reception {
         sessionStorage.setItem(this.conf.sys.storageKey,JSON.stringify(this.conf));
 
         v.step = 8; // 確認ダイアログ表示
-        alert('更新しました');
+        await alert('更新しました');
       }
 
       v.step = 9; // 終了処理
@@ -3446,7 +3475,7 @@ window.addEventListener('DOMContentLoaded',async () => {
       v.step = 4.1; // 受付業務の準備
       // v.rにシートデータが入っていること
       v.Reception = new Reception({
-        wrapper: '.Reception[name="wrapper"]',
+        parent: '[data-BurgerMenu="id:\'受付業務\',func:\'recept\'"]',
         header: v.r.header,
         data: v.r.data,
         filter: (o,key) => {  // 検索キーを元にした候補者の抽出条件
