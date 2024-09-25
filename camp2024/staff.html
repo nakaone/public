@@ -246,6 +246,7 @@ pre {border: solid 5px #999;}
         </ruby></td>
         <td name="参加者00所属">卒業生</td>
         <td><form name="参加者00会費">
+          <label><input type="radio" name="fee00" value="未入場"><span>未入場</span></label>
           <label><input type="radio" name="fee00" value="未収"><span>未収</span></label>
           <label><input type="radio" name="fee00" value="既収"><span>既収</span></label>
           <label><input type="radio" name="fee00" value="無料"><span>無料</span></label>  
@@ -257,6 +258,7 @@ pre {border: solid 5px #999;}
         </ruby></td>
         <td name="参加者01所属">卒業生</td>
         <td><form name="参加者01会費">
+          <label><input type="radio" name="fee01" value="未入場"><span>未入場</span></label>
           <label><input type="radio" name="fee01" value="未収"><span>未収</span></label>
           <label><input type="radio" name="fee01" value="既収"><span>既収</span></label>
           <label><input type="radio" name="fee01" value="無料"><span>無料</span></label>  
@@ -268,6 +270,7 @@ pre {border: solid 5px #999;}
         </ruby></td>
         <td name="参加者02所属">卒業生</td>
         <td><form name="参加者02会費">
+          <label><input type="radio" name="fee02" value="未入場"><span>未入場</span></label>
           <label><input type="radio" name="fee02" value="未収"><span>未収</span></label>
           <label><input type="radio" name="fee02" value="既収"><span>既収</span></label>
           <label><input type="radio" name="fee02" value="無料"><span>無料</span></label>  
@@ -279,6 +282,7 @@ pre {border: solid 5px #999;}
         </ruby></td>
         <td name="参加者03所属">卒業生</td>
         <td><form name="参加者03会費">
+          <label><input type="radio" name="fee03" value="未入場"><span>未入場</span></label>
           <label><input type="radio" name="fee03" value="未収"><span>未収</span></label>
           <label><input type="radio" name="fee03" value="既収"><span>既収</span></label>
           <label><input type="radio" name="fee03" value="無料"><span>無料</span></label>  
@@ -290,6 +294,7 @@ pre {border: solid 5px #999;}
         </ruby></td>
         <td name="参加者04所属">卒業生</td>
         <td><form name="参加者04会費">
+          <label><input type="radio" name="fee04" value="未入場"><span>未入場</span></label>
           <label><input type="radio" name="fee04" value="未収"><span>未収</span></label>
           <label><input type="radio" name="fee04" value="既収"><span>既収</span></label>
           <label><input type="radio" name="fee04" value="無料"><span>無料</span></label>  
@@ -301,6 +306,7 @@ pre {border: solid 5px #999;}
         </ruby></td>
         <td name="参加者05所属">卒業生</td>
         <td><form name="参加者05会費">
+          <label><input type="radio" name="fee05" value="未入場"><span>未入場</span></label>
           <label><input type="radio" name="fee05" value="未収"><span>未収</span></label>
           <label><input type="radio" name="fee05" value="既収"><span>既収</span></label>
           <label><input type="radio" name="fee05" value="無料"><span>無料</span></label>  
@@ -324,6 +330,10 @@ pre {border: solid 5px #999;}
         <button name="update">更新</button>
         <button name="updall">全員<br>受領</button>
       </div>
+      <ol>
+        <li>リストの全員分を受領した場合は「全員受領」、一部未入場が残る場合は個別に設定して「更新」</li>
+        <li>入力ミスが有った場合、正しい状態にして「更新」すれば修正可</li>
+      </ol>
     </div>
     </div></div>
     <div data-BurgerMenu="id:'参加者集計'">
@@ -2296,7 +2306,7 @@ class Reception {
 
           v.step = 2.23; // 会費のセット
           v.col = `fee0${v.i}`;
-          v.val = v.data[v.col] ? v.data[v.col] : '未収';
+          v.val = v.data[v.col] ? v.data[v.col] : '未入場';
           this.detail.querySelector(`[name="${v.col}"][value="${v.val}"]`).checked = true;
         }
       }
@@ -2336,8 +2346,9 @@ class Reception {
         for( v.i=0 ; v.i<6 ; v.i++ ){
           v.tr = this.detail.querySelector(`tr[name="参加者0${v.i}"]`);
           if( v.tr.innerHTML.length > 0 ){
-            v.obj.data['fee0'+v.i] = v.func === 'updall' ? '既収' :
-            this.detail.querySelector(`form[name="参加者0${v.i}会費"]`).elements['fee0'+v.i].value;
+            v.obj.data['fee0'+v.i] = v.func === 'updall'
+            ? (v.obj.data[`参加者0${v.i}所属`] === '未就学児' ? '無料' : '既収')
+            : this.detail.querySelector(`form[name="参加者0${v.i}会費"]`).elements['fee0'+v.i].value;
           }
         }
 
