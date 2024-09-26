@@ -2149,7 +2149,24 @@ class Reception {
    */
   editParticipant(arg){
     const v = {whois:this.constructor.name+'.editParticipant',step:0,rv:null,
-      icon:'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',
+      icon: {
+        info: {obj:{text:'i'}}, // 後からinfo.domを追加予定
+        help: {obj:{text:'?'}},
+        style: {
+          display:'inline-block',
+          verticalAlign:'bottom',
+          width:'1.8rem',
+          height:'1.8rem',
+          marginLeft:'2rem',
+          textAlign:'center',
+          fontSize:'2rem',
+          fontFamily:'cursive',
+          color:'#bbb',
+          weight: '900',
+          border:'solid 6px #bbb',
+          borderRadius:'50%',
+        },
+      },
     };
     console.log(`${v.whois} start.\narg=${stringify(arg)}`);
     try {
@@ -2177,62 +2194,97 @@ class Reception {
         v.data['参加者00所属'] = '保護者';
       }
 
+      v.step = 1.4; // アイコンの準備
+      ['info','help'].forEach(x => {
+        v.icon[x].obj.style = v.icon.style;
+        v.icon[x].dom = createElement(v.icon[x].obj);
+        if( v.icon[x].dom instanceof Error ) throw v.icon[x].dom;
+      });
+
       // --------------------------------------------
       // step.2 申込者情報(ヘッダ)の作成
       // --------------------------------------------
       v.header = {tag:'p',children:[]};
-      v.name = {  // 申込者氏名
+      v.step = 2.1; // 申込者氏名
+      v.name = {
         tag:'ruby',
         text:v.data['申込者氏名'],
         style:{fontSize:'1.8rem'},
         children:[{tag:'rt',style:{fontSize:'0.8rem'},text:v.data['申込者カナ']}],
       };
       v.header.children.push(v.name);
-      // 申込者がキャンセル済なら赤文字＋取消線
+      v.step = 2.2; // 申込者がキャンセル済なら赤文字＋取消線
       if( v.data['キャンセル'] ){
         Object.assign(v.name.style,{color:'red',textDecoration:'line-through'});
         //v.name.style = {color:'red',textDecoration:'line-through'}
       }
-      // テント泊ならアイコンを追加
+      v.step = 2.3; // テント泊ならアイコンを追加
       if( v.data['宿泊、テント'].match(/テントあり/) ){
         v.header.children.push({tag:'span',html:'&#x26fa;',style:{fontSize:'2rem',marginLeft:'1rem'}});
       }
-      // 申込者がスタッフならアイコンを追加
-      if( v.data['申込者の参加'].match(/おやじ/) || v.data['ボランティア募集'] ){
+      v.step = 2.4; // 申込者がスタッフならアイコンを追加
+      if( v.data['申込者の参加'].match(/おやじ/) || v.data['ボランティア募集'].match(/できる/) ){
         v.header.children.push({tag:'span',html:'&#x1f49d;',style:{fontSize:'2rem',marginLeft:'1rem'}});
       }
-      // 詳細情報表示アイコンを追加
-      v.header.children.push({
-        tag:'img',
-        attr:{src:'data:image/webp;base64,'+v.icon},
-        style:{marginLeft:'5rem'},
-        event:{click:()=>{
-          const dom = document.querySelector(`${this.parent} [title="entryInformation"]`);
-          dom.style.display = dom.style.display === 'none' ? 'block' : 'none';
-        }},
-      });
+      v.step = 2.5; // 詳細情報表示アイコンを追加
+      v.i = Object.assign({},v.icon.info.obj,{event:{click:()=>{
+        const dom = document.querySelector(`${this.parent} [title="entryInformation"]`);
+        dom.style.display = dom.style.display === 'none' ? 'block' : 'none';
+      }}});
+      v.header.children.push(v.i);
+      v.step = 2.6; // スタッフ用ヘルプアイコンを追加
+      v.i = Object.assign({},v.icon.help.obj,{event:{click:()=>{
+        const dom = document.querySelector(`${this.parent} [title="helpForStaff"]`);
+        dom.style.display = dom.style.display === 'none' ? 'block' : 'none';
+      }}});
+      v.header.children.push(v.i);
 
-      // 特記事項
+      v.step = 2.7; // 特記事項
       v.memo = v.data.memo ? {
         text:v.data.memo,
         style:{margin:'1rem',border:'solid 5px pink',padding:'1rem'},
       } : null;
 
       // --------------------------------------------
-      // step.3 申込者情報(詳細)の作成
+      // step.3 スタッフ用ヘルプの作成
       // --------------------------------------------
-      v.step = 3;
-      vlog(v,'data.memo');
-      v.info = {attr:{title:'entryInformation'},style:{display:'none'},children:[
+      v.help = {attr:{title:'helpForStaff'},style:{display:'none',border:'solid 5px aqua',margin:'1rem'},children:[
         {tag:'ol',children:[
           {tag:'li',html:'上の名前が赤字＋取消線：キャンセル済の申込<br>'
             + '例：<span style="color:red;text-decoration:line-through">織田　信長</span>'},
           {tag:'li',html:'<span style="font-size:2rem">&#x26fa;</span>：テント泊。アイコンなしは体育館泊または日帰り'},
           {tag:'li',html:'<span style="font-size:2rem">&#x1f49d;</span>：おやじの会メンバまたはボランティア可'},
+          {tag:'li',children:[{tag:'table',children:[
+            {tag:'tr',children:[
+              {tag:'td',attr:{colspan:3},text:'未入場'},
+              {tag:'th',text:'⇒ 未入場'}
+            ]},
+            {tag:'tr',children:[
+              {tag:'td',attr:{rowspan:3},text:'入場済'},
+              {tag:'td',attr:{colspan:2},text:'未就学児'},
+              {tag:'th',text:'⇒ 無料'}
+            ]},
+            {tag:'tr',children:[
+              {tag:'td',attr:{rowspan:2},text:'未就学児以外'},
+              {tag:'td',text:'参加費支払済'},
+              {tag:'th',text:'⇒ 既収'}
+            ]},
+            {tag:'tr',children:[
+              {tag:'td',text:'参加費未払'},
+              {tag:'th',text:'⇒ 未収'}
+            ]},
+          ]}]},
           {tag:'li',html:'リストの全員分を受領した場合は「全員受領」、一部未入場が残る場合は個別に設定して「更新」'},
           {tag:'li',html:'入力ミスが有った場合、もう一度検索して、正しい状態にして「更新」すれば修正可'},
           {tag:'li',html:'他のスタッフと共有すべき情報は下の「特記事項」欄に記入。<br>記入された情報は上の氏名直下に常時表示される'},
         ]},
+      ]};
+
+      // --------------------------------------------
+      // step.4 申込者情報(詳細)の作成
+      // --------------------------------------------
+      v.step = 4;
+      v.info = {attr:{title:'entryInformation'},style:{display:'none'},children:[
         {tag:'table',style:{margin:'1rem auto 1rem 2rem'},children:[
           {tag:'tr',children:[
             {tag:'th',text:'e-mail'},
@@ -2279,17 +2331,17 @@ class Reception {
       ]};
 
       // --------------------------------------------
-      // step.4 参加者明細の作成
+      // step.5 参加者明細の作成
       // --------------------------------------------
       v.member = {children:[]};
       v.amount = 0; // 参加費(請求額)合計
       for( v.i=0 ; v.i<6 ; v.i++ ){
 
-        v.step = 4.1; // 氏名も所属もない参加者はスキップ
+        v.step = 5.1; // 氏名も所属もない参加者はスキップ
         if( !v.data[`参加者0${v.i}氏名`] && !v.data[`参加者0${v.i}所属`] )
           continue;
 
-        v.step = 4.2; // 参加者名＋所属
+        v.step = 5.2; // 参加者名＋所属
         v.member.children.push({tag:'p',children:[
           {tag:'ruby',text:v.data[`参加者0${v.i}氏名`],children:[
             {tag:'rt',style:{fontSize:'0.6rem'},text:(v.data[`参加者0${v.i}カナ`]||'')},
@@ -2297,7 +2349,7 @@ class Reception {
           {tag:'span',style:{marginLeft:'1rem'},text:v.data[`参加者0${v.i}所属`]},
         ]});
 
-        v.step = 4.3; // 参加費(ラジオボタンの作成)
+        v.step = 5.3; // 参加費(ラジオボタンの作成)
         if( !v.data['fee0'+v.i] ) v.data['fee0'+v.i] = '未入場';  // 空欄なら未入場
         v.fee = [];
         ['未入場','未収','既収','無料'].forEach(x => {
@@ -2311,14 +2363,14 @@ class Reception {
           {tag:'form',attr:{name:`参加者0${v.i}会費`,title:v.data[`参加者0${v.i}所属`]},children:v.fee},
         ]});
 
-        v.step = 4.4; // 請求額に加算
-        if( v.data['fee0'+v.i] === '未入場' && v.data[`参加者0${v.i}所属`] !== '未就学児' ){
+        v.step = 5.4; // 請求額に加算
+        if( (v.data['fee0'+v.i] === '未入場' || v.data['fee0'+v.i] === '未収') && v.data[`参加者0${v.i}所属`] !== '未就学児' ){
           v.amount += 500;
         }
       }
 
       // --------------------------------------------
-      // step.5 包摂要素への追加
+      // step.6 包摂要素への追加
       // --------------------------------------------
       this.info.innerHTML = '';
       v.r = createElement([
@@ -2327,6 +2379,7 @@ class Reception {
         v.header,    // 申込者情報(ヘッダ)
         v.memo,      // 特記事項
         {tag:'hr'},
+        v.help,      // スタッフ用ヘルプ
         v.info,      // 申込者情報(詳細)
         v.member,    // 参加者明細
         {tag:'hr'},
