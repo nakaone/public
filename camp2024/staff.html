@@ -277,17 +277,7 @@ pre {border: solid 5px #999;}
       </div>
     </div>
     <div data-BurgerMenu="id:'受付業務',func:'recept'"></div>
-    <div data-BurgerMenu="id:'参加者集計'">
-      <div title="summaryTable">
-        <h1>参加申込口数・人数集計</h1>
-        <div title="wrapper"></div>
-        <ol>
-          <li>申込口数におやじの会メンバの申込は含まれません</li>
-          <li>宿泊には日帰り予定の保護者を含みます(例：母申込で日帰り、子供＋父がテント泊)</li>
-          <li>「ボランティア=できる」と回答いただいた方も「おやじの会」にはカウントしていません</li>
-        </ol>
-      </div>
-    </div>
+    <div data-BurgerMenu="id:'参加者集計'"></div>
     <div data-BurgerMenu="id:'スタッフ名簿'"></div>
     <div data-BurgerMenu="id:要確認の応募">
 <style>
@@ -2791,9 +2781,8 @@ function stringify(variable,opt={addType:false}){
     return e;
   }
 }
-/** summaryTable: 集計表を作成
+/** summaryTable: 集計表作成用のcreateElementオブジェクトを作成
  * @param {Object} arg
- * @param {string} arg.wrapper - tableの包摂要素(div)を指定するCSSセレクタ
  * @param {Object[]} arg.data - 集計表の元となるデータ。1行1Objectの配列
  * @param {string[]} arg.cols - 横軸の項目名
  * @param {string[]} arg.rows - 縦軸の項目名
@@ -2802,9 +2791,14 @@ function stringify(variable,opt={addType:false}){
  * @param {function} arg.normalize - データを正規化する関数
  * @param {Object} arg.thead - ヘッダ部を作成するcreateElementオブジェクト
  * @param {Object} arg.tbody - ボディ部を作成するcreateElementオブジェクト。但し計数項目・導出項目は除く
+ * @returns {Object}
  * 
  * - 空白行は想定しない(全てのセルが計数項目または導出項目の前提)
  * - Google Spread [表形式仕様・テストデータ](https://docs.google.com/spreadsheets/d/1fvCYOfp35LivbZlQHIhnGaujpCUeoI7u2qydFrMFem0/edit?gid=1400698249#gid=1400698249)
+ * 
+ * **戻り値のデータ型**
+ * rv.data {Object[]} - `{row:"(行ラベル)",col:"(列ラベル)",num:件数}`形式のオブジェクト。セル単位。
+ * rv.table {Object} - createElemntの引数となるオブジェクト
  * 
  * **normalizeの仕様**
  * 
@@ -2818,18 +2812,22 @@ function summaryTable(arg){
   console.log(`${v.whois} start.\narg=${stringify(arg)}`);
   try {
 
-    v.step = 1; // データを正規化する
+    v.step = 1; // 事前準備
+    if( !arg.hasOwnProperty('colsFormula') ) arg.colsFormula = [];
+    if( !arg.hasOwnProperty('rowsFormula') ) arg.rowsFormula = [];
+
+    v.step = 2; // データを正規化する
     arg.data.forEach(o => v.data.push(...arg.normalize(o)));
     vlog(v,'data');
 
-    v.step = 2; // 計数項目の集計
+    v.step = 3; // 計数項目の集計
     v.sql = 'select `row`,`col`,count(*) as `num` from ? group by `row`,`col`;';
     v.table = alasql(v.sql,[v.data]);
     vlog(v,'table');
 
-    v.step = 3; // 横方向での導出項目の計算
+    v.step = 4; // 横方向での導出項目の計算
     arg.colsFormula.forEach(formula => {
-      v.step = 3.1;
+      v.step = 4.1;
       v.m = formula.match(/^(.+?)=(.+)$/);
       v.left = v.m[1];
       v.fm = [];
@@ -2842,14 +2840,14 @@ function summaryTable(arg){
       vlog(v,['m','cols','to','fm']);
 
       arg.rows.forEach(row => {
-        v.step = 3.2; // 集計結果を格納するセルを特定、v.cellとする
+        v.step = 4.2; // 集計結果を格納するセルを特定、v.cellとする
         v.cell = v.table.find(x => x.row === row && x.col === v.left);
         if( v.cell === undefined ){
           v.cell = {row:row,col:v.left,num:0};
           v.table.push(v.cell);
         }
 
-        v.step = 3.3; // 式に現れた項目毎に加減
+        v.step = 4.3; // 式に現れた項目毎に加減
         v.fm.forEach(col => {
           v.cell.num += ((v.table.find(x => x.row === row && x.col === col.name)
           || {num:0}).num) * (col.sign ? 1 : -1);
@@ -2858,9 +2856,9 @@ function summaryTable(arg){
       });
     });
 
-    v.step = 4; // 縦方向での導出項目の計算
+    v.step = 5; // 縦方向での導出項目の計算
     arg.rowsFormula.forEach(formula => {
-      v.step = 4.1;
+      v.step = 5.1;
       v.m = formula.match(/^(.+?)=(.+)$/);
       v.left = v.m[1];
       v.fm = [];
@@ -2873,14 +2871,14 @@ function summaryTable(arg){
       vlog(v,['m','rows','to','fm']);
 
       arg.cols.forEach(col => {
-        v.step = 4.2; // 集計結果を格納するセルを特定、v.cellとする
+        v.step = 5.2; // 集計結果を格納するセルを特定、v.cellとする
         v.cell = v.table.find(x => x.row === v.left && x.col === col);
         if( v.cell === undefined ){
           v.cell = {row:v.left,col:col,num:0};
           v.table.push(v.cell);
         }
 
-        v.step = 4.3; // 式に現れた項目毎に加減
+        v.step = 5.3; // 式に現れた項目毎に加減
         v.fm.forEach(row => {
           v.cell.num += ((v.table.find(x => x.row === row.name && x.col === col)
           || {num:0}).num) * (row.sign ? 1 : -1);
@@ -2888,31 +2886,28 @@ function summaryTable(arg){
         vlog(v,'cell');
       });
     });
+    vlog(v,'table');
 
     for( v.i=0 ; v.i<arg.tbody.length ; v.i++ ){
-      v.step = 5.1; // 表要素の作成：行単位
+      v.step = 6.1; // 表要素の作成：行単位
       v.tr = arg.tbody[v.i].children;
       for( v.j=0 ; v.j<arg.cols.length ; v.j++ ){
-        v.step = 5.2; // 列単位
+        v.step = 6.2; // 列単位
         v.val = (v.table.find(x => x.row === arg.rows[v.i] && x.col === arg.cols[v.j]) || {num:0}).num;
-        v.tr.push({tag:'td',text:v.val});
+        v.tr.push({tag:'td',text:v.val,attr:{title:arg.rows[v.i]+'_'+arg.cols[v.j]}});
       }
       vlog(v,'tr')
     }
 
-
-    v.step = 5.3; // 表の作成
-    v.r = createElement({
-      children:[
-        {tag:'table',children:[
-          {tag:'thead',children:arg.thead},
-          {tag:'tbody',children:arg.tbody},
-        ]}
-    ]},document.querySelector(arg.wrapper));
-    if( v.r instanceof Error ) throw v.r;
-
     v.step = 9; // 終了処理
-    console.log(`${v.whois} normal end.\nv.rv=${stringify(v.rv)}`);
+    v.rv = {
+      data: v.table,
+      table: {children:[{tag:'table',children:[
+        {tag:'thead',children:arg.thead},
+        {tag:'tbody',children:arg.tbody},
+      ]}]}
+    };
+    console.log(`${v.whois} normal end.`);
     return v.rv;
 
   } catch(e) {
@@ -3557,56 +3552,57 @@ window.addEventListener('DOMContentLoaded',async () => {
       });
     })();
 
-    v.step = 2; // 前回のパスコード通知メール発行要求が10分以上前、または要求自体した記録がないなら発行要求
-    v.r = await v.eq.request();
-    vlog(v,'r');
+    v.step = 2; // 認証処理
+v.step = 2.1; // 前回のパスコード通知メール発行要求が10分以上前、または要求自体した記録がないなら発行要求
+v.r = await v.eq.request();
+vlog(v,'r');
+if( v.r instanceof Error ) throw v.r;
+if( v.r.status < 0 ) throw new Error(v.r.message);
+
+v.step = 2.2; // パスコード入力
+v.passcode = null;
+v.msg = 'メールでパスコードを送信しました。\n';
+for( v.cnt=0 ; v.cnt<3 ; v.cnt++ ){
+
+  v.step = 2.3; // パスコード入力ダイアログ表示
+  v.passcode = window.prompt(v.msg + 'メール記載のパスコードを入力してください。');
+
+  if( v.passcode ){
+    v.step = 2.4; // パスコード有効性検証要求
+    v.r = await v.eq.request(Number(v.passcode));
     if( v.r instanceof Error ) throw v.r;
-    if( v.r.status < 0 ) throw new Error(v.r.message);
+    vlog(v,'r');
 
-    v.step = 3; // パスコード入力
-    v.passcode = null;
-    v.msg = 'メールでパスコードを送信しました。\n';
-    for( v.cnt=0 ; v.cnt<3 ; v.cnt++ ){
-
-      v.step = 3.1; // パスコード入力ダイアログ表示
-      v.passcode = window.prompt(v.msg + 'メール記載のパスコードを入力してください。');
-
-      if( v.passcode ){
-        v.step = 3.2; // パスコード有効性検証要求
-        v.r = await v.eq.request(Number(v.passcode));
-        if( v.r instanceof Error ) throw v.r;
-        vlog(v,'r');
-
-        switch( v.r.status ){
-          case 1: // 正当性検証OK ⇒ シート全情報をsessionStorageに保存
-            ['header','data','staff','expire'].forEach(x => v.conf[x] = v.r[x]);
-            sessionStorage.setItem(v.conf.sys.storageKey,JSON.stringify({
-              header:v.r.header,
-              data:v.r.data,
-              staff: v.r.staff,
-              expire: v.r.expire,
-            }));
-            v.cnt = 3;
-            break;
-          case 0: // 検証NGだが再試行可 ⇒ 入力値をクリアしてもう一度
-            v.passcode = null;
-            v.msg = v.r.message;
-            break;
-          default: // エラー ⇒ メッセージを出して終了
-            throw new Error(v.r.message);      
-        }
-      } else {
-        // ダイアログでキャンセルされた場合、内容を消去して終了
-        throw new Error('スタッフ専用サイトは認証が必要です。\n'
-          + 'パスコード確認のため一度メールアプリに切り替えていた場合、'
-          + 'リロードしてから改めてパスコード入力してください。'
-        );
-      }
+    switch( v.r.status ){
+      case 1: v.step = 2.5; // 正当性検証OK ⇒ シート全情報をsessionStorageに保存
+        ['header','data','staff','expire'].forEach(x => v.conf[x] = v.r[x]);
+        sessionStorage.setItem(v.conf.sys.storageKey,JSON.stringify({
+          header:v.r.header,
+          data:v.r.data,
+          staff: v.r.staff,
+          expire: v.r.expire,
+        }));
+        v.cnt = 3;
+        break;
+      case 0: v.step = 2.6; // 検証NGだが再試行可 ⇒ 入力値をクリアしてもう一度
+        v.passcode = null;
+        v.msg = v.r.message;
+        break;
+      default: v.step = 2.7; // エラー ⇒ メッセージを出して終了
+        throw new Error(v.r.message);      
     }
+  } else {
+    v.step = 2.8; // ダイアログでキャンセルされた場合、内容を消去して終了
+    throw new Error('スタッフ専用サイトは認証が必要です。\n'
+      + 'パスコード確認のため一度メールアプリに切り替えていた場合、'
+      + 'リロードしてから改めてパスコード入力してください。'
+    );
+  }
+}
 
-    (()=>{ v.step = 4; // 画面の準備
+    (()=>{ v.step = 3; // 画面の準備
       
-      v.step = 4.1; // 受付業務の準備
+      v.step = 3.1; // 受付業務の準備
       // v.rにシートデータが入っていること
       v.Reception = new Reception({
         parent: '[data-BurgerMenu="id:\'受付業務\',func:\'recept\'"]',
@@ -3623,101 +3619,162 @@ window.addEventListener('DOMContentLoaded',async () => {
       });
       if( v.Reception instanceof Error ) throw v.Reception;
 
-      v.step = 4.2; // 参加者集計の作成
-      v.r = summaryTable({
-        wrapper: 'div[title="summaryTable"] [title="wrapper"]',
-        data: v.r.data,
-        cols: ['テント','体育館','宿泊計','日帰り','参加計','参加取消'],
-        rows: ['申込口数',
-          '1年生','2年生','3年生','4年生','5年生','6年生','在校生計',
-          '未就学児','卒業生','保護者','関係者計','申込人数計','おやじの会'],
-        colsFormula: ['宿泊計=テント+体育館','参加計=宿泊計+日帰り'],
-        rowsFormula: [
-          '在校生計=1年生+2年生+3年生+4年生+5年生+6年生',
-          '関係者計=未就学児+卒業生+保護者',
-          '申込人数計=在校生計+関係者計',
-        ],
-        normalize: o => { /* データの正規化方法の定義
-          1行分のObject = {
-            "申込者の参加": "参加予定(宿泊なし)",
-            "宿泊、テント": "宿泊しない",
-            "参加者01所属": "1年生",
-            "参加者02所属": "2年生",
-            "参加者03所属": "2年生"
-          }
-          
-          [{row:"申込口数",col:"日帰り"},
-          {row:"1年生",col:"日帰り"},
-          {row:"2年生",col:"日帰り"}, // 1件1Objとする(まとめない)
-          {row:"2年生",col:"日帰り"}]
-          */
-          const v = {rv:[],
-            cancel: (o['キャンセル'] && o['キャンセル'].length > 0 ? true : false),
-            oyaji: (o['申込者の参加'].match(/おやじ/) ? true : false),
-            stay: (o['宿泊、テント'] === '宿泊しない' ? false : true),
-            tent: (o['宿泊、テント'].match(/あり/) ? true : false),
-          };
-          v.col = v.cancel  // 計上する欄の特定
-            ? '参加取消'
-            : ( v.oyaji
-              ? (v.stay ? '宿泊計' : '日帰り')
-              : (v.stay ? (v.tent ? 'テント' : '体育館') : '日帰り'));
-  
-          if( v.oyaji === false ) // 申込口数の登録
-            v.rv.push({row:'申込口数',col:v.col});
-  
-          if( v.oyaji ) v.rv.push({row:'おやじの会',col:v.col}); // 申込者の登録
-          else if( o['申込者の参加'].match(/参加予定/) ) v.rv.push({row:'保護者',col:v.col});
-  
-          for( v.i=1 ; v.i<6 ; v.i++ ) // 参加者01〜05の登録
-            if( o[`参加者0${v.i}所属`] ) v.rv.push({row:o[`参加者0${v.i}所属`],col:v.col});
-  
-          return v.rv;
-        },
-        thead: [
-          {tag:'tr',children:[
-            {tag:'th',attr:{colspan:3,rowspan:3}},
-            {tag:'th',attr:{colspan:5},text:'参加予定'},
-            {tag:'th',attr:{rowspan:3},text:'参加取消'},
-          ]},
-          {tag:'tr',children:[
-            {tag:'th',attr:{colspan:3},text:'宿泊'},
-            {tag:'th',attr:{rowspan:2},text:'日帰り'},
-            {tag:'th',attr:{rowspan:2},text:'参加計'},
-          ]},
-          {tag:'tr',children:[
-            {tag:'th',text:'テント'},
-            {tag:'th',text:'体育館'},
-            {tag:'th',text:'宿泊計'},
-          ]},
-        ],
-        tbody: [
-          {tag:'tr',children:[{tag:'th',attr:{colspan:3},text:'申込口数'}]},
-          {tag:'tr',children:[
-            {tag:'th',attr:{rowspan:12},text:'申込人数'},
-            {tag:'th',attr:{rowspan:7},text:'在校生'},
-            {tag:'th',text:'1年生'}
-          ]},
-          {tag:'tr',children:[{tag:'th',text:'2年生'}]},
-          {tag:'tr',children:[{tag:'th',text:'3年生'}]},
-          {tag:'tr',children:[{tag:'th',text:'4年生'}]},
-          {tag:'tr',children:[{tag:'th',text:'5年生'}]},
-          {tag:'tr',children:[{tag:'th',text:'6年生'}]},
-          {tag:'tr',children:[{tag:'th',text:'在校生計'}]},
-          {tag:'tr',children:[
-            {tag:'th',attr:{rowspan:4},text:'関係者'},
-            {tag:'th',text:'未就学児'},
-          ]},
-          {tag:'tr',children:[{tag:'th',text:'卒業生'}]},
-          {tag:'tr',children:[{tag:'th',text:'保護者'}]},
-          {tag:'tr',children:[{tag:'th',text:'関係者計'}]},
-          {tag:'tr',children:[{tag:'th',attr:{colspan:2},text:'申込人数計'}]},
-          {tag:'tr',children:[{tag:'th',attr:{colspan:3},text:'おやじの会'}]},
-        ],
-      });
-      if( v.r instanceof Error ) throw v.r;
+      v.step = 3.2; // 参加者集計の作成
+v.step = 3.21; // 集計表のcreateElementオブジェクトをv.summaryとして作成
+v.summary = summaryTable({
+  data: v.r.data,
+  cols: ['テント','体育館','宿泊計','日帰り','参加計','参加取消'],
+  rows: ['申込口数',
+    '1年生','2年生','3年生','4年生','5年生','6年生','在校生計',
+    '未就学児','卒業生','保護者','関係者計','申込人数計','おやじの会'],
+  colsFormula: ['宿泊計=テント+体育館','参加計=宿泊計+日帰り'],
+  rowsFormula: [
+    '在校生計=1年生+2年生+3年生+4年生+5年生+6年生',
+    '関係者計=未就学児+卒業生+保護者',
+    '申込人数計=在校生計+関係者計',
+  ],
+  normalize: o => { /* データの正規化方法の定義
+    1行分のObject = {
+      "申込者の参加": "参加予定(宿泊なし)",
+      "宿泊、テント": "宿泊しない",
+      "参加者01所属": "1年生",
+      "参加者02所属": "2年生",
+      "参加者03所属": "2年生"
+    }
+    
+    [{row:"申込口数",col:"日帰り"},
+    {row:"1年生",col:"日帰り"},
+    {row:"2年生",col:"日帰り"}, // 1件1Objとする(まとめない)
+    {row:"2年生",col:"日帰り"}]
+    */
+    const v = {rv:[],
+      cancel: (o['キャンセル'] && o['キャンセル'].length > 0 ? true : false),
+      oyaji: (o['申込者の参加'].match(/おやじ/) ? true : false),
+      stay: (o['宿泊、テント'] === '宿泊しない' ? false : true),
+      tent: (o['宿泊、テント'].match(/あり/) ? true : false),
+    };
+    v.col = v.cancel  // 計上する欄の特定
+      ? '参加取消'
+      : ( v.oyaji
+        ? (v.stay ? '宿泊計' : '日帰り')
+        : (v.stay ? (v.tent ? 'テント' : '体育館') : '日帰り'));
 
-      v.step = 4.3; // メニュー作成
+    if( v.oyaji === false ) // 申込口数の登録
+      v.rv.push({row:'申込口数',col:v.col});
+
+    if( v.oyaji ) v.rv.push({row:'おやじの会',col:v.col}); // 申込者の登録
+    else if( o['申込者の参加'].match(/参加予定/) ) v.rv.push({row:'保護者',col:v.col});
+
+    for( v.i=1 ; v.i<6 ; v.i++ ) // 参加者01〜05の登録
+      if( o[`参加者0${v.i}所属`] ) v.rv.push({row:o[`参加者0${v.i}所属`],col:v.col});
+
+    return v.rv;
+  },
+  thead: [
+    {tag:'tr',children:[
+      {tag:'th',attr:{colspan:3,rowspan:3}},
+      {tag:'th',attr:{colspan:5},text:'参加予定'},
+      {tag:'th',attr:{rowspan:3},text:'参加取消'},
+    ]},
+    {tag:'tr',children:[
+      {tag:'th',attr:{colspan:3},text:'宿泊'},
+      {tag:'th',attr:{rowspan:2},text:'日帰り'},
+      {tag:'th',attr:{rowspan:2},text:'参加計'},
+    ]},
+    {tag:'tr',children:[
+      {tag:'th',text:'テント'},
+      {tag:'th',text:'体育館'},
+      {tag:'th',text:'宿泊計'},
+    ]},
+  ],
+  tbody: [
+    {tag:'tr',children:[{tag:'th',attr:{colspan:3},text:'申込口数'}]},
+    {tag:'tr',children:[
+      {tag:'th',attr:{rowspan:12},text:'申込人数'},
+      {tag:'th',attr:{rowspan:7},text:'在校生'},
+      {tag:'th',text:'1年生'}
+    ]},
+    {tag:'tr',children:[{tag:'th',text:'2年生'}]},
+    {tag:'tr',children:[{tag:'th',text:'3年生'}]},
+    {tag:'tr',children:[{tag:'th',text:'4年生'}]},
+    {tag:'tr',children:[{tag:'th',text:'5年生'}]},
+    {tag:'tr',children:[{tag:'th',text:'6年生'}]},
+    {tag:'tr',children:[{tag:'th',text:'在校生計'}]},
+    {tag:'tr',children:[
+      {tag:'th',attr:{rowspan:4},text:'関係者'},
+      {tag:'th',text:'未就学児'},
+    ]},
+    {tag:'tr',children:[{tag:'th',text:'卒業生'}]},
+    {tag:'tr',children:[{tag:'th',text:'保護者'}]},
+    {tag:'tr',children:[{tag:'th',text:'関係者計'}]},
+    {tag:'tr',children:[{tag:'th',attr:{colspan:2},text:'申込人数計'}]},
+    {tag:'tr',children:[{tag:'th',attr:{colspan:3},text:'おやじの会'}]},
+  ],
+});
+if( v.summary instanceof Error ) throw v.summary;
+
+v.step = 3.22; // 入場者数集計をv.enterdとして作成
+v.enterd = summaryTable({
+  data: v.r.data,
+  cols: ['申込','来場','比率'],
+  rows: ['口数ベース','人数ベース'],
+  normalize: o => {
+    const v = {rv:[],
+      cancel: (o['キャンセル'] && o['キャンセル'].length > 0 ? true : false),
+      oyaji: (o['申込者の参加'].match(/おやじ/) ? true : false),
+    };
+    if( v.cancel === false && v.oyaji === false ){
+      // 申込ベースの件数
+      v.rv.push({row:'口数ベース',col:'申込'}); // 申込口数の登録
+      if( o['申込者の参加'].match(/参加予定/) ) v.rv.push({row:'人数ベース',col:'申込'}); // 保護者の登録
+      for( v.i=1 ; v.i<6 ; v.i++ ) // 参加者01〜05の登録
+        if( o[`参加者0${v.i}所属`] ) v.rv.push({row:'人数ベース',col:'申込'});
+      // 来場ベースの件数
+      for( v.i=0,v.f=false ; v.i<6 ; v.i++ ){
+        v.sts = o['fee0'+v.i] || '未入場';
+        if( v.sts !== '未入場' ){
+          v.rv.push({row:'人数ベース',col:'来場'});
+          v.f = true;
+        }
+      }
+      if( v.f === true ) v.rv.push({row:'口数ベース',col:'来場'});
+    }
+    return v.rv;
+  },
+  thead: [{tag:'tr',children:[{tag:'th'},{tag:'th',text:'申込'},{tag:'th',text:'来場'},{tag:'th',text:'比率'}]}],
+  tbody: [
+    {tag:'tr',children:[{tag:'th',text:'口数ベース'}]},
+    {tag:'tr',children:[{tag:'th',text:'人数ベース'}]},
+  ],
+});
+if( v.enterd instanceof Error ) throw v.enterd;
+vlog(v,'enterd');
+
+v.step = 3.23; // 包摂要素内に追記
+v.r = createElement({attr:{title:'summaryTable'},children:[
+  {tag:'h1',text:'参加申込口数・人数集計'},
+  {tag:'p',style:{textAlign:'right'},text:toLocale(new Date(),'hh:mm:ss 現在')},
+  v.summary.table,
+  {tag:'h1',text:'来場者数集計'},
+  v.enterd.table,
+  {tag:'ol',children:[
+    {tag:'li',html:'申込口数におやじの会メンバの申込は含まれません'},
+    {tag:'li',html:'宿泊には日帰り予定の保護者を含みます(例：母申込で日帰り、子供＋父がテント泊)'},
+    {tag:'li',html:'「ボランティア=できる」と回答いただいた方も「おやじの会」にはカウントしていません'},
+  ]},
+]},document.querySelector('[data-BurgerMenu="id:\'参加者集計\'"]'));
+if( v.r instanceof Error ) throw v.r;
+
+v.step = 3.24; // 来場者比率のセット
+['口数','人数'].forEach(x => {
+  v.a = (v.enterd.data.find(o => o.row === x+'ベース' && o.col === '来場') || {num:0}).num;
+  v.b = (v.enterd.data.find(o => o.row === x+'ベース' && o.col === '申込') || {num:0}).num;
+  v.p = Math.round(v.a / v.b * 10000) / 100;
+  vlog(v,['a','b','p']);
+  document.querySelector(`[title="summaryTable"] [title="${x}ベース_比率"]`).innerText = v.p + '%';
+});
+
+      v.step = 3.3; // メニュー作成
       // ※Receptionインスタンス作成後に実行
       v.menu = new BurgerMenu({home:'ホーム',func:{
         recept: async () => {  // 受付番号or検索キー入力
@@ -3730,16 +3787,16 @@ window.addEventListener('DOMContentLoaded',async () => {
       }});
       if( v.menu instanceof Error ) throw v.menu;
 
-      v.step = 4.4; // URLの埋め込み(位置指定属性を持つHTML要素に変数を代入)
+      v.step = 3.4; // URLの埋め込み(位置指定属性を持つHTML要素に変数を代入)
       v.r = assignVariables({data:v.conf});
       if( v.r instanceof Error ) throw v.r;
 
-      v.step = 4.5; // スタッフ名簿の作成
+      v.step = 3.5; // スタッフ名簿の作成
       // メニュー作成後に実行(∵CSSセレクタはBurgerMenu実行後のもの)
       v.r = staffList('.screen[name="スタッフ名簿"]');
       if( v.r instanceof Error ) throw v.r;
 
-      v.step = 4.6; // メール一斉配信の作成
+      v.step = 3.6; // メール一斉配信の作成
       v.r = new bulkMail({
         conf: v.conf,
         parent: '[data-BurgerMenu="id:\'メール一斉配信\'"]',
@@ -3748,7 +3805,7 @@ window.addEventListener('DOMContentLoaded',async () => {
       });
       if( v.r instanceof Error ) throw v.r;
 
-      v.step = 4.7; // 「要確認の応募」の作成
+      v.step = 3.7; // 「要確認の応募」の作成
       vlog(v,'conf.data');
       v.warnings = new warnings({
         parent:'[data-BurgerMenu="id:要確認の応募"]',
