@@ -3753,14 +3753,19 @@ vlog(v,'enterd');
 v.step = 3.23; // 包摂要素内に追記
 v.r = createElement({attr:{title:'summaryTable'},children:[
   {tag:'h1',text:'参加申込口数・人数集計'},
-  {tag:'p',style:{textAlign:'right'},text:toLocale(new Date(),'hh:mm:ss 現在')},
+  {tag:'p',style:{textAlign:'right'},text:toLocale(new Date(),'M/dd hh:mm:ss 現在')},
   v.summary.table,
-  {tag:'h1',text:'来場者数集計'},
-  v.enterd.table,
   {tag:'ol',children:[
     {tag:'li',html:'申込口数におやじの会メンバの申込は含まれません'},
     {tag:'li',html:'宿泊には日帰り予定の保護者を含みます(例：母申込で日帰り、子供＋父がテント泊)'},
     {tag:'li',html:'「ボランティア=できる」と回答いただいた方も「おやじの会」にはカウントしていません'},
+  ]},
+
+  {tag:'h1',text:'来場者数集計'},
+  v.enterd.table,
+  {tag:'ol',children:[
+    {tag:'li',html:'おやじの会メンバは含みません。'},
+    {tag:'li',html:'口数ベースでは、参加者が一人でも入場していればカウントしてます。'},
   ]},
 ]},document.querySelector('[data-BurgerMenu="id:\'参加者集計\'"]'));
 if( v.r instanceof Error ) throw v.r;
