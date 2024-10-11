@@ -87,7 +87,9 @@ pre {border: solid 5px #999;}
   .Reception [name="scanner"] [name="keyword"] {display: block;margin:1rem;}
   .Reception [name="scanner"] [name="keyword"] input {display: inline-block;margin-right: 1rem;font-size: 2rem;}
   .Reception [name="scanner"] [name="keyword"] button {display: inline-block;font-size: 2rem;}
-  .Reception [name="scanner"] dialog .act {background-color: #ddd;}
+  .Reception dialog .act {background-color: #ddd;}
+  .Reception dialog rt {font-size: 50%;}
+  .Reception dialog div {margin: 0.7rem;}
 
   .Reception [name="detail"] button {
     width: 250px;
@@ -2179,6 +2181,7 @@ class Reception {
           if( v.r instanceof Error ) throw v.r;
         } else {
           v.step = 3.2; // 該当が複数 ⇒ ダイアログでリスト表示、選択
+          this.dialog.querySelector('[name="list"]').innerHTML = '';
           v.candidates.sort((a,b)=>a['申込者カナ']<b['申込者カナ']).forEach(o => {
             createElement({
               attr: {name:o.entryNo},
