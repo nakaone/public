@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>校庭キャンプ2025</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    body {
+      background-image: url('background.png'); /* ← 画像パスを指定 */
+      background-position: center center;      /* 中央に配置 */
+      background-repeat: no-repeat;            /* 繰り返しなし */
+      background-size: cover;                  /* 画面幅いっぱいに表示 */
+      background-attachment: fixed;            /* スクロールしても固定 */
+    }
+
+    .content {
+      min-height: 200vh; /* スクロール可能にするための高さ */
+      padding: 100px;
+      color: white;
+      font-size: 2em;
+      text-shadow: 1px 1px 3px black;
+    }
+
+    header {
+      background-color: transparent; /* 背景を透明に */
+      color: gray;                   /* テキスト色を灰色に（必要なら） */
+      padding: 10px;
+      position: relative;
+    }
+
+    .menu-toggle {
+      font-size: 24px;
+      cursor: pointer;
+      color: gray; /* ハンバーガーアイコンの色を灰色に */
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 1000; /* 他の要素より前面に表示 */
+    }
+
+    nav {
+      display: none;
+      background-color: #2980b9;
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    nav ul li {
+      border-top: 1px solid #fff;
+    }
+
+    nav ul li a {
+      display: block;
+      padding: 10px;
+      color: white;
+      text-decoration: none;
+    }
+
+    nav ul li a:hover {
+      background-color: #1abc9c;
+    }
+
+    section {
+      display: none; /* すべて非表示にする */
+    }
+
+    #outline {
+      display: block; /* 実施要領だけ表示 */
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="menu-toggle" id="menu-toggle">☰</div>
+    <nav id="menu">
+      <ul>
+        <li><a href="#outline">実施要領</a></li>
+        <li><a href="#venue">会場案内</a></li>
+        <li><a href="#notes">注意事項</a></li>
+        <li><a href="#timetable">タイムテーブル</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="outline">
+      <h2>実施要領</h2>
+      <ul>
+        <li>日時：〇月〇日</li>
+        <li>場所：〇〇小学校</li>
+        <li>参加費：無料</li>
+        <li><a href="form.html">申込フォームはこちら</a></li>
+      </ul>
+    </section>
+
+    <section id="venue">
+      <h2>会場案内</h2>
+      <img src="venue.png" alt="会場イメージ図">
+    </section>
+
+    <section id="notes">
+      <h2>注意事項</h2>
+      <ul>
+        <li>申込時の注意事項</li>
+        <li>持ち物：水筒・帽子など</li>
+      </ul>
+    </section>
+
+    <section id="timetable">
+      <h2>タイムテーブル</h2>
+      <img src="timetable.png" alt="タイムテーブル図">
+    </section>
+  </main>
+
+  <script>
+    const toggle = document.getElementById('menu-toggle');
+    const menu = document.getElementById('menu');
+    const sections = document.querySelectorAll('main section');
+
+    // ハンバーガーの開閉
+    toggle.addEventListener('click', () => {
+      menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+    });
+
+    // メニュークリックで該当セクションのみ表示
+    const links = document.querySelectorAll('#menu a');
+    links.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault(); // ページジャンプを防止
+        const targetId = link.getAttribute('href').substring(1);
+
+        sections.forEach(section => {
+          section.style.display = (section.id === targetId) ? 'block' : 'none';
+        });
+
+        menu.style.display = 'none'; // メニューを閉じる
+      });
+    });
+  </script>
+
+</body>
+</html>
