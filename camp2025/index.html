@@ -4,6 +4,59 @@
   <title>camp2025</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <style type="text/css">
+h1 {
+      position: relative;
+      color: #158b2b;
+      font-size: 20px;
+      padding: 10px 0;
+      text-align: center;
+      margin: 1.5em 0;
+    }
+    h1:before {
+      content: "";
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      width: 150px;
+      height: 58px;
+      border-radius: 50%;
+      border: 5px solid #a6ddb0;
+      border-left-color: transparent;
+      border-right-color: transparent;
+      -webkit-transform: translateX(-50%);
+      transform: translateX(-50%);
+    }
+    
+    h2 {
+      border-bottom: solid 3px #cce4ff;
+      position: relative;
+      margin: 1.5em;
+    }
+    
+    h2:after {
+      position: absolute;
+      content: " ";
+      display: block;
+      border-bottom: solid 3px #5472cd;
+      bottom: -3px;
+      width: 20%;
+    }
+    
+    li {
+      margin: 0.5em 1.5em;
+    }
+    
+    .catchphrase {
+      margin: 2em;
+      padding: 2em;
+      background-color: #fef;
+      text-align: center;
+    }
+    .catchphrase p {
+      color: #808;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
 body{
       margin: 0;
     }
@@ -274,9 +327,9 @@ body{
   <header class="navi">
     <div class="navi_inner">
       <div class="navi_item"><a href="./index.html">ホーム</a></div>
-      <div class="navi_item"><a href="./guideline.html">【未】持ち物・注意事項</a></div>
-      <div class="navi_item"><a href="./timetable.html">【未】タイムテーブル</a></div>
-      <div class="navi_item"><a href="./map.html">【未】会場マップ</a></div>
+      <div class="navi_item"><a href="./guideline.html">持ち物・注意事項</a></div>
+      <div class="navi_item"><a href="./timetable.html">タイムテーブル</a></div>
+      <div class="navi_item"><a href="./map.html">会場マップ</a></div>
       <div class="navi_item js_openParent"><a href="">リンク集</a>
           <div class="el_spChildNavOpen js_openSwitch">
             <div class="el_spChildNavOpen_wrapper"></div>
@@ -309,14 +362,28 @@ body{
   </header>
 
   <div class="mainView">
-<div title="information">
-    <h1>お知らせ</h1>
+<div class="catchphrase">
+    <p>恒例の校庭キャンプ、今年は11月に行います。</p>
+    <p>みんなと一緒にカレーを食べて、夜の学校を探検して</p>
+    <p>テントでお泊まり。家族と一緒のプチ修学旅行気分です。</p>
+    <p>ついでに避難所生活体験もできるこの企画。</p>
+    <p>皆さんの参加をお待ちしております。</p>
+  </div>
   
+  <div title="information">
+    <!--h1>お知らせ</h1-->
   </div>
   
   <div title="summary">
     <h1>実施要領</h1>
-  
+    <ul>
+  		<li>日時：2025年 11月1日(土) 14:00(受付開始) 〜 2日(日) 9:00頃</li>
+  		<li>場所：下北沢小グラウンド、体育館、校舎(一部)</li>
+  		<li>概要：夕食(カレー)、校内探検(肝試し)、校庭・体育館で宿泊、等</li>
+  		<li>参加者：下北沢小在校生、保護者・兄弟姉妹(卒業生・未就学児も可)</li>
+  		<li>参加費：500円/人　※未就学児は無料</li>
+  		<li>申込締切：10月26日(日) 24:00 (=10/27 00:00)</li>
+    </ul>
   </div>
   </div>
 

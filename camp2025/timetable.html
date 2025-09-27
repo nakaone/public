@@ -4,6 +4,59 @@
   <title>camp2025</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <style type="text/css">
+h1 {
+      position: relative;
+      color: #158b2b;
+      font-size: 20px;
+      padding: 10px 0;
+      text-align: center;
+      margin: 1.5em 0;
+    }
+    h1:before {
+      content: "";
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      width: 150px;
+      height: 58px;
+      border-radius: 50%;
+      border: 5px solid #a6ddb0;
+      border-left-color: transparent;
+      border-right-color: transparent;
+      -webkit-transform: translateX(-50%);
+      transform: translateX(-50%);
+    }
+    
+    h2 {
+      border-bottom: solid 3px #cce4ff;
+      position: relative;
+      margin: 1.5em;
+    }
+    
+    h2:after {
+      position: absolute;
+      content: " ";
+      display: block;
+      border-bottom: solid 3px #5472cd;
+      bottom: -3px;
+      width: 20%;
+    }
+    
+    li {
+      margin: 0.5em 1.5em;
+    }
+    
+    .catchphrase {
+      margin: 2em;
+      padding: 2em;
+      background-color: #fef;
+      text-align: center;
+    }
+    .catchphrase p {
+      color: #808;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
 body{
       margin: 0;
     }
@@ -274,9 +327,9 @@ body{
   <header class="navi">
     <div class="navi_inner">
       <div class="navi_item"><a href="./index.html">ホーム</a></div>
-      <div class="navi_item"><a href="./guideline.html">【未】持ち物・注意事項</a></div>
-      <div class="navi_item"><a href="./timetable.html">【未】タイムテーブル</a></div>
-      <div class="navi_item"><a href="./map.html">【未】会場マップ</a></div>
+      <div class="navi_item"><a href="./guideline.html">持ち物・注意事項</a></div>
+      <div class="navi_item"><a href="./timetable.html">タイムテーブル</a></div>
+      <div class="navi_item"><a href="./map.html">会場マップ</a></div>
       <div class="navi_item js_openParent"><a href="">リンク集</a>
           <div class="el_spChildNavOpen js_openSwitch">
             <div class="el_spChildNavOpen_wrapper"></div>
@@ -311,7 +364,8 @@ body{
   <div class="mainView">
 <div title="timetable">
     <h1>タイムテーブル</h1>
-  
+    <p style="color:red">※2024版を仮置き</p>
+    <img src="./img/timetable.webp" width="100%" />
   </div>
   </div>
 
