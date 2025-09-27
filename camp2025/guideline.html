@@ -3,14 +3,23 @@
 <head>
   <title>camp2025</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style type="text/css">
-h1 {
+body {
+      font-size: 1rem; /* 通常は16px相当 */
+      line-height: 1.6;
+      margin: 0;
+      padding: 1rem;
+      font-family: Arial, sans-serif;
+      width: 100vw;
+    }
+    
+    h1 {
       position: relative;
       color: #158b2b;
       font-size: 20px;
       padding: 10px 0;
       text-align: center;
-      margin: 1.5em 0;
     }
     h1:before {
       content: "";
@@ -30,7 +39,6 @@ h1 {
     h2 {
       border-bottom: solid 3px #cce4ff;
       position: relative;
-      margin: 1.5em;
     }
     
     h2:after {
@@ -42,13 +50,13 @@ h1 {
       width: 20%;
     }
     
-    h3,p,li {
+    /*h3,p,li {
       margin: 0.5em 1.5em;
-    }
+    }*/
     
     .catchphrase {
-      margin: 2em;
-      padding: 2em;
+      margin: 0 2rem 1rem 2rem;
+      padding: 2rem;
       background-color: #fef;
       text-align: center;
     }
@@ -56,6 +64,12 @@ h1 {
       color: #808;
       font-weight: 700;
       font-size: 1.2rem;
+    }
+    
+    .mainView a {
+      color: #00f;
+      background-color: #ddf;
+      font-weight: 600;
     }
 body{
       margin: 0;
