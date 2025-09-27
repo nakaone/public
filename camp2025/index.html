@@ -1,151 +1,437 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html xml:lang="ja" lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>校庭キャンプ2025</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-    }
-
-    body {
-      background-image: url('background.png'); /* ← 画像パスを指定 */
-      background-position: center center;      /* 中央に配置 */
-      background-repeat: no-repeat;            /* 繰り返しなし */
-      background-size: cover;                  /* 画面幅いっぱいに表示 */
-      background-attachment: fixed;            /* スクロールしても固定 */
-    }
-
-    .content {
-      min-height: 200vh; /* スクロール可能にするための高さ */
-      padding: 100px;
-      color: white;
-      font-size: 2em;
-      text-shadow: 1px 1px 3px black;
-    }
-
-    header {
-      background-color: transparent; /* 背景を透明に */
-      color: gray;                   /* テキスト色を灰色に（必要なら） */
-      padding: 10px;
-      position: relative;
-    }
-
-    .menu-toggle {
-      font-size: 24px;
-      cursor: pointer;
-      color: gray; /* ハンバーガーアイコンの色を灰色に */
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      z-index: 1000; /* 他の要素より前面に表示 */
-    }
-
-    nav {
-      display: none;
-      background-color: #2980b9;
-    }
-
-    nav ul {
-      list-style: none;
-      padding: 0;
+  <title>camp2025</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!--link rel="stylesheet" href="style.css"-->
+  <style type="text/css">
+body{
       margin: 0;
     }
-
-    nav ul li {
-      border-top: 1px solid #fff;
-    }
-
-    nav ul li a {
-      display: block;
-      padding: 10px;
-      color: white;
+    a{
+      color: #040404;
       text-decoration: none;
     }
-
-    nav ul li a:hover {
-      background-color: #1abc9c;
+    .mainView{
+      width: 100vw;
+      height: 100vh;
+      background-color: #fff; /*original: #ccc;*/
     }
-
-    section {
-      display: none; /* すべて非表示にする */
+    /*ハンバーガーボタン*/
+    .el_humburger {
+      position: fixed;
+      top: 45px;
+      right: 60px;
+      width: 46px;
+      height: 25px;
+      padding-top: 1px;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      padding-top: 0px;
+      z-index: 20;
+      cursor: pointer;
+      pointer-events: auto;
+      color: #000;
+      text-align: center;}
+    
+    @media screen and (max-width: 840px) {
+      .el_humburger {
+        display: block;
+        right: 0;
+        top: 0;
+        padding-top: 20px;
+        width: 70px;
+        height: 70px;}
+        #factory .el_humburger {
+          display: none; } }
+    
+    .el_humburger_wrapper {
+      margin-bottom: 5px;
+      width: 42px;
+      display: inline-block; }
+    
+    @media screen and (max-width: 840px) {
+      .el_humburger_wrapper {
+        margin-bottom: 5px;
+        width: 30px; } }
+    
+    .el_humburger_text {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      font-family: "游ゴシック Medium", YuGothic, "Yu Gothic", "ヒラギノ角ゴ Pro", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, sans-serif; }
+    
+    .js_humburgerOpen .el_humburger_text.el_humburger_text__menu {
+      display: none; }
+    
+    .el_humburger_text.el_humburger_text__close {
+      display: none; }
+    
+    .js_humburgerOpen .el_humburger_text.el_humburger_text__close {
+      display: block; }
+    
+    @media screen and (max-width: 840px) {
+      .el_humburger_text {
+        font-size: 10px;
+        padding-top: 2px; } }
+    
+    @media screen and (max-width: 840px) {
+      .el_humburger_text svg path {
+        -webkit-transition: all 200ms cubic-bezier(0.16, 0.52, 0.25, 1);
+        -o-transition: all 200ms cubic-bezier(0.16, 0.52, 0.25, 1);
+        transition: all 200ms cubic-bezier(0.16, 0.52, 0.25, 1);
+        fill: #000; } }
+    
+    @media screen and (max-width: 840px) {
+      .js_humburgerOpen .el_humburger_text svg path {
+        fill: #000; } }
+    
+    .el_humburger span.el_humburger_bar {
+      display: block;
+      width: 100%;
+      margin: 0 auto 9px;
+      height: 1px;
+      background: #000;
+      -webkit-transition: all .2s ease-in-out;
+      -o-transition: all .2s ease-in-out;
+      transition: all .2s ease-in-out; }
+    
+    .el_humburger span.el_humburger_bar:last-child {
+      margin-bottom: 0; }
+    
+    .js_humburgerOpen .el_humburger span.el_humburger_bar {
+      background: #000; }
+    
+    @media screen and (max-width: 840px) {
+      .el_humburger span.el_humburger_bar {
+        left: 0;
+        top: 0;
+        background: #000; } }
+    
+    .js_humburgerOpen .el_humburger span.el_humburger_bar.top {
+      -webkit-transform: translateY(9px) rotate(-45deg);
+      -ms-transform: translateY(9px) rotate(-45deg);
+      transform: translateY(9px) rotate(-45deg); }
+    
+    .js_humburgerOpen .el_humburger span.el_humburger_bar.middle {
+      opacity: 0; }
+    
+    .js_humburgerOpen .el_humburger span.el_humburger_bar.bottom {
+      -webkit-transform: translateY(-11px) rotate(45deg);
+      -ms-transform: translateY(-11px) rotate(45deg);
+      transform: translateY(-11px) rotate(45deg); }
+    
+    .el_humburgerButton.el_humburgerButton__close {
+      top: 2%;
+      right: 2%; }
+    
+    .el_humburgerButton__close span.el_humburger_bar {
+      display: block;
+      width: 35px;
+      margin: 0 auto;
+      height: 4px;
+      background: #000; }
+    
+    .el_humburgerButton__close span.el_humburger_bar.top {
+      -webkit-transform: translateY(5px) rotate(-45deg);
+      -ms-transform: translateY(5px) rotate(-45deg);
+      transform: translateY(5px) rotate(-45deg); }
+    
+    .el_humburgerButton__close span.el_humburger_bar.bottom {
+      -webkit-transform: translateY(-6px) rotate(45deg);
+      -ms-transform: translateY(-6px) rotate(45deg);
+      transform: translateY(-6px) rotate(45deg); }
+    
+    .navi {
+      position: fixed;
+      right: 0;
+      height: 100%;
+      background-color: rgba(223,223,223,0.8);/*original: rgba(255, 255, 255, 0.9);*/
+      width: 450px;
+      z-index: 3;
+      padding-top: 100px;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      -webkit-transition: all 600ms ease-out;
+      -o-transition: all 600ms ease-out;
+      transition: all 600ms ease-out;
+      transform:translateZ(0) translateX(100%);
+      overflow: auto; }
+      .js_humburgerOpen .navi {
+        transform:translateZ(0) translateX(0); }
+        @media screen and (max-width: 840px) {
+          .navi {
+            padding: 100px 5% 0; }
+          .js_humburgerOpen .navi {
+            width: 100%;} }
+    
+    .navi_item {
+      position:relative;
+      margin-bottom: 28px;
+      font-size: 20px;
+      font-family: "Marcellus", serif !important;
+      white-space: nowrap;
+      margin-left: 90px; }
+      .navi_item.op_innerLink {
+        cursor: pointer; }
+      @media screen and (max-width: 840px) {
+        .navi_item {
+          margin-left: 0;
+          font-size: 18px; } }
+    
+    
+    
+    .el_spChildNavOpen {
+      position: absolute;
+      top: -6px;
+      left: 80%;
+      z-index: 20;
+      -webkit-transition: all 200ms ease-out;
+      -o-transition: all 200ms ease-out;
+      transition: all 200ms ease-out;
+      -webkit-transform-origin: center;
+      -ms-transform-origin: center;
+      transform-origin: center;
+      padding: 10px; }
+    
+    .js_openParent.js_fire > .el_spChildNavOpen {
+      -webkit-transform: rotate(180deg);
+      -ms-transform: rotate(180deg);
+      transform: rotate(180deg); }
+      .js_openParent.js_fire > .el_spChildNavOpen > .el_spChildNavOpen_wrapper:after {
+        -webkit-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        transform: rotate(90deg);
+        opacity: 0; }
+    
+    .el_spChildNavOpen_wrapper {
+      position: relative;
+      width: 15px;
+      height: 15px;
+      -webkit-transition: all 200ms ease-out;
+      -o-transition: all 200ms ease-out;
+      transition: all 200ms ease-out;
+      -webkit-transform-origin: center;
+      -ms-transform-origin: center;
+      transform-origin: center; }
+      .el_spChildNavOpen_wrapper:before {
+        content: "";
+        width: 100%;
+        height: 1px;
+        background-color: #111;
+        position: absolute;
+        top: calc(50% - 1px); }
+      .el_spChildNavOpen_wrapper:after {
+        content: "";
+        width: 1px;
+        height: 100%;
+        background-color: #111;
+        position: absolute;
+        left: calc(50% - 1px);
+        -webkit-transition: all 200ms ease-out;
+        -o-transition: all 200ms ease-out;
+        transition: all 200ms ease-out; }
+    
+    
+    .nav_child{
+      padding-top:20px;
     }
-
-    #outline {
-      display: block; /* 実施要領だけ表示 */
+    
+    .nav_child_item{
+      position: relative;
+      font-size:16px;
+      padding-left:20px;
+      margin-bottom:10px;
     }
+    
+    .nav_child_item > a{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      top:0;
+    }
+    
+    .nav_child_item:last-child{
+      margin-bottom:0px;
+    }
+    
+    .js_openSwitch {
+      cursor: pointer; }
+    
+    .js_openTarget {
+      display: none; }
   </style>
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+  <!-- script src="https://cdnjs.cloudflare.com/ajax/libs/alasql/4.6.4/alasql.min.js" integrity="sha512-/IeaoBeXScPD3EiZkaYKzjnqRnKJI73FM/18T8P+v2n11hKNCKQmko/n2ccvlDyH3AziR0oPEGShwsZEwO/Jjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="../../../../library/devTools/1.0.1/core.js"></script -->
 </head>
 <body>
-  <header>
-    <div class="menu-toggle" id="menu-toggle">☰</div>
-    <nav id="menu">
-      <ul>
-        <li><a href="#outline">実施要領</a></li>
-        <li><a href="#venue">会場案内</a></li>
-        <li><a href="#notes">注意事項</a></li>
-        <li><a href="#timetable">タイムテーブル</a></li>
-      </ul>
-    </nav>
+<div class="el_humburger"><!--ハンバーガーボタン-->
+    <div class="el_humburger_wrapper">
+      <span class="el_humburger_bar top"></span>
+      <span class="el_humburger_bar middle"></span>
+      <span class="el_humburger_bar bottom"></span>
+    </div>
+  </div>
+  
+  <header class="navi">
+    <div class="navi_inner">
+      <div class="navi_item js_openParent"><a href="">ABOUT</a>
+          <div class="el_spChildNavOpen js_openSwitch">
+            <div class="el_spChildNavOpen_wrapper"></div>
+          </div>
+          <div class="nav_child js_openTarget">
+            <div class="nav_child_item">
+              <a href=""></a>
+              ABOUTの子ページ
+            </div>
+            <div class="nav_child_item">
+              <a href=""></a>
+              ABOUTの子ページ
+            </div>
+            <div class="nav_child_item">
+              <a href=""></a>
+              ABOUTの子ページ
+            </div>
+            <div class="nav_child_item">
+              <a href=""></a>
+              ABOUTの子ページ
+            </div>
+            <div class="nav_child_item">
+              <a  href=""></a>
+              ABOUTの子ページ
+            </div>
+          </div>
+          <div class="bl_nav_item_spToggle"></div>
+      </div>
+  
+  
+      <div class="navi_item js_openParent"><a href="">WORKS</a>
+          <div class="el_spChildNavOpen js_openSwitch">
+            <div class="el_spChildNavOpen_wrapper"></div>
+          </div>
+          <div class="nav_child js_openTarget">
+            <div class="nav_child_item">
+              <a class="hp_coverLink" href=""></a>
+              WORKSの子ページ
+            </div>
+            <div class="nav_child_item">
+              <a class="hp_coverLink" href=""></a>
+              WORKSの子ページ
+            </div>
+            <div class="nav_child_item">
+              <a class="hp_coverLink" href=""></a>
+              WORKSの子ページ
+            </div>
+            <div class="nav_child_item">
+              <a class="hp_coverLink" href=""></a>
+              WORKSの子ページ
+            </div>
+            <div class="nav_child_item">
+              <a class="hp_coverLink" href=""></a>
+              WORKSの子ページ
+            </div>
+          </div>
+          <div class="bl_nav_item_spToggle"></div>
+      </div>
+      <div class="navi_item"><a href="">GALLERY</a></div>
+      <div class="navi_item"><a href="">FLOW</a></div>
+      <div class="navi_item"><a href="">FAQ</a></div>
+      <div class="navi_item"><a href="">CONTACT</a></div>
+    </div>
   </header>
 
-  <main>
-    <section id="outline">
-      <h2>実施要領</h2>
-      <ul>
-        <li>日時：〇月〇日</li>
-        <li>場所：〇〇小学校</li>
-        <li>参加費：無料</li>
-        <li><a href="form.html">申込フォームはこちら</a></li>
-      </ul>
-    </section>
-
-    <section id="venue">
-      <h2>会場案内</h2>
-      <img src="venue.png" alt="会場イメージ図">
-    </section>
-
-    <section id="notes">
-      <h2>注意事項</h2>
-      <ul>
-        <li>申込時の注意事項</li>
-        <li>持ち物：水筒・帽子など</li>
-      </ul>
-    </section>
-
-    <section id="timetable">
-      <h2>タイムテーブル</h2>
-      <img src="timetable.png" alt="タイムテーブル図">
-    </section>
-  </main>
-
-  <script>
-    const toggle = document.getElementById('menu-toggle');
-    const menu = document.getElementById('menu');
-    const sections = document.querySelectorAll('main section');
-
-    // ハンバーガーの開閉
-    toggle.addEventListener('click', () => {
-      menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-    });
-
-    // メニュークリックで該当セクションのみ表示
-    const links = document.querySelectorAll('#menu a');
-    links.forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault(); // ページジャンプを防止
-        const targetId = link.getAttribute('href').substring(1);
-
-        sections.forEach(section => {
-          section.style.display = (section.id === targetId) ? 'block' : 'none';
-        });
-
-        menu.style.display = 'none'; // メニューを閉じる
-      });
-    });
-  </script>
+  <div class="mainView">
+  <!--ページコンテンツ-->
+  <h1>hoge</h1>
+  </div>
 
 </body>
+<script type="text/javascript">
+//変数定義
+  var navigationOpenFlag = false;
+  var navButtonFlag = true;
+  var focusFlag = false;
+  
+  //toggle
+  $(function(){
+    $(document).on('click','.js_openSwitch',function(){
+      $(this).parent('.js_openParent').find(' > .js_openTarget').slideToggle("fast");
+      $(this).parent('.js_openParent').toggleClass('js_fire');
+    });
+  });
+  
+  //ハンバーガーメニュー
+      $(function(){
+  
+        $(document).on('click','.el_humburger',function(){
+          if(navButtonFlag){
+            spNavInOut.switch();
+            //一時的にボタンを押せなくする
+            setTimeout(function(){
+              navButtonFlag = true;
+            },200);
+            navButtonFlag = false;
+          }
+        });
+        $(document).on('click touchend', function(event) {
+          if (!$(event.target).closest('.navi,.el_humburger').length && $('body').hasClass('js_humburgerOpen') && focusFlag) {
+            focusFlag = false;
+            //scrollBlocker(false);
+            spNavInOut.switch();
+          }
+        });
+      });
+  
+  //ナビ開く処理
+  function spNavIn(){
+    $('body').removeClass('js_humburgerClose');
+    $('body').addClass('js_humburgerOpen');
+    setTimeout(function(){
+      focusFlag = true;
+    },200);
+    setTimeout(function(){
+      navigationOpenFlag = true;
+    },200);
+  }
+  
+  //ナビ閉じる処理
+  function spNavOut(){
+    $('body').removeClass('js_humburgerOpen');
+    $('body').addClass('js_humburgerClose');
+    setTimeout(function(){
+      $(".uq_spNavi").removeClass("js_appear");
+      focusFlag = false;
+    },200);
+    navigationOpenFlag = false;
+  }
+  
+  //ナビ開閉コントロール
+  var spNavInOut = {
+    switch:function(){
+      if($('body.spNavFreez').length){
+        return false;
+      }
+      if($('body').hasClass('js_humburgerOpen')){
+       spNavOut();
+      } else {
+       spNavIn();
+      }
+    }
+  };
+
+  /*
+  const dev = devTools();
+  window.addEventListener('DOMContentLoaded', () => {
+    const v = { whois: 'DOMContentLoaded', rv: null };
+    dev.start(v.whois, [...arguments]);
+    try {
+      //:x:onload::
+
+      dev.end(); // 終了処理
+      return v.rv;
+    } catch (e) { dev.error(e); return e; }
+  });
+  */
+</script>
 </html>
