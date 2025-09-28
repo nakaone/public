@@ -481,5 +481,36 @@ var spNavInOut = {
     }
   }
 };
+function fetchNotice() {
+  const apiUrl = 'https://script.google.com/macros/s/AKfycbxO_NzZBH2BnS6zaNZD54okTXk74xSCoFk8r_0aE5SjyWsFMRHE8GHP2e_fU2gOHC_0Gg/exec?func=notice';
+
+  fetch(apiUrl)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('ネットワークエラー: ' + response.status);
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log(JSON.stringify(data,null,2));
+      /*
+      const list = document.getElementById('notice-list');
+
+      if (Array.isArray(data)) {
+        data.forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = `${item['日付']}：${item['タイトル']} - ${item['内容']}`;
+          list.appendChild(li);
+        });
+      } else {
+        list.innerHTML = '<li>データがありません</li>';
+      }
+      */
+    })
+    .catch(error => {
+      console.error('エラー:', error);
+      document.getElementById('notice-list').innerHTML = `<li>読み込みエラー: ${error.message}</li>`;
+    });
+}
 </script>
 </html>
