@@ -401,26 +401,26 @@ $(function(){
 });
 
 //ハンバーガーメニュー
-    $(function(){
+$(function(){
 
-      $(document).on('click','.el_humburger',function(){
-        if(navButtonFlag){
-          spNavInOut.switch();
-          //一時的にボタンを押せなくする
-          setTimeout(function(){
-            navButtonFlag = true;
-          },200);
-          navButtonFlag = false;
-        }
-      });
-      $(document).on('click touchend', function(event) {
-        if (!$(event.target).closest('.navi,.el_humburger').length && $('body').hasClass('js_humburgerOpen') && focusFlag) {
-          focusFlag = false;
-          //scrollBlocker(false);
-          spNavInOut.switch();
-        }
-      });
-    });
+  $(document).on('click','.el_humburger',function(){
+    if(navButtonFlag){
+      spNavInOut.switch();
+      //一時的にボタンを押せなくする
+      setTimeout(function(){
+        navButtonFlag = true;
+      },200);
+      navButtonFlag = false;
+    }
+  });
+  $(document).on('click touchend', function(event) {
+    if (!$(event.target).closest('.navi,.el_humburger').length && $('body').hasClass('js_humburgerOpen') && focusFlag) {
+      focusFlag = false;
+      //scrollBlocker(false);
+      spNavInOut.switch();
+    }
+  });
+});
 
 //ナビ開く処理
 function spNavIn(){

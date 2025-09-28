@@ -424,26 +424,26 @@ $(function(){
 });
 
 //ハンバーガーメニュー
-    $(function(){
+$(function(){
 
-      $(document).on('click','.el_humburger',function(){
-        if(navButtonFlag){
-          spNavInOut.switch();
-          //一時的にボタンを押せなくする
-          setTimeout(function(){
-            navButtonFlag = true;
-          },200);
-          navButtonFlag = false;
-        }
-      });
-      $(document).on('click touchend', function(event) {
-        if (!$(event.target).closest('.navi,.el_humburger').length && $('body').hasClass('js_humburgerOpen') && focusFlag) {
-          focusFlag = false;
-          //scrollBlocker(false);
-          spNavInOut.switch();
-        }
-      });
-    });
+  $(document).on('click','.el_humburger',function(){
+    if(navButtonFlag){
+      spNavInOut.switch();
+      //一時的にボタンを押せなくする
+      setTimeout(function(){
+        navButtonFlag = true;
+      },200);
+      navButtonFlag = false;
+    }
+  });
+  $(document).on('click touchend', function(event) {
+    if (!$(event.target).closest('.navi,.el_humburger').length && $('body').hasClass('js_humburgerOpen') && focusFlag) {
+      focusFlag = false;
+      //scrollBlocker(false);
+      spNavInOut.switch();
+    }
+  });
+});
 
 //ナビ開く処理
 function spNavIn(){
@@ -481,6 +481,7 @@ var spNavInOut = {
     }
   }
 };
+// 「お知らせ」の読み込み
 function fetchNotice() {
   const apiUrl = 'https://script.google.com/macros/s/AKfycbxO_NzZBH2BnS6zaNZD54okTXk74xSCoFk8r_0aE5SjyWsFMRHE8GHP2e_fU2gOHC_0Gg/exec?func=notice';
 
@@ -512,5 +513,10 @@ function fetchNotice() {
       document.getElementById('notice-list').innerHTML = `<li>読み込みエラー: ${error.message}</li>`;
     });
 }
+
+window.addEventListener('DOMContentLoaded', () => {
+  const v = { whois: 'DOMContentLoaded', rv: null };
+  fetchNotice();
+});
 </script>
 </html>
