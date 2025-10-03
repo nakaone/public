@@ -378,21 +378,36 @@ body{
   </header>
 
   <div class="mainView">
-<div title="information">
-    <h1>お知らせ</h1>
-    <div class="view"></div>
-  </div>
-  
-  <div title="summary">
-    <h1>実施要領</h1>
-    <ul>
-  		<li>日時：2025年 11月1日(土) 14:00(受付開始) 〜 2日(日) 9:00頃</li>
-  		<li>場所：下北沢小グラウンド、体育館、校舎(一部)</li>
-  		<li>概要：夕食(カレー)、校内探検(肝試し)、校庭・体育館で宿泊、等</li>
-  		<li>参加者：下北沢小在校生、保護者・兄弟姉妹(卒業生・未就学児も可)</li>
-  		<li>参加費：500円/人　※未就学児は無料</li>
-  		<li>申込締切：10月26日(日) 24:00 (=10/27 00:00)</li>
-    </ul>
+<style>
+    .vertical {
+      writing-mode: vertical-rl; /* 右から左に縦書き */
+      text-orientation: upright; /* 文字の向きを正立にする（漢字など） */
+      white-space: nowrap;       /* 折り返さない */
+    }
+    th, td {
+      font-size: 1rem;
+      font-weight: normal;
+      color: #000;
+      border-top: solid 1px #bbb;
+      border-left: solid 1px #bbb;
+      border-right: solid 1px #888;
+      border-bottom: solid 1px #888;
+      padding: 5px;
+    }
+    th {
+      text-align: left;
+      background-color: #ddd;
+    }
+    td {
+      text-align: right;
+    }
+    .sum {background-color: #bff;}
+  </style>
+  <div title="totalNumberOfParticipants">
+    <h1>応募者数集計</h1>
+    <p style="color:red">※ テストデータを基に作成</p>
+    <div class="participant"></div>
+    <div class="staff" style="margin-top: 2rem;"></div>
   </div>
   </div>
 
@@ -560,9 +575,93 @@ function createElement(arg,parent=null){
   }
 }
 
-// 「お知らせ」の読み込み
-function fetchNotice() {
-  const apiUrl = 'https://script.google.com/macros/s/AKfycbxO_NzZBH2BnS6zaNZD54okTXk74xSCoFk8r_0aE5SjyWsFMRHE8GHP2e_fU2gOHC_0Gg/exec?func=notice';
+// 集計表の作成
+function createTable(data){
+  const v = { whois: 'createTable', rv: null,
+    cols: ['テント','体育館','宿泊計','日帰り','参加者計'],
+    rows: ['1年生','2年生','3年生','4年生','5年生','6年生',
+      '在校生計','卒業生','未就学児','保護者','不明','合計'],
+  };
+  try {
+
+    // ヘッダの作成
+    v.header = [{tag:'th'}];
+    v.cols.forEach(c => v.header.push({tag:'th',attr:{class:'vertical'},text:c}));
+    console.log(v.header);
+
+    // 応募者数テーブルデータの作成
+    v.body = [];
+    // 申込口数別集計
+    v.body.push({tag:'tr',children:[
+      {tag:'th',attr:{colspan:6},text:'申込口数の集計'}
+    ]});
+    v.row = [{tag:'th'}];
+    v.cols.forEach(c => {
+      v.o = data.find(o => o.X === c && o.Y === '申込口数');
+      v.val = v.o ? v.o.num : 0;
+      v.e = {tag:'td',text:v.val};
+      if( c === '宿泊計' || c === '参加者計' ){
+        v.e.attr = {class:'sum'}; // 合計数表示セル
+      }
+      v.row.push(v.e);
+    });
+    v.body.push({tag:'tr',children:v.row});
+
+    // 参加者数集計
+    v.body.push({tag:'tr',children:[
+      {tag:'th',attr:{colspan:6},text:'参加者数の集計'}
+    ]});
+    v.rows.forEach(r => {
+      v.isSum = r === '在校生計' || r === '合計';
+      v.row = [{tag:'th',text:r}];
+      v.cols.forEach(c => {
+        v.o = data.find(o => o.X === c && o.Y === r);
+        v.val = v.o ? v.o.num : 0;
+        v.e = {tag:'td',text:v.val};
+        if( v.isSum || c === '宿泊計' || c === '参加者計' ){
+          v.e.attr = {class:'sum'}; // 合計数表示セル
+        }
+        v.row.push(v.e);
+      });
+      v.body.push({tag:'tr',children:v.row});
+    });
+    console.log(v.body);
+
+    // テーブルの作成
+    v.r = createElement({tag:'table',children:[
+      {tag:'thead',children:[{tag:'tr',children:v.header}]},
+      {tag:'tbody',children:v.body},
+    ]},'.participant');
+    if( v.r instanceof Error ) throw v.r;
+
+    // スタッフ数テーブルデータの作成
+    v.o = data.find(o => o.X === '参加者' && o.Y === 'ボランティア');
+    v.staff = v.o ? Number(v.o.num) : 0;
+    v.o = data.find(o => o.X === 'おやじ' && o.Y === 'ボランティア');
+    v.oyaji = v.o ? Number(v.o.num) : 0;
+
+    v.r = createElement({tag:'table',children:[
+      {tag:'thead',children:[{tag:'tr',children:[
+        {tag:'th'},
+        {tag:'th',text:'参加者'},
+        {tag:'th',text:'おやじ'},
+        {tag:'th',text:'合計'},
+      ]}]},
+      {tag:'tbody',children:[{tag:'tr',children:[
+        {tag:'th',text:'ボランティア'},
+        {tag:'td',text:v.staff},
+        {tag:'td',text:v.oyaji},
+        {tag:'td',text:v.staff+v.oyaji},
+      ]}]},
+    ]},'.staff');
+    if( v.r instanceof Error ) throw v.r;
+
+  } catch (e) { console.error(e); return e; }
+}
+
+// 「集計表」の読み込み
+function fetchSummary() {
+  const apiUrl = 'https://script.google.com/macros/s/AKfycbxO_NzZBH2BnS6zaNZD54okTXk74xSCoFk8r_0aE5SjyWsFMRHE8GHP2e_fU2gOHC_0Gg/exec?func=summary';
 
   fetch(apiUrl)
     .then(response => {
@@ -572,35 +671,9 @@ function fetchNotice() {
       return response.json();
     })
     .then(data => {
-      const parentElement = document.querySelector('div[title="information"]');
-      if( !Array.isArray(data) ){
-        // エラーの場合は非表示
-        parentElement.style.display = 'none';
-      } else {
-        const notices = [];
-        data.forEach(item => {
-          const dt = new Date();
-          item['掲示開始'] = new Date(item['掲示開始'] ? item['掲示開始'] : '1970/01/01 00:00:00');
-          item['掲示終了'] = new Date(item['掲示終了'] ? item['掲示終了'] : '2999/12/31 23:59:59');
-          if( item['掲示開始'] <= dt && dt <= item['掲示終了'] && item['タイトル'] ){
-            if( item['内容'] && !(/<[^>]+>/.test(item['内容'])) ){
-              // プレーンテキストの場合はHTMLに整形
-              item['内容'] = `<p>${item['内容'].replaceAll(/\\n/g,'<br>')}</p>`;
-            }
-            notices.push({tag:'div',children:[
-              {tag:'h2',text:item['タイトル']},
-              {tag:'div',html:item['内容']}
-            ]});
-          }
-        });
-
-        if( notices.length === 0 ){
-          // お知らせが一件も無い場合は非表示
-          parentElement.style.display = 'none';
-        } else {
-          createElement(notices,parentElement.querySelector('.view'));
-        }
-      }
+      console.log(data);
+      const r = createTable(data);
+      if( r instanceof Error ) throw r;
     })
     .catch(error => {
       console.error('エラー:', error);
@@ -610,7 +683,7 @@ function fetchNotice() {
 
 window.addEventListener('DOMContentLoaded', () => {
   const v = { whois: 'DOMContentLoaded', rv: null };
-  fetchNotice();
+  fetchSummary();
 });
 </script>
 </html>
