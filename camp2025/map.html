@@ -470,9 +470,9 @@ var spNavInOut = {
  * @param {void}
  * @returns {Object} {シート名:行オブジェクトの配列}形式のオブジェクト
  */
-function fetchPublic() {
+function fetchPublic(func='notice') {
   console.log('fetchPublic start.');
-  return fetch(config.publicSheetAPI).then(response => {
+  return fetch(config.publicSheetAPI+`?func=${func}`).then(response => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
