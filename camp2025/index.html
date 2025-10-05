@@ -402,6 +402,10 @@ body{
 
 </body>
 <script type="text/javascript">
+const config = {
+  systemName: 'camp2025',
+  publicSheetAPI:'https://script.google.com/macros/s/AKfycbxO_NzZBH2BnS6zaNZD54okTXk74xSCoFk8r_0aE5SjyWsFMRHE8GHP2e_fU2gOHC_0Gg/exec',
+};
 //変数定義
 var navigationOpenFlag = false;
 var navButtonFlag = true;
@@ -473,6 +477,25 @@ var spNavInOut = {
     }
   }
 };
+/** fetchPublic: 「公開用」全シートの読み込み＋localStorageへの保存
+ * @param {void}
+ * @returns {Object} {シート名:行オブジェクトの配列}形式のオブジェクト
+ */
+function fetchPublic() {
+  console.log('fetchPublic start.');
+  return fetch(config.publicSheetAPI).then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json(); // JSONに変換
+  })
+  .then(jsonData => {
+    // localStorage に保存（文字列に変換）
+    localStorage.setItem(config.systemName, JSON.stringify(jsonData));
+    console.log('fetchPublic end.',jsonData);
+    return jsonData; // jsonDataをPromiseの結果として返す
+  });
+}
 /** HTMLElementを生成する
  * @param {CEDefObj|CEDefObj[]} arg - 生成するHTMLElementの定義
  * @param {HTMLElement|string} [parent=null] - 本関数内部で親要素への追加まで行う場合に指定
@@ -564,57 +587,48 @@ function createElement(arg,parent=null){
   }
 }
 
-// 「お知らせ」の読み込み
-function fetchNotice() {
-  const apiUrl = 'https://script.google.com/macros/s/AKfycbxO_NzZBH2BnS6zaNZD54okTXk74xSCoFk8r_0aE5SjyWsFMRHE8GHP2e_fU2gOHC_0Gg/exec?func=notice';
+// 「お知らせ」の書き込み
+function drawNotices(){
+  const parentElement = document.querySelector('div[title="information"]');
 
-  fetch(apiUrl)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('ネットワークエラー: ' + response.status);
-      }
-      return response.json();
-    })
-    .then(data => {
-      const parentElement = document.querySelector('div[title="information"]');
-      if( !Array.isArray(data) ){
-        // エラーの場合は非表示
-        parentElement.style.display = 'none';
-      } else {
-        const notices = [];
-        data.forEach(item => {
-          const dt = new Date();
-          item['掲示開始'] = new Date(item['掲示開始'] ? item['掲示開始'] : '1970/01/01 00:00:00');
-          item['掲示終了'] = new Date(item['掲示終了'] ? item['掲示終了'] : '2999/12/31 23:59:59');
-          if( item['掲示開始'] <= dt && dt <= item['掲示終了'] && item['タイトル'] ){
-            if( item['内容'] && !(/<[^>]+>/.test(item['内容'])) ){
-              // プレーンテキストの場合はHTMLに整形
-              item['内容'] = `<p>${item['内容'].replaceAll(/\\n/g,'<br>')}</p>`;
-            }
-            notices.push({tag:'div',children:[
-              {tag:'h2',text:item['タイトル']},
-              {tag:'div',html:item['内容']}
-            ]});
-          }
-        });
+  // localStorageからデータを取得
+  const lStorage = JSON.parse(localStorage.getItem(config.systemName) || '{}');
 
-        if( notices.length === 0 ){
-          // お知らせが一件も無い場合は非表示
-          parentElement.style.display = 'none';
-        } else {
-          createElement(notices,parentElement.querySelector('.view'));
-        }
+  if( typeof lStorage['お知らせ'] === 'undefined' ){
+    // データが無い場合は非表示
+    parentElement.style.display = 'none';
+    return;
+  }
+
+  const notices = [];
+  lStorage['お知らせ'].forEach(item => {
+    const dt = new Date();
+    item['掲示開始'] = new Date(item['掲示開始'] ? item['掲示開始'] : '1970/01/01 00:00:00');
+    item['掲示終了'] = new Date(item['掲示終了'] ? item['掲示終了'] : '2999/12/31 23:59:59');
+    if( item['掲示開始'] <= dt && dt <= item['掲示終了'] && item['タイトル'] ){
+      if( item['内容'] && !(/<[^>]+>/.test(item['内容'])) ){
+        // プレーンテキストの場合はHTMLに整形
+        item['内容'] = `<p>${item['内容'].replaceAll(/\\n/g,'<br>')}</p>`;
       }
-    })
-    .catch(error => {
-      console.error('エラー:', error);
-      document.getElementById('notice-list').innerHTML = `<li>読み込みエラー: ${error.message}</li>`;
-    });
+      notices.push({tag:'div',children:[
+        {tag:'h2',text:item['タイトル']},
+        {tag:'div',html:item['内容']}
+      ]});
+    }
+  });
+
+  if( notices.length === 0 ){
+    // お知らせが一件も無い場合は非表示
+    parentElement.style.display = 'none';
+  } else {
+    parentElement.querySelector('.view').innerHTML = '';
+    createElement(notices,parentElement.querySelector('.view'));
+  }
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  const v = { whois: 'DOMContentLoaded', rv: null };
-  fetchNotice();
+  drawNotices();  // localStorageの内容で描画
+  fetchPublic().then(() => drawNotices());  // 取得データで再描画
 });
 </script>
 </html>

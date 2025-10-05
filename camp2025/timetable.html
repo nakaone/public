@@ -398,6 +398,10 @@ body{
 
 </body>
 <script type="text/javascript">
+const config = {
+  systemName: 'camp2025',
+  publicSheetAPI:'https://script.google.com/macros/s/AKfycbxO_NzZBH2BnS6zaNZD54okTXk74xSCoFk8r_0aE5SjyWsFMRHE8GHP2e_fU2gOHC_0Gg/exec',
+};
 //変数定義
 var navigationOpenFlag = false;
 var navButtonFlag = true;
@@ -469,6 +473,25 @@ var spNavInOut = {
     }
   }
 };
+/** fetchPublic: 「公開用」全シートの読み込み＋localStorageへの保存
+ * @param {void}
+ * @returns {Object} {シート名:行オブジェクトの配列}形式のオブジェクト
+ */
+function fetchPublic() {
+  console.log('fetchPublic start.');
+  return fetch(config.publicSheetAPI).then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json(); // JSONに変換
+  })
+  .then(jsonData => {
+    // localStorage に保存（文字列に変換）
+    localStorage.setItem(config.systemName, JSON.stringify(jsonData));
+    console.log('fetchPublic end.',jsonData);
+    return jsonData; // jsonDataをPromiseの結果として返す
+  });
+}
 //専用スクリプト
 </script>
 </html>

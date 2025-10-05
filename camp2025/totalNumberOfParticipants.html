@@ -416,6 +416,10 @@ body{
 
 </body>
 <script type="text/javascript">
+const config = {
+  systemName: 'camp2025',
+  publicSheetAPI:'https://script.google.com/macros/s/AKfycbxO_NzZBH2BnS6zaNZD54okTXk74xSCoFk8r_0aE5SjyWsFMRHE8GHP2e_fU2gOHC_0Gg/exec',
+};
 //変数定義
 var navigationOpenFlag = false;
 var navButtonFlag = true;
@@ -487,6 +491,25 @@ var spNavInOut = {
     }
   }
 };
+/** fetchPublic: 「公開用」全シートの読み込み＋localStorageへの保存
+ * @param {void}
+ * @returns {Object} {シート名:行オブジェクトの配列}形式のオブジェクト
+ */
+function fetchPublic() {
+  console.log('fetchPublic start.');
+  return fetch(config.publicSheetAPI).then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json(); // JSONに変換
+  })
+  .then(jsonData => {
+    // localStorage に保存（文字列に変換）
+    localStorage.setItem(config.systemName, JSON.stringify(jsonData));
+    console.log('fetchPublic end.',jsonData);
+    return jsonData; // jsonDataをPromiseの結果として返す
+  });
+}
 /** HTMLElementを生成する
  * @param {CEDefObj|CEDefObj[]} arg - 生成するHTMLElementの定義
  * @param {HTMLElement|string} [parent=null] - 本関数内部で親要素への追加まで行う場合に指定
@@ -579,13 +602,20 @@ function createElement(arg,parent=null){
 }
 
 // 集計表の作成
-function createTable(data){
+function createTable(){
   const v = { whois: 'createTable', rv: null,
     cols: ['テント','体育館','宿泊計','日帰り','参加者計'],
     rows: ['1年生','2年生','3年生','4年生','5年生','6年生',
       '在校生計','卒業生','未就学児','保護者','不明','合計'],
   };
   try {
+
+    // localStorageからデータを取得
+    const lStorage = JSON.parse(localStorage.getItem(config.systemName) || '{}');
+
+    // データが無い場合は空配列
+    const data = typeof lStorage['集計表'] === 'undefined'
+    ? [] : lStorage['集計表'];
 
     // ヘッダの作成
     v.header = [{tag:'th'}];
@@ -631,6 +661,7 @@ function createTable(data){
     console.log(v.body);
 
     // テーブルの作成
+    document.querySelector('.participant').innerHTML = '';
     v.r = createElement({tag:'table',children:[
       {tag:'thead',children:[{tag:'tr',children:v.header}]},
       {tag:'tbody',children:v.body},
@@ -643,6 +674,7 @@ function createTable(data){
     v.o = data.find(o => o.X === 'おやじ' && o.Y === 'ボランティア');
     v.oyaji = v.o ? Number(v.o.num) : 0;
 
+    document.querySelector('.staff').innerHTML = '';
     v.r = createElement({tag:'table',children:[
       {tag:'thead',children:[{tag:'tr',children:[
         {tag:'th'},
@@ -662,31 +694,9 @@ function createTable(data){
   } catch (e) { console.error(e); return e; }
 }
 
-// 「集計表」の読み込み
-function fetchSummary() {
-  const apiUrl = 'https://script.google.com/macros/s/AKfycbxO_NzZBH2BnS6zaNZD54okTXk74xSCoFk8r_0aE5SjyWsFMRHE8GHP2e_fU2gOHC_0Gg/exec?func=summary';
-
-  fetch(apiUrl)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('ネットワークエラー: ' + response.status);
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log(data);
-      const r = createTable(data);
-      if( r instanceof Error ) throw r;
-    })
-    .catch(error => {
-      console.error('エラー:', error);
-      document.getElementById('notice-list').innerHTML = `<li>読み込みエラー: ${error.message}</li>`;
-    });
-}
-
 window.addEventListener('DOMContentLoaded', () => {
-  const v = { whois: 'DOMContentLoaded', rv: null };
-  fetchSummary();
+  createTable();  // localStorageの内容で描画
+  fetchPublic().then(() => createTable());  // 取得データで再描画
 });
 </script>
 </html>
