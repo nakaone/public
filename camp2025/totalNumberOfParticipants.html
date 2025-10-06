@@ -406,11 +406,30 @@ body{
       text-align: right;
     }
     .sum {background-color: #bff;}
+  
+    /* グラフ描画用 */
+    .chart-container {
+      width: 100%;
+      height: 400px;
+      margin-bottom: 40px;
+    }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
   <div title="totalNumberOfParticipants">
     <h1>応募者数集計</h1>
     <div class="participant"></div>
     <div class="staff" style="margin-top: 2rem;"></div>
+  
+    <h2>日別応募数の推移</h2>
+    <div class="chart-container daily">
+      <canvas id="dailyChart"></canvas>
+    </div>
+  
+    <h2>時間帯別応募数</h2>
+    <div class="chart-container hourly">
+      <canvas id="hourlyChart"></canvas>
+    </div>
   </div>
   </div>
 
@@ -620,7 +639,6 @@ function createTable(){
     // ヘッダの作成
     v.header = [{tag:'th'}];
     v.cols.forEach(c => v.header.push({tag:'th',attr:{class:'vertical'},text:c}));
-    console.log(v.header);
 
     // 応募者数テーブルデータの作成
     v.body = [];
@@ -694,9 +712,145 @@ function createTable(){
   } catch (e) { console.error(e); return e; }
 }
 
+function drawGraph(){
+
+  // localStorageからデータを取得
+  const lStorage = JSON.parse(localStorage.getItem(config.systemName) || '{}');
+
+  // データが無い場合は空配列
+  const data = typeof lStorage['応募・アクセス数集計'] === 'undefined'
+  ? [] : lStorage['応募・アクセス数集計'];
+
+  // ■ 日付フォーマット関数 mm/dd
+  function formatDate(date) {
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${m}/${d}`;
+  }
+
+  // ■ 日付範囲生成
+  function getDateRange(data) {
+    const filtered = data.filter(d => d.type === '日別応募数');
+    const dates = filtered.map(d => new Date(d.key));
+    const min = new Date(Math.min(...dates));
+    const max = new Date(Math.max(...dates));
+    return [min, max];
+  }
+
+  function generateDateLabels(start, end) {
+    const labels = [];
+    const current = new Date(start);
+    while (current <= end) {
+      labels.push(formatDate(new Date(current)));
+      current.setDate(current.getDate() + 1);
+    }
+    return labels;
+  }
+
+  // ■ 日別応募数グラフ（横棒）
+  function renderDailyChart(data) {
+    const dailyData = data.filter(d => d.type === '日別応募数');
+    const [start, end] = getDateRange(dailyData);
+    const labels = generateDateLabels(start, end);
+
+    const valueMap = Object.fromEntries(
+      dailyData.map(d => [formatDate(new Date(d.key)), d.value])
+    );
+
+    const values = labels.map(label => valueMap[label] || 0);
+
+    if( dailyChartInstance ) dailyChartInstance.destroy();
+    const ctx = document.getElementById('dailyChart').getContext('2d');
+    dailyChartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: '応募数',
+          data: values,
+          backgroundColor: 'rgba(75, 192, 192, 0.7)',
+          borderRadius: 4
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: context => `応募数: ${context.raw}`
+            }
+          },
+          legend: { display: false }
+        },
+        scales: {
+          x: { beginAtZero: true }
+        }
+      }
+    });
+  }
+
+  // ■ 時間帯別応募数グラフ（ドーナツ）
+  function renderHourlyChart(data) {
+    const hourlyData = data.filter(d => d.type === '時間帯別応募数');
+    const labels = hourlyData.map(d => `${String(d.key).padStart(2, '0')}時台`);
+    const values = hourlyData.map(d => d.value);
+
+    if( hourlyChartInstance ) hourlyChartInstance.destroy();
+    const ctx = document.getElementById('hourlyChart').getContext('2d');
+    hourlyChartInstance = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: '応募数',
+          data: values,
+          backgroundColor: [
+            '#4dc9f6', '#f67019', '#f53794', '#537bc4'
+          ]
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }, // 外の凡例は非表示
+          tooltip: {
+            callbacks: {
+              label: context => `応募数: ${context.raw}`
+            }
+          },
+          datalabels: {
+            color: '#000',
+            formatter: (value, context) => {
+              const label = context.chart.data.labels[context.dataIndex];
+              return `${label}: ${value}件`;
+            },
+            font: {
+              weight: 'bold'
+            }
+          }
+        }
+      },
+      plugins: [ChartDataLabels]
+    });
+  }
+
+  // ■ 実行
+  let dailyChartInstance, hourlyChartInstance;
+
+  renderDailyChart(data);
+  renderHourlyChart(data);
+
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   createTable();  // localStorageの内容で描画
-  fetchPublic('summary').then(() => createTable());  // 取得データで再描画
+  fetchPublic('summary').then(() => {
+    createTable();  // 取得データで再描画
+    drawGraph();
+  });
 });
 </script>
 </html>
