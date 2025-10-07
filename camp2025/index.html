@@ -63,9 +63,9 @@ body {
       font-weight: 600;
     }
     li,p {width: max(150px,calc(100vw-2rem))}
-body{
+/*body{
       margin: 0;
-    }
+    }*/
     a{
       color: #040404;
       text-decoration: none;
@@ -319,11 +319,14 @@ body{
     
     .js_openTarget {
       display: none; }
+    /*専用スタイル定義*/
   </style>
   <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 </head>
 <body>
-  <a href="index.html"><img src="img/siteHeader.png" width="90%"/></a>
+  <a href="index.html">
+    <img src="img/siteHeader.png" width="90%" />
+  </a>
 <div class="el_humburger"><!--ハンバーガーボタン-->
     <div class="el_humburger_wrapper">
       <span class="el_humburger_bar top"></span>
@@ -370,6 +373,10 @@ body{
             <div class="nav_child_item">
               <a class="hp_coverLink" href="totalNumberOfParticipants.html"></a>
               応募者数集計
+            </div>
+            <div class="nav_child_item">
+              <a class="hp_coverLink" href="accessLog.html"></a>
+              アクセス数集計
             </div>
             <div class="nav_child_item">
               <a class="hp_coverLink" href="https://forms.gle/APUHcSJnFHjkQCuq5" target="_blank"></a>
