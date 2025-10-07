@@ -63,9 +63,7 @@ body {
       font-weight: 600;
     }
     li,p {width: max(150px,calc(100vw-2rem))}
-/*body{
-      margin: 0;
-    }*/
+table.header td {border: none;}
     a{
       color: #040404;
       text-decoration: none;
@@ -327,6 +325,7 @@ body {
       padding: 0;
       line-height: 0.5rem;
       vertical-align: middle;
+      border: none;
     }
     .graph td.label {
       font-size:0.8rem;
@@ -349,7 +348,7 @@ body {
   <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 </head>
 <body>
-<table><tr><td>
+<table class="header"><tr><td>
     <a href="index.html">
       <img src="img/siteHeader.png" width="85%" />
     </a>
@@ -420,8 +419,8 @@ body {
   <div class="mainView">
 <h2>日別アクセス数</h2>
   <p class="total"></p>
-  <div id="dailyGraph" class="graph"></div>
   <p>※ 日付は04:00〜28:00で区切り</p>
+  <div id="dailyGraph" class="graph"></div>
   
   <h2>時間帯別アクセス数</h2>
   <div id="hourlyGraph" class="graph"></div>
