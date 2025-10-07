@@ -344,6 +344,7 @@ body {
       color: #080;
       background: #0f8;
       font-size:0.7rem;
+    }
   </style>
   <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 </head>
@@ -419,7 +420,11 @@ body {
   <div class="mainView">
 <h2>日別アクセス数</h2>
   <p class="total"></p>
-  <div class="graph dailyGraph"></div>
+  <div id="dailyGraph" class="graph"></div>
+  <p>※ 日付は04:00〜28:00で区切り</p>
+  
+  <h2>時間帯別アクセス数</h2>
+  <div id="hourlyGraph" class="graph"></div>
   </div>
 
 </body>
@@ -990,6 +995,7 @@ function drawGraph(data,qsStr) {
         ]}
       ]});
     });
+    document.querySelector(qsStr).innerHTML = '';
     createElement({tag:'table',children:v.content},qsStr);
 
     dev.end(); // 終了処理
@@ -1003,6 +1009,11 @@ window.addEventListener('DOMContentLoaded', () => {
   const v = {};
   fetchPublic('access').then(data => {
 
+    console.log(JSON.stringify(data));
+
+    // -----------------------
+    // 日別アクセス数集計
+    // -----------------------
     // 対象データの抽出、整形
     v.data = data['応募・アクセス数集計']
     .filter(x => x.type === "noticeDaily")
@@ -1015,7 +1026,27 @@ window.addEventListener('DOMContentLoaded', () => {
     = `累計： ${v.data.reduce((sum, item) => sum + item.value, 0).toLocaleString()}件`;
 
     // 横棒グラフ表示
-    drawGraph(v.data,'.dailyGraph');
+    drawGraph(v.data,'#dailyGraph');
+
+    // -----------------------
+    // 時間帯別アクセス数集計
+    // -----------------------
+    v.data = data['応募・アクセス数集計']
+    .filter(x => x.type === "noticeHourly");
+    v.hourly = [];
+    for( v.i=4 ; v.i<28 ; v.i++ ){
+      v.o = v.data.find(x => x.key === v.i);
+      v.value = v.o ? v.o.value : 0;
+      if( !v.value ) v.value = 0;
+      v.hourly.push({
+        key: ('0'+v.i).slice(-2) + '時台',
+        value: v.value
+      });
+    }
+    console.log('l.1054',v.hourly);
+
+    // 横棒グラフ表示
+    drawGraph(v.hourly,'#hourlyGraph');
   })
   .catch(e => console.error(e));
 });
