@@ -10,7 +10,7 @@ body {
       font-size: 1rem;
       line-height: 1.6;
       margin: 0;
-      padding: 1rem;
+      /*padding: 1rem;*/
       font-family: Arial, sans-serif;
       overflow-x: hidden;
     }
@@ -348,18 +348,20 @@ body {
   <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 </head>
 <body>
-  <table><tr>
-  </tr></table>
-  <td><a href="index.html">
-    <img src="img/siteHeader.png" width="90%" />
-  </a></td>
-<td><div class="el_humburger"><!--ハンバーガーボタン-->
-    <div class="el_humburger_wrapper">
-      <span class="el_humburger_bar top"></span>
-      <span class="el_humburger_bar middle"></span>
-      <span class="el_humburger_bar bottom"></span>
+<table><tr><td>
+    <a href="index.html">
+      <img src="img/siteHeader.png" width="90%" />
+    </a>
+  </td><td>
+    <div class="el_humburger"><!--ハンバーガーボタン-->
+      <div class="el_humburger_wrapper">
+        <span class="el_humburger_bar top"></span>
+        <span class="el_humburger_bar middle"></span>
+        <span class="el_humburger_bar bottom"></span>
+      </div>
     </div>
-  </div></td>
+  </td></tr></table>
+  
   
   <header class="navi">
     <div class="navi_inner">
@@ -417,7 +419,7 @@ body {
   <div class="mainView">
 <h2>日別アクセス数</h2>
   <p class="total"></p>
-  <div class="dailyGraph"></div>
+  <div class="graph dailyGraph"></div>
   </div>
 
 </body>
