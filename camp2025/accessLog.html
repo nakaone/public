@@ -1021,9 +1021,9 @@ window.addEventListener('DOMContentLoaded', () => {
     // -----------------------
     // 対象データの抽出、整形
     v.data = data['応募・アクセス数集計']
-    .filter(x => x.type === "noticeDaily")
-    .sort((a,b) => a.key < b.key)
+    .filter(x => x.type === "noticeDaily");
     v.data.forEach(x => x.key = toLocale(x.key,'MM/dd'));
+    v.data = v.data.sort((a,b) => a.key.localeCompare(b.key));
     v.data = v.data.filter(x => x.key >= '10/06');  // 本番日以降
 
     // 合計欄の表示

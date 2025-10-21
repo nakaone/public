@@ -1149,12 +1149,11 @@ window.addEventListener('DOMContentLoaded', () => {
     // -----------------------
     // 対象データの抽出、整形
     v.daily = data['応募・アクセス数集計']
-    .filter(x => x.type === "日別応募数")
-    .sort((a,b) => a.key < b.key)
+    .filter(x => x.type === "日別応募数");
     v.daily.forEach(x => x.key = toLocale(x.key,'MM/dd'));
     v.daily = v.daily.filter(x => x.key >= '10/06');  // 本番日以降
     // 横棒グラフ表示
-    drawGraph(v.daily,'#dailyGraph');
+    drawGraph(v.daily.sort((a,b) => a.key.localeCompare(b.key)),'#dailyGraph');
 
     // -----------------------
     // 時間帯別応募数
