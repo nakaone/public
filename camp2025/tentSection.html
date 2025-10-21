@@ -395,17 +395,52 @@ table.header td {border: none;}
   </header>
 
   <div class="mainView">
-<div title="timetable">
-    <h1>タイムテーブル</h1>
-    <p style="color:red">※未確定。2024版からの修正点は以下の通り</p>
-    <ol>
-      <li>校内探検終了時刻 : 21:30 ⇒ 20:30</li>
-      <li>一般参加者向けとスタッフ向けの切替 : ボタン式 ⇒ 並列表示</li>
-    </ol>
-    <h2>一般参加者向け</h2>
-    <img src="./img/timetable.participant.svg" width="100%" />
-    <h2>スタッフ向け</h2>
-    <img src="./img/timetable.staff.webp" width="100%" />
+<div title="tentSection">
+  
+    <style>
+      div[title="tentSection"] img {
+        display: block;
+        width: 80%;
+        margin: 0 auto;
+      }
+    </style>
+    <p>①：下北沢小を上から見た図です(Googleマップより引用)</p>
+    <a href="img/fig01.png" target="_blank"><img src="img/fig01.png" /></a>
+  
+    <p>②：①に1階の平面図を重ねました</p>
+    <a href="img/fig02.png" target="_blank"><img src="img/fig02.png" /></a>
+  
+    <p>③：区画の位置を明確にするため、②にグリッドを重ねます</p>
+    <a href="img/fig03.png" target="_blank"><img src="img/fig03.png" /></a>
+  
+    <p>④：1階だとグリッドと平面図の対応が分かりづらいので、2階の平面図に交換してます。<br>
+      以降東西(横)をx座標、南北(縦)をy座標として交点をoと呼称します。
+    </p>
+    <a href="img/fig04.png" target="_blank"><img src="img/fig04.png" /></a>
+  
+    <p>実物はこんな感じです。</p>
+    <a href="img/imgO.png" target="_blank"><img src="img/imgO.png" width="60%" /></a>
+    <a href="img/imgX.png" target="_blank"><img src="img/imgX.png" /></a>
+    <a href="img/imgY.png" target="_blank"><img src="img/imgY.png" /></a>
+  
+  
+    <p>⑤：全体図をグリッドに重ねます</p>
+    <a href="img/fig05.png" target="_blank"><img src="img/fig05.png" /></a>
+  
+    <p>⑥：区画の位置を計算しました</p>
+    <a href="img/fig08.png" target="_blank"><img src="img/fig08.png" /></a>
+  
+    <p>⑦：ピンクの部分が通路です</p>
+    <a href="img/fig06.png" target="_blank"><img src="img/fig06.png" /></a>
+  
+    <p>⑧：ブロック毎に記号を入れました</p>
+    <a href="img/fig07.png" target="_blank"><img src="img/fig07.png" /></a>
+    <ul>
+      <li>A〜D block : テント区画</li>
+      <li>E block : 遊戯用区画。テント区画不足時はここを流用</li>
+      <li>F block : フリー区画。日帰りの方の食事。通路とは区分すること!!</li>
+      <li>G block : 体育館</li>
+    </ul>
   </div>
   </div>
 
