@@ -8,7 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/alasql/4.6.4/alasql.min.js" integrity="sha512-/IeaoBeXScPD3EiZkaYKzjnqRnKJI73FM/18T8P+v2n11hKNCKQmko/n2ccvlDyH3AziR0oPEGShwsZEwO/Jjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-<p style='text-align:right'>2025/12/18 11:57:34</p>
+<p style='text-align:right'>2025/12/18 12:31:46</p>
 <h1>SPkey要求テスト</h1>
 
 <button onclick="localFunc()">localFuncテスト</button>
@@ -335,6 +335,62 @@ class authClient {
     } catch (e) { return dev.error(e); }
   }
 
+  /** _exportIfCryptoKey */
+  async _exportIfCryptoKey(key, value){
+    if( /^(C[SP]key(Sign|Enc))$/.test(key) && value instanceof CryptoKey ){
+      return await crypto.subtle.exportKey("jwk", value);
+    }
+    return value;
+  }
+
+  /** _importIfCryptoKey */
+  async _importIfCryptoKey(key, value){
+    if(!value) return value;
+
+    switch(key){
+      case 'CSkeySign':
+        return crypto.subtle.importKey(
+          "jwk", value, { name:"RSA-PSS", hash:"SHA-256" }, false, ["sign"]
+        );
+      case 'CPkeySign':
+        return crypto.subtle.importKey(
+          "jwk", value, { name:"RSA-PSS", hash:"SHA-256" }, false, ["verify"]
+        );
+      case 'CSkeyEnc':
+        return crypto.subtle.importKey(
+          "jwk", value, { name:"RSA-OAEP", hash:"SHA-256" }, false, ["decrypt"]
+        );
+      case 'CPkeyEnc':
+        return crypto.subtle.importKey(
+          "jwk", value, { name:"RSA-OAEP", hash:"SHA-256" }, false, ["encrypt"]
+        );
+      default:
+        return value;
+    }
+  }
+
+  /** _withStore: IndexedDB操作共通ラッパ
+   * @param {'readonly'|'readwrite'} mode
+   * @param {(store: IDBObjectStore)=>Promise<any>} fn
+   */
+  async _withStore(mode, fn){
+    const db = authClient._IndexedDB;
+    if (!db) throw new Error("IndexedDB not initialized");
+
+    const tx = db.transaction([this.cf.storeName], mode);
+    const store = tx.objectStore(this.cf.storeName);
+
+    const rv = await fn(store);
+
+    await new Promise((resolve, reject) => {
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+      tx.onabort = () => reject(tx.error);
+    });
+
+    return rv;
+  }
+
   /** authRequest: authRequest型のオブジェクトを作成
    * @param {string} func - サーバ側関数名
    * @param {any[]} arg - サーバ側関数に渡す引数
@@ -431,7 +487,7 @@ class authClient {
    * @param {authRequest} request - 処理要求
    * @returns {authResponse|Error} 処理結果
    */
-  async fetch(request) {  // モック。実運用では fetch / UrlFetchApp 等に差し替え
+  async fetch(request) {
     const v = {whois:`${this.constructor.name}.getIndexedDB`, arg:{request}, rv:null};
     dev.start(v);
     try {
@@ -492,55 +548,30 @@ class authClient {
     try {
 
       dev.step(1);  // IndexedDBを取得
-      v.db = authClient._IndexedDB;
-      if (!v.db) throw new Error("IndexedDB not initialized");
-
-      dev.step(2);  // 'readwrite' トランザクション
-      const transaction = v.db.transaction([this.cf.storeName], 'readwrite');
-      const store = transaction.objectStore(this.cf.storeName);
-
-      dev.step(3);  // 全てのキーを取得
-      v.rv = await new Promise((resolve, reject) => {
-        const putRequest = store.getAll();
-        putRequest.onsuccess = () => resolve();
-        putRequest.onerror = (event) => {
-          reject(new Error(`GET操作失敗: ${event.target.error.message}`));
-        };
-      });
-
-      dev.step(4);  // CryptoKey復元
-      v.rv.CSkeySign = await crypto.subtle.importKey(
-        "jwk",
-        v.rv.CSkeySign,
-        { name: "RSA-PSS", hash: "SHA-256" },
-        false,
-        ["sign"]
+      v.raw = await this._withStore('readonly', store =>
+        new Promise((resolve, reject) => {
+          const req = store.getAll();
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = e => reject(e.target.error);
+        })
       );
-      v.rv.CPkeySign = await crypto.subtle.importKey(
-        "jwk",
-        v.rv.CPkeySign,
-        { name: "RSA-PSS", hash: "SHA-256" },
-        false,
-        ["verify"]
-      );
-      v.rv.CSkeyEnc = await crypto.subtle.importKey(
-        "jwk",
-        v.rv.CSkeyEnc,
-        { name: "RSA-OAEP", hash: "SHA-256" },
-        false,
-        ["decrypt"]
-      );
-      v.rv.CPkeyEnc = await crypto.subtle.importKey(
-        "jwk",
-        stored.CPkeyEnc,
-        { name: "RSA-OAEP", hash: "SHA-256" },
-        false,
-        ["encrypt"]
-      );
+      dev.step(99.268,v.raw);
 
-      dev.step(5);  // this.idbに登録
-      for ( [v.key, v.value] of Object.entries(v.rv)) {
-        this.idb[v.key] = v.value;
+      // getAll() → [{key, value}]ではなく値配列なので再構成
+      v.rv = {};
+      await this._withStore('readonly', store =>
+        Promise.all(
+          store.getAllKeys().then(keys =>
+            keys.forEach((k,i)=> v.rv[k] = v.raw[i])
+          )
+        )
+      );
+      dev.step(99.279,v.rv);
+
+      // CryptoKey復元（存在するものだけ）
+      for(const [k,vv] of Object.entries(v.rv)){
+        v.rv[k] = await this._importIfCryptoKey(k, vv);
+        this.idb[k] = v.rv[k];
       }
 
       dev.end(); // 終了処理
@@ -630,6 +661,32 @@ class authClient {
    * @param {Object<string, string>} arg
    * @returns {null|Error}
    */
+  async setIndexedDB(arg){
+    const v = {whois:`${this.constructor.name}.setIndexedDB`, arg:{arg}, rv:null};
+    dev.start(v);
+    try {
+
+      await this._withStore('readwrite', async store => {
+        for(const [k,val] of Object.entries(arg)){
+
+          const stored = await this._exportIfCryptoKey(k, val);
+
+          this.idb[k] = val;
+
+          await new Promise((resolve, reject) => {
+            const req = store.put(stored, k);
+            req.onsuccess = () => resolve();
+            req.onerror = e => reject(e.target.error);
+          });
+        }
+      });
+
+      dev.end();
+      return null;
+
+    } catch(e){ return dev.error(e); }
+  }
+  /*
   async setIndexedDB(arg) {
     const v = {whois:`${this.constructor.name}.setIndexedDB`, arg:{arg}, rv:null};
     dev.start(v);
@@ -672,6 +729,7 @@ class authClient {
 
     } catch (e) { return dev.error(e); }
   }
+  */
 }
 class authConfig {
 
