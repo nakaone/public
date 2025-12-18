@@ -8,7 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/alasql/4.6.4/alasql.min.js" integrity="sha512-/IeaoBeXScPD3EiZkaYKzjnqRnKJI73FM/18T8P+v2n11hKNCKQmko/n2ccvlDyH3AziR0oPEGShwsZEwO/Jjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-<p style='text-align:right'>2025/12/18 12:37:08</p>
+<p style='text-align:right'>2025/12/18 12:49:13</p>
 <h1>SPkey要求テスト</h1>
 
 <button onclick="localFunc()">localFuncテスト</button>
@@ -335,7 +335,11 @@ class authClient {
     } catch (e) { return dev.error(e); }
   }
 
-  /** _exportIfCryptoKey */
+  /** _exportIfCryptoKey: CryptoKey型のRSA鍵をIndexedDBに保存可能な文字列に変換
+   * @param {string} key - 鍵名。"CPkeySign"等
+   * @param {CryptoKey} value - 鍵の内容
+   * @returns {string}
+   */
   async _exportIfCryptoKey(key, value){
     if( /^(C[SP]key(Sign|Enc))$/.test(key) && value instanceof CryptoKey ){
       return await crypto.subtle.exportKey("jwk", value);
@@ -343,7 +347,11 @@ class authClient {
     return value;
   }
 
-  /** _importIfCryptoKey */
+  /** _importIfCryptoKey: IndexedDBに保存されたRSA鍵をCryptoKey型に変換
+   * @param {string} key - 鍵名。"CPkeySign"等
+   * @param {string} value - IndexedDBに保存された鍵の内容
+   * @returns {CryptoKey}
+   */
   async _importIfCryptoKey(key, value){
     if(!value) return value;
 
@@ -547,7 +555,7 @@ class authClient {
     dev.start(v);
     try {
 
-      dev.step(1);  // IndexedDBを取得
+      dev.step(1);  // IndexedDBに保存された項目を全て配列で取得
       v.raw = await this._withStore('readonly', store =>
         new Promise((resolve, reject) => {
           const req = store.getAll();
@@ -555,9 +563,9 @@ class authClient {
           req.onerror = e => reject(e.target.error);
         })
       );
-      dev.step(99.268,{raw:v.raw});
+      dev.step(99.276,{raw:v.raw});
 
-      // getAll() → [{key, value}]ではなく値配列なので再構成
+      dev.step(2);  // [{key, value}]形式の値配列を{key:value}形式に再構成
       v.rv = {};
       if( Array.isArray(v.raw) && v.raw.length > 0 ){
 
@@ -568,7 +576,7 @@ class authClient {
             )
           )
         );
-        dev.step(99.281,{rv:v.rv});
+        dev.step(99.289,{rv:v.rv});
 
         // CryptoKey復元（存在するものだけ）
         for(const [k,vv] of Object.entries(v.rv)){
@@ -689,50 +697,6 @@ class authClient {
 
     } catch(e){ return dev.error(e); }
   }
-  /*
-  async setIndexedDB(arg) {
-    const v = {whois:`${this.constructor.name}.setIndexedDB`, arg:{arg}, rv:null};
-    dev.start(v);
-    try {
-
-      dev.step(1);  // IndexedDBを取得
-      v.db = authClient._IndexedDB;
-      if (!v.db) throw new Error("IndexedDB not initialized");
-
-      dev.step(2);  // 'readwrite' トランザクション
-      const transaction = v.db.transaction([this.cf.storeName], 'readwrite');
-      const store = transaction.objectStore(this.cf.storeName);
-
-      // 複数の put リクエストを順番に実行
-      for ( [v.key, v.value] of Object.entries(arg)) {
-
-        dev.step(3.1);  // CryptoKeyはIndexedDBに保存可能になるよう出力
-        if( /^(C[SP]key(Sign|Enc))$/.test(v.key) ){
-          v.value = await crypto.subtle.exportKey("jwk", v.value);
-        }
-
-        dev.step(3.2);  // this.idbに登録
-        this.idb[v.key] = v.value;
-
-        dev.step(3.3);  // putリクエストを実行
-        // リクエストの成功/失敗を待つ必要は必ずしもないが、
-        // エラーハンドリングのためにPromiseでラップするのが一般的。
-        await new Promise((resolve, reject) => {
-          const putRequest = store.put(v.value, v.key);
-          putRequest.onsuccess = () => resolve();
-          putRequest.onerror = (event) => {
-            // 個別のリクエストエラーはトランザクション全体のエラーとなる
-            reject(new Error(`PUT操作失敗 (Key: ${v.key}): ${event.target.error.message}`));
-          };
-        });
-      }
-
-      dev.end(); // 終了処理
-      return v.rv;
-
-    } catch (e) { return dev.error(e); }
-  }
-  */
 }
 class authConfig {
 
