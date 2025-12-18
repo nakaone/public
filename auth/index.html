@@ -8,7 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/alasql/4.6.4/alasql.min.js" integrity="sha512-/IeaoBeXScPD3EiZkaYKzjnqRnKJI73FM/18T8P+v2n11hKNCKQmko/n2ccvlDyH3AziR0oPEGShwsZEwO/Jjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-<p style='text-align:right'>2025/12/18 12:31:46</p>
+<p style='text-align:right'>2025/12/18 12:33:42</p>
 <h1>SPkey要求テスト</h1>
 
 <button onclick="localFunc()">localFuncテスト</button>
@@ -555,7 +555,7 @@ class authClient {
           req.onerror = e => reject(e.target.error);
         })
       );
-      dev.step(99.268,v.raw);
+      dev.step(99.268,{raw:v.raw});
 
       // getAll() → [{key, value}]ではなく値配列なので再構成
       v.rv = {};
@@ -566,7 +566,7 @@ class authClient {
           )
         )
       );
-      dev.step(99.279,v.rv);
+      dev.step(99.279,{rv:v.rv});
 
       // CryptoKey復元（存在するものだけ）
       for(const [k,vv] of Object.entries(v.rv)){
