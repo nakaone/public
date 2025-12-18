@@ -8,7 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/alasql/4.6.4/alasql.min.js" integrity="sha512-/IeaoBeXScPD3EiZkaYKzjnqRnKJI73FM/18T8P+v2n11hKNCKQmko/n2ccvlDyH3AziR0oPEGShwsZEwO/Jjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-<p style='text-align:right'>2025/12/18 15:34:21</p>
+<p style='text-align:right'>2025/12/18 15:55:48</p>
 <h1>SPkey要求テスト</h1>
 
 <button onclick="localFunc()">localFuncテスト</button>
@@ -439,8 +439,8 @@ class authClient {
         throw new Error('Invalid function');
       }
 
-      dev.step(1.2);  // 引数は関数を排除するため、一度JSON化してからオブジェクト化
-      arg = JSON.parse(JSON.stringify(arg));
+      dev.step(1.2);  // サーバ側に渡す引数を無毒化
+      arg = this.cf.sanitizeArg(arg);
 
       if( !this.idb.SPkeySign ){  // SPkey未取得
 
@@ -743,6 +743,47 @@ class authConfig {
       dev.end(); // 終了処理
 
     } catch (e) { return dev.error(e); }
+  }
+
+  /** sanitizeArg: プリミティブ型のみで構成されるよう無毒化
+   * @param {*} value - チェック対象の変数
+   * @param {string} path='$' - エラーメッセージ用にオブジェクト内の階層を保持
+   * @returns
+   */
+  sanitizeArg(value, path = '$') {
+    if( value === null ||
+      typeof value === 'string' ||
+      (typeof value === 'number' && Number.isFinite(value)) ||
+      typeof value === 'boolean'
+    ) return value;
+
+    if (Array.isArray(value)) {
+      return value.map((v, i) => this.sanitizeArg(v, `${path}[${i}]`));
+    }
+
+    if (typeof value === 'object') {
+      // 明示的に禁止したい型
+      if (
+        value instanceof CryptoKey ||
+        value instanceof Date ||
+        value instanceof Error ||
+        value instanceof Map ||
+        value instanceof Set
+      ) {
+        throw new Error(`Unsupported argument type at ${path}`);
+      }
+
+      const obj = {};
+      for (const [k, v] of Object.entries(value)) {
+        if (typeof v === 'function') {
+          throw new Error(`Function not allowed in arg at ${path}.${k}`);
+        }
+        obj[k] = this.sanitizeArg(v, `${path}.${k}`);
+      }
+      return obj;
+    }
+
+    throw new Error(`Unsupported value type at ${path}`);
   }
 }
 class cryptoClient {
