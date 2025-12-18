@@ -8,7 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/alasql/4.6.4/alasql.min.js" integrity="sha512-/IeaoBeXScPD3EiZkaYKzjnqRnKJI73FM/18T8P+v2n11hKNCKQmko/n2ccvlDyH3AziR0oPEGShwsZEwO/Jjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-<p style='text-align:right'>2025/12/18 12:49:13</p>
+<p style='text-align:right'>2025/12/18 12:58:43</p>
 <h1>SPkey要求テスト</h1>
 
 <button onclick="localFunc()">localFuncテスト</button>
@@ -569,14 +569,15 @@ class authClient {
       v.rv = {};
       if( Array.isArray(v.raw) && v.raw.length > 0 ){
 
-        await this._withStore('readonly', store =>
-          Promise.all(
-            store.getAllKeys().then(keys =>
-              keys.forEach((k,i)=> v.rv[k] = v.raw[i])
-            )
-          )
+        v.keys = await this._withStore('readonly', store =>
+          new Promise((resolve, reject) => {
+            const req = store.getAllKeys();
+            req.onsuccess = () => resolve(req.result);
+            req.onerror = e => reject(e.target.error);
+          })
         );
-        dev.step(99.289,{rv:v.rv});
+
+        v.keys.forEach((k, i) => v.rv[k] = v.raw[i]);
 
         // CryptoKey復元（存在するものだけ）
         for(const [k,vv] of Object.entries(v.rv)){
@@ -584,6 +585,7 @@ class authClient {
           this.idb[k] = v.rv[k];
         }
       }
+      dev.step(99.298,{rv:v.rv});
 
       dev.end(); // 終了処理
       return v.rv;
