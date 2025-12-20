@@ -8,7 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/alasql/4.6.4/alasql.min.js" integrity="sha512-/IeaoBeXScPD3EiZkaYKzjnqRnKJI73FM/18T8P+v2n11hKNCKQmko/n2ccvlDyH3AziR0oPEGShwsZEwO/Jjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-<p style='text-align:right'>2025/12/20 15:19:57</p>
+<p style='text-align:right'>2025/12/20 15:38:05</p>
 <h1>SPkey要求テスト</h1>
 
 <button onclick="localFunc()">localFuncテスト</button>
@@ -549,8 +549,9 @@ class authClient {
       dev.step(2.2);  // fetch処理を行うPromise
       v.fetchPromise = globalThis.fetch(this.cf.api, {
         method: 'POST',
+        mode: 'cors',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/x-www-form-urlencoded'
         },
         body: JSON.stringify(v.encryptedRequest)
       }).then(response => {
