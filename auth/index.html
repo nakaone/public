@@ -8,7 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/alasql/4.6.4/alasql.min.js" integrity="sha512-/IeaoBeXScPD3EiZkaYKzjnqRnKJI73FM/18T8P+v2n11hKNCKQmko/n2ccvlDyH3AziR0oPEGShwsZEwO/Jjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-<p style='text-align:right'>2025/12/20 10:48:30</p>
+<p style='text-align:right'>2025/12/20 11:04:04</p>
 <h1>SPkey要求テスト</h1>
 
 <button onclick="localFunc()">localFuncテスト</button>
@@ -24,8 +24,8 @@
  * @prop {string} whois='' - 関数名またはクラス名.メソッド名
  * @prop {Object.<string, any>} arg={} - 起動時引数。{変数名：値}形式
  * @prop {Object} v={} - 関数・メソッド内汎用変数
- * @prop {string} step=1 - 関数・メソッド内の現在位置
- * @prop {string[]} log=[] - {string[]} 実行順に並べたdev.step
+ * @prop {string} stepNo=1 - 関数・メソッド内の現在位置
+ * @prop {string[]} log=[] - {string[]} 実行順に並べたdev.stepNo
  * @prop {number} start=Date.now() - 開始時刻
  * @prop {number} end - 終了時刻
  * @prop {number} elaps - 所要時間(ミリ秒)
@@ -92,7 +92,7 @@ class devTools {
 		this.whois = v.whois ?? '';
 		this.arg = v.arg ?? {};
     this.v = v ?? {};
-		this.step = 1;
+		this.stepNo = 1;
 		this.log = [];
 		this.start = new Date();
 		this.end = 0;
@@ -115,7 +115,7 @@ class devTools {
     const rv = new Error(...e);
 
     // 独自追加項目を個別に設定
-    ['whois','arg','step','log','start','end','elaps','v']
+    ['whois','arg','stepNo','log','start','end','elaps','v']
     .forEach(x => rv[x] = dtObj[x] ?? null);
 
     rv.name = 'devToolsError';
@@ -131,11 +131,11 @@ class devTools {
    *   ※ 99はデバック、0.123は行番号の意で設定
    */
   step(label, val=null, cond=true){
-    this.step = String(label);
-    this.log.push(this.step);
+    this.stepNo = String(label);
+    this.log.push(this.stepNo);
     // valが指定されていたらステップ名＋JSON表示
     if( this.opt.mode === 'dev' && val && cond ){
-      console.log(`== ${fi.whois} step.${label} ${this.formatObject(val)}`);
+      console.log(`== ${this.whois} step.${label} ${this.formatObject(val)}`);
     }
   }
 
@@ -154,9 +154,9 @@ class devTools {
       if( typeof arg !== 'undefined' ) msg += '\n' + this.formatObject(arg)
       // 大本の呼出元ではstart/end/elaps表示
       if( this.opt.footer ){
-        msg += '\n' + `\tstart: ${toLocale(fi.start)
-        }\n\tend  : ${toLocale(fi.end)
-        }\n\telaps: ${fi.elaps}`;
+        msg += '\n' + `\tstart: ${toLocale(this.start)
+        }\n\tend  : ${toLocale(this.end)
+        }\n\telaps: ${this.elaps}`;
       }
       console.log(msg);
     }
