@@ -8,7 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/alasql/4.6.4/alasql.min.js" integrity="sha512-/IeaoBeXScPD3EiZkaYKzjnqRnKJI73FM/18T8P+v2n11hKNCKQmko/n2ccvlDyH3AziR0oPEGShwsZEwO/Jjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-<p style='text-align:right'>2025/12/20 11:46:39</p>
+<p style='text-align:right'>2025/12/20 12:48:32</p>
 <h1>SPkey要求テスト</h1>
 
 <button onclick="localFunc()">localFuncテスト</button>
@@ -325,7 +325,7 @@ class authClient {
       // -------------------------------------------------------------
       dev.step(2.1);  // authClient特有の設定項目について既定値を定義
       v.authClientConfig = {
-        api: config.api,
+        api: `https://script.google.com/macros/s/${config.api}/exec`,
         timeout: 300000,
         storeName: 'config',
         dbVersion: 1,
