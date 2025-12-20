@@ -8,7 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/alasql/4.6.4/alasql.min.js" integrity="sha512-/IeaoBeXScPD3EiZkaYKzjnqRnKJI73FM/18T8P+v2n11hKNCKQmko/n2ccvlDyH3AziR0oPEGShwsZEwO/Jjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-<p style='text-align:right'>2025/12/20 11:14:22</p>
+<p style='text-align:right'>2025/12/20 11:14:36</p>
 <h1>SPkey要求テスト</h1>
 
 <button onclick="localFunc()">localFuncテスト</button>
@@ -187,7 +187,7 @@ class devTools {
   /** finisher: end/error共通の終了時処理 */
   finisher(){
     // 終了時に確定する項目に値設定
-    this.log = this.log.join(', ');
+    if( Array.isArray(this.log) ) this.log = this.log.join(', ');
     this.endTime = new Date();
     this.elaps = `${this.endTime - this.startTime} msec`;
   }
