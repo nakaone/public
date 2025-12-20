@@ -8,7 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/alasql/4.6.4/alasql.min.js" integrity="sha512-/IeaoBeXScPD3EiZkaYKzjnqRnKJI73FM/18T8P+v2n11hKNCKQmko/n2ccvlDyH3AziR0oPEGShwsZEwO/Jjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-<p style='text-align:right'>2025/12/20 11:14:36</p>
+<p style='text-align:right'>2025/12/20 11:17:38</p>
 <h1>SPkey要求テスト</h1>
 
 <button onclick="localFunc()">localFuncテスト</button>
@@ -149,13 +149,13 @@ class devTools {
 
     // ログ出力
     if( this.opt.mode === 'normal' || this.opt.mode === 'dev' ){
-      let msg = `${toLocale(this.endTime,'hh:mm:ss.nnn')} ${this.whois} normal end`;
+      let msg = `${this.toLocale(this.endTime,'hh:mm:ss.nnn')} ${this.whois} normal end`;
       // 引数があればダンプ出力
       if( typeof arg !== 'undefined' ) msg += '\n' + this.formatObject(arg)
       // 大本の呼出元ではstart/end/elaps表示
       if( this.opt.footer ){
-        msg += '\n' + `\tstart: ${toLocale(this.startTime)
-        }\n\tend  : ${toLocale(this.endTime)
+        msg += '\n' + `\tstart: ${this.toLocale(this.startTime)
+        }\n\tend  : ${this.toLocale(this.endTime)
         }\n\telaps: ${this.elaps}`;
       }
       console.log(msg);
