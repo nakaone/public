@@ -8,7 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/alasql/4.6.4/alasql.min.js" integrity="sha512-/IeaoBeXScPD3EiZkaYKzjnqRnKJI73FM/18T8P+v2n11hKNCKQmko/n2ccvlDyH3AziR0oPEGShwsZEwO/Jjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-<p style='text-align:right'>2025/12/20 10:44:40</p>
+<p style='text-align:right'>2025/12/20 10:48:30</p>
 <h1>SPkey要求テスト</h1>
 
 <button onclick="localFunc()">localFuncテスト</button>
@@ -135,7 +135,7 @@ class devTools {
     this.log.push(this.step);
     // valが指定されていたらステップ名＋JSON表示
     if( this.opt.mode === 'dev' && val && cond ){
-      console.log(`== ${fi.whois} step.${label} ${formatObject(val)}`);
+      console.log(`== ${fi.whois} step.${label} ${this.formatObject(val)}`);
     }
   }
 
@@ -151,7 +151,7 @@ class devTools {
     if( this.opt.mode === 'normal' || this.opt.mode === 'dev' ){
       let msg = `${toLocale(this.end,'hh:mm:ss.nnn')} ${this.whois} normal end`;
       // 引数があればダンプ出力
-      if( typeof arg !== 'undefined' ) msg += '\n' + formatObject(arg)
+      if( typeof arg !== 'undefined' ) msg += '\n' + this.formatObject(arg)
       // 大本の呼出元ではstart/end/elaps表示
       if( this.opt.footer ){
         msg += '\n' + `\tstart: ${toLocale(fi.start)
@@ -268,7 +268,7 @@ class devTools {
 
       const elements = obj.map(item =>
         // Arrayの要素は名前がないため、インデントと値のみを返す
-        formatObject(item, indentLevel + 1)
+        this.formatObject(item, indentLevel + 1)
       ).join('\n');
 
       // Arrayの要素はカンマではなく改行で区切ります
@@ -289,7 +289,7 @@ class devTools {
       // オブジェクト/配列/関数は再帰呼び出し
       if (memberType === 'object' && value !== null || memberType === 'function') {
         // 複合型の場合は、キーと値の開始のみを記載
-        const formattedValue = formatObject(value, indentLevel + 1);
+        const formattedValue = this.formatObject(value, indentLevel + 1);
         return `${nextIndent}${key}:${formattedValue}`;
       }
 
