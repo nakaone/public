@@ -8,7 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/alasql/4.6.4/alasql.min.js" integrity="sha512-/IeaoBeXScPD3EiZkaYKzjnqRnKJI73FM/18T8P+v2n11hKNCKQmko/n2ccvlDyH3AziR0oPEGShwsZEwO/Jjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-<p style='text-align:right'>2025/12/20 15:09:51</p>
+<p style='text-align:right'>2025/12/20 15:17:17</p>
 <h1>SPkey要求テスト</h1>
 
 <button onclick="localFunc()">localFuncテスト</button>
@@ -186,7 +186,9 @@ class devTools {
       // ⇒ 自関数・メソッドで発生またはthrowされたError
       // ⇒ メッセージを出力し、devToolsErrorにして情報を付加
       e = devTools.devToolsError(this,e);
-      console.error(e.message+'\n'+this.formatObject(e));
+      //console.error(e.message+'\n'+this.formatObject(e));
+      console.error(`[${e.seq}]${e.whois} step.${e.stepNo}\n${
+        e.message}\n${this.formatObject(e)}`);
       return e;
     }
   }
